@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: net.glass.glassl.Main
+Class-Path: com.cedarsoftware.util.io
+
