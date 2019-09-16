@@ -1,13 +1,16 @@
 package net.glass.glassl;
 
-import net.glass.glassw.Wrapper;
+import net.glass.glassl.components.DirtPanel;
+import net.glass.glassl.components.Logo;
+import net.glass.glassl.mc.LaunchArgs;
+import net.glass.glassl.mc.Wrapper;
+import net.glass.glassl.util.ComponentArrayList;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.util.Collection;
 import java.util.Scanner;
 
 import static net.glass.glassl.Main.logger;
@@ -70,17 +73,17 @@ class MainWindow extends Frame {
         Logo logo = new Logo();
 
         // Username field
-        TextField username = new TextField();
+        JTextField username = new JTextField();
         username.setBounds(0, 14, 166, 22);
 
         // Password field
-        TextField password = new TextField();
+        JPasswordField password = new JPasswordField();
         password.setEchoChar('•');
         password.setBounds(0, 40, 166, 22);
 
         // Instance selector
-        Choice instsel = new Choice();
-        File file = new File(Config.instpath + "instances");
+        JComboBox instsel = new JComboBox();
+        File file = new File(Config.glasspath + "instances");
         String[] instances = file.list((current, name) -> new File(current, name).isDirectory());
         if (instances != null) {
             for (String instance : instances) {
@@ -91,24 +94,27 @@ class MainWindow extends Frame {
 
         // Options button
         JButton options = new JButton();
-        options.setLabel("Options");
+        options.setText("Options");
         options.setBounds(168, 14, 70, 22);
+        options.setOpaque(false);
         options.addActionListener(event -> {
-            new OptionsWindow(this, instsel.getSelectedItem());
+            new OptionsWindow(this, (String) instsel.getSelectedItem());
         });
 
         // Login button
         JButton login = new JButton();
-        login.setLabel("Login");
+        login.setText("Login");
         login.setBounds(168, 40, 70, 22);
-        WidgetArrayList widgetlist = new WidgetArrayList();
+        login.setOpaque(false);
+        ComponentArrayList widgetlist = new ComponentArrayList();
         login.addActionListener(event -> {
-            logger.info(instsel.getSelectedItem());
-            widgetlist.setStateAll(false);
-            String[] launchargs = {username.getText(), password.getText(), instsel.getSelectedItem()};
+            logger.info((String) instsel.getSelectedItem());
+            widgetlist.setEnabledAll(false);
+            String[] launchargs = {username.getText(), String.valueOf(password.getPassword()), (String) instsel.getSelectedItem()};
             launchargs = (new LaunchArgs()).getArgs(launchargs);
             if (launchargs != null) {
-                new Wrapper().main(launchargs, widgetlist);
+                Wrapper mc = new Wrapper(launchargs, widgetlist);
+                mc.startMC();
             }
         });
 

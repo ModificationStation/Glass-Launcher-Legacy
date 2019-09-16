@@ -1,4 +1,6 @@
 Manifest-Version: 1.0
 Main-Class: net.glass.glassl.Main
-Class-Path: com.cedarsoftware.util.io
+Class-Path: lib/json-io-4.10.1.jar lib/bcpkix-jdk15on-1.63.jar lib/bcpro
+ v-jdk15on-1.63.jar lib/commons-io-2.4.jar lib/littleproxy-1.1.2-littlep
+ roxy-shade.jar lib/littleproxy-mitm-1.1.0.jar
 
