@@ -1,3 +1,0 @@
-2019-09-15 22:49:03,525 INFO  [main] impl.DefaultHttpProxyServer (DefaultHttpProxyServer.java:495).start() - Starting proxy at address: /127.0.0.1:25560
-2019-09-15 22:49:03,558 INFO  [main] impl.DefaultHttpProxyServer (DefaultHttpProxyServer.java:524).doStart() - Proxy listening with TCP transport
-2019-09-15 22:49:03,834 INFO  [main] impl.DefaultHttpProxyServer (DefaultHttpProxyServer.java:559).doStart() - Proxy started at address: /127.0.0.1:25560
