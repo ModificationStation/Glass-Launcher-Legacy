@@ -18,6 +18,9 @@ public class OptionsWindow extends Dialog {
     private JsonObject settings;
     private String instpath;
 
+    private JTextField javaargs;
+    private JTextField minram;
+    private JTextField maxram;
     private JCheckBox skinproxy;
     private JCheckBox capeproxy;
     private JCheckBox soundproxy;
@@ -43,6 +46,9 @@ public class OptionsWindow extends Dialog {
 
         addWindowListener(new WindowAdapter() {
                               public void windowClosing(WindowEvent we) {
+                                  settings.put("javaargs", javaargs.getText());
+                                  settings.put("maxram", maxram.getText());
+                                  settings.put("minram", minram.getText());
                                   settings.put("proxyskin", skinproxy.isSelected());
                                   settings.put("proxycape", capeproxy.isSelected());
                                   settings.put("proxysound", soundproxy.isSelected());
@@ -71,11 +77,9 @@ public class OptionsWindow extends Dialog {
         javaargslabel.setBounds(20, 22, 100, 20);
         instsettings.add(javaargslabel);
 
-        JTextField javaargs = new JTextField();
+        javaargs = new JTextField();
         javaargs.setBounds(150, 20, 400, 24);
-        javaargs.setText("Defunct");
-        javaargs.setEditable(false);
-        javaargs.setForeground(Color.gray);
+        javaargs.setText((String) settings.get("javaargs"));
         instsettings.add(javaargs);
 
         JLabel ramalloclabel = new JLabel("RAM Allocation:");
@@ -86,22 +90,18 @@ public class OptionsWindow extends Dialog {
         maxramlabel.setBounds(150, 50, 65, 20);
         instsettings.add(maxramlabel);
 
-        JTextField maxram = new JTextField();
+        maxram = new JTextField();
         maxram.setBounds(245, 48, 100, 24);
-        maxram.setText(Runtime.getRuntime().maxMemory()/1024/1024 + "M");
-        maxram.setEditable(false);
-        maxram.setForeground(Color.gray);
+        maxram.setText((String) settings.get("maxram"));
         instsettings.add(maxram);
 
         JLabel minramlabel = new JLabel("Minimum:");
         minramlabel.setBounds(360, 50, 65, 20);
         instsettings.add(minramlabel);
 
-        JTextField minram = new JTextField();
+        minram = new JTextField();
         minram.setBounds(450, 48, 100, 24);
-        minram.setText(Runtime.getRuntime().totalMemory()/1024/1024 + "M");
-        minram.setEditable(false);
-        minram.setForeground(Color.gray);
+        minram.setText((String) settings.get("minram"));
         instsettings.add(minram);
 
         JLabel skinproxylabel = new JLabel("Enable Skin Proxy:");

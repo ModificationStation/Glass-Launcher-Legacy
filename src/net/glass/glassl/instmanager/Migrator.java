@@ -4,10 +4,6 @@ import net.glass.glassl.Main;
 import net.glass.glassl.util.DirFilenameFilter;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class Migrator {
     private File oldpath;

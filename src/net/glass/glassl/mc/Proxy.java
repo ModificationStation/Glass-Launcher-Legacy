@@ -40,7 +40,9 @@ public class Proxy extends Thread {
                             )))
                             .withFiltersSource(new HttpFiltersSourceAdapter() {
                                 public HttpFilters filterRequest(HttpRequest originalRequest, ChannelHandlerContext ctx) {
-                                    return new ProxyFilter(originalRequest, args);
+                                    ProxyFilter proxyFilter = new ProxyFilter(originalRequest);
+                                    proxyFilter.setArgs(args);
+                                    return proxyFilter;
                                 }
                             });
             Main.logger.info("Log format for proxy is oldhost : oldpath : newhost : newurl");

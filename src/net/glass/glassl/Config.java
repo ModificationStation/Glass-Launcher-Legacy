@@ -4,11 +4,12 @@ import java.io.File;
 import java.util.HashMap;
 
 public class Config {
+    public static int proxyport = 25560;
     public static final String os = getOS();
+    public static final String version = "v0.2";
     public static final String glasspath = getDataPath(".PyMCL");
     public static final String pymclpath = getDataPath(".PyMCL");
-    public static final String version = "v0.1";
-    public static int proxyport = 25560;
+    public static final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
     public static HashMap prettyprint = new HashMap(){{
         put("PRETTY_PRINT", true);
         put("TYPE", false);
@@ -21,7 +22,6 @@ public class Config {
             "    \"proxyskin\": false,\n" +
             "    \"proxysound\": false\n" +
             "}";
-    public static final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
 
     private static String getOS() {
         String os = (System.getProperty("os.name")).toLowerCase();

@@ -8,6 +8,7 @@ import org.littleshoot.proxy.HttpFiltersAdapter;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 
 public class ProxyFilter extends HttpFiltersAdapter {
     private static String newHost = "resourceproxy.pymcl.net";
@@ -15,24 +16,26 @@ public class ProxyFilter extends HttpFiltersAdapter {
     private boolean doSkinFix;
     private boolean doCapeFix;
 
-    ProxyFilter(HttpRequest originalRequest, boolean[] args) {
+    ProxyFilter(HttpRequest originalRequest) {
         super(originalRequest);
+    }
+
+    public void setArgs(boolean[] args) {
         this.doSoundFix = args[0];
         this.doSkinFix = args[1];
         this.doCapeFix = args[2];
+        Main.logger.info(Arrays.toString(args));
     }
 
     @Override
     public HttpResponse clientToProxyRequest(HttpObject httpObject) {
-        try {
-            System.out.println(((HttpRequest) httpObject).getUri());
-        }
-        catch (Exception ignored) {}
 
         if(httpObject instanceof HttpRequest) {
             HttpRequest httpRequest = (HttpRequest) httpObject;
             String host = httpRequest.headers().get("Host");
             String path;
+
+            Main.logger.info(httpRequest.getUri());
             if (httpRequest.getUri().startsWith("http://") || httpRequest.getUri().startsWith("https://")) {
                 if (httpRequest.getUri().contains("pymcl.net")) {
                     return null;
@@ -70,6 +73,7 @@ public class ProxyFilter extends HttpFiltersAdapter {
                 }
 
                 if (end == null) {
+                    Main.logger.info("Nulled!");
                     return null;
                 }
 

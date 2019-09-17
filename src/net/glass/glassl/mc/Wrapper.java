@@ -1,8 +1,14 @@
 package net.glass.glassl.mc;
 
+import com.cedarsoftware.util.io.JsonObject;
+import com.cedarsoftware.util.io.JsonReader;
 import net.glass.glassl.Config;
-import net.glass.glassl.util.ComponentArrayList;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -11,30 +17,43 @@ import static net.glass.glassl.Main.logger;
 public class Wrapper {
     private final String instance;
     private final String instPath;
-    private final ComponentArrayList componentList;
 
     private ArrayList args;
+    private JsonObject instJson;
 
     private Proxy proxy = null;
 
-    public Wrapper(String[] launchArgs, ComponentArrayList componentList) {
+    public Wrapper(String[] launchArgs) {
         // 0: username, 1: session, 2: version, 3: doproxy, 4: instance
         if (launchArgs.length < 5) {
             logger.severe("Got " + launchArgs.length + " args, expected 5.");
         }
         this.instance = launchArgs[4];
-        this.componentList = componentList;
         this.instPath = Config.glasspath + "instances/" + instance + "/.minecraft";
+
+        this.getConfig();
 
         this.args = new ArrayList();
         args.add(Config.javaBin);
         if (launchArgs[3].equals("true")) {
             args.add("-Dhttp.proxyHost=127.0.0.1");
             args.add("-Dhttp.proxyPort=" + Config.proxyport);
-            boolean[] proxyArgs = new boolean[] {true, true, true};
+            boolean[] proxyArgs = new boolean[] {
+                    (boolean) instJson.get("proxysound"),
+                    (boolean) instJson.get("proxyskin"),
+                    (boolean) instJson.get("proxycape")
+            };
             proxy = new Proxy(proxyArgs);
             proxy.start();
         }
+        String javaArgs = instJson.get("javaargs").toString();
+        if (!javaArgs.isEmpty()) {
+            for (String arg : javaArgs.split("- ")) {
+                args.add("-" + arg);
+            }
+        }
+        args.add("-Xmx" + instJson.get("maxram"));
+        args.add("-Xms" + instJson.get("minram"));
         args.add("-jar");
         args.add("EasyMineLauncher.jar");
         args.add("--lwjgl-dir=" + instPath + "/bin");
@@ -49,9 +68,28 @@ public class Wrapper {
         logger.info(args.toString());
     }
 
+    private void getConfig() {
+        String instPath = Config.glasspath + "instances/" + instance;
+        File confFile = new File(instPath + "/instance_config.json");
+
+        if (!confFile.exists()) {
+            logger.info("Config file does not exist! Using defaults.");
+            instJson = (JsonObject) JsonReader.jsonToJava(Config.defaultjson);
+        }
+        else {
+            try {
+                instJson = (JsonObject) JsonReader.jsonToJava(readFile(confFile.getPath()));
+            }
+            catch (Exception e) {
+                logger.info("Config file cannot be read! Using defaults.");
+                instJson = (JsonObject) JsonReader.jsonToJava(Config.defaultjson);
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void startMC() {
         // Launched as a separate process because Minecraft directly calls exit when quit is pressed.
-        componentList.setEnabledAll(false);
 
         ProcessBuilder mcInit = new ProcessBuilder(args);
 
@@ -73,5 +111,12 @@ public class Wrapper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    static String readFile(String path)
+            throws IOException
+    {
+        byte[] encoded = Files.readAllBytes(Paths.get(path));
+        return new String(encoded, StandardCharsets.UTF_8);
     }
 }

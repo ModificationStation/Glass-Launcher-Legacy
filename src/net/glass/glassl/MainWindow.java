@@ -4,7 +4,6 @@ import net.glass.glassl.components.DirtPanel;
 import net.glass.glassl.components.Logo;
 import net.glass.glassl.mc.LaunchArgs;
 import net.glass.glassl.mc.Wrapper;
-import net.glass.glassl.util.ComponentArrayList;
 
 import javax.swing.*;
 import java.awt.*;
@@ -106,14 +105,12 @@ class MainWindow extends Frame {
         login.setText("Login");
         login.setBounds(168, 40, 70, 22);
         login.setOpaque(false);
-        ComponentArrayList widgetlist = new ComponentArrayList();
         login.addActionListener(event -> {
             logger.info((String) instsel.getSelectedItem());
-            widgetlist.setEnabledAll(false);
             String[] launchargs = {username.getText(), String.valueOf(password.getPassword()), (String) instsel.getSelectedItem()};
             launchargs = (new LaunchArgs()).getArgs(launchargs);
             if (launchargs != null) {
-                Wrapper mc = new Wrapper(launchargs, widgetlist);
+                Wrapper mc = new Wrapper(launchargs);
                 mc.startMC();
             }
         });
@@ -126,12 +123,6 @@ class MainWindow extends Frame {
         loginpanel.add(options);
         loginpanel.add(password);
         loginpanel.add(login);
-
-        widgetlist.add(login);
-        widgetlist.add(instsel);
-        widgetlist.add(username);
-        widgetlist.add(password);
-        widgetlist.add(options);
 
         panel.add(blogcontainer, BorderLayout.CENTER);
         panel.add(loginform, BorderLayout.SOUTH);
