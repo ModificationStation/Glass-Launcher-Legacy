@@ -1,6 +1,7 @@
 package net.glass.glassl;
 
 import net.glass.glassl.components.DirtPanel;
+import net.glass.glassl.components.HintTextField;
 import net.glass.glassl.components.Logo;
 import net.glass.glassl.mc.LaunchArgs;
 import net.glass.glassl.mc.Wrapper;
@@ -75,26 +76,10 @@ class MainWindow extends Frame {
         Logo logo = new Logo();
 
         // Username field
-        JTextField username = new JTextField("Username or Email");
-        username.setForeground(Color.gray);
-
-        username.addFocusListener(new FocusListener() {
-            public void focusGained(FocusEvent e) {
-                if (username.getForeground() == Color.gray) {
-                    username.setText("");
-                    username.setForeground(Color.black);
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-
-            }
-        });
-
+        HintTextField username = new HintTextField("Username or Email");
         username.setBounds(0, 14, 166, 22);
 
-        // Password fieldPassword
+        // Password field
         JPasswordField password = new JPasswordField();
         password.setEchoChar((char) 0);
         password.setForeground(Color.gray);
@@ -111,7 +96,11 @@ class MainWindow extends Frame {
 
             @Override
             public void focusLost(FocusEvent e) {
-
+                if ((String.valueOf(password.getPassword()).isEmpty())) {
+                    password.setText("Password");
+                    password.setForeground(Color.gray);
+                    password.setEchoChar((char) 0);
+                }
             }
         });
 
