@@ -76,10 +76,14 @@ class MainWindow extends Frame {
 
         // Username field
         JTextField username = new JTextField("Username or Email");
+        username.setForeground(Color.gray);
 
         username.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
-                username.setText("");
+                if (username.getForeground() == Color.gray) {
+                    username.setText("");
+                    username.setForeground(Color.black);
+                }
             }
 
             @Override
@@ -90,11 +94,19 @@ class MainWindow extends Frame {
 
         username.setBounds(0, 14, 166, 22);
 
-        // Password field
-        JPasswordField password = new JPasswordField("Password");
+        // Password fieldPassword
+        JPasswordField password = new JPasswordField();
+        password.setEchoChar((char) 0);
+        password.setForeground(Color.gray);
+        password.setText("Password");
+
         password.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
-                password.setText("");
+                if (password.getForeground() == Color.gray) {
+                    password.setText("");
+                    password.setForeground(Color.black);
+                    password.setEchoChar('•');
+                }
             }
 
             @Override
@@ -103,7 +115,6 @@ class MainWindow extends Frame {
             }
         });
 
-        password.setEchoChar('•');
         password.setBounds(0, 40, 166, 22);
 
         // Instance selector
@@ -116,6 +127,7 @@ class MainWindow extends Frame {
             }
         }
         instsel.setBounds(0, 66, 166, 22);
+
 
         // Options button
         JButton options = new JButton();
