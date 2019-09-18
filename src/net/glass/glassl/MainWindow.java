@@ -7,6 +7,8 @@ import net.glass.glassl.mc.Wrapper;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -28,7 +30,8 @@ class MainWindow extends Frame {
         setLayout(new GridLayout(1, 1));
         setLocationRelativeTo(null);
         pack();
-        setPreferredSize(new Dimension(orgwidth+insets.left+insets.right, orgheight+insets.top+insets.bottom));
+        setPreferredSize(new Dimension(orgwidth + insets.left + insets.right, orgheight + insets.top + insets.bottom));
+        setMinimumSize(new Dimension(650, 400));
 
         // Container to make my brain hurt less
         Panel panel = new Panel();
@@ -37,12 +40,12 @@ class MainWindow extends Frame {
 
         // Makes it so the launcher closes when you press the close button
         addWindowListener(new WindowAdapter() {
-                public void windowClosing(WindowEvent we) {
-                    console.dispose();
-                    dispose();
-                    System.exit(0);
-                }
-            }
+                              public void windowClosing(WindowEvent we) {
+                                  console.dispose();
+                                  dispose();
+                                  System.exit(0);
+                              }
+                          }
         );
 
         // Blog Window
@@ -57,7 +60,7 @@ class MainWindow extends Frame {
         blog.setEditable(false);
         JScrollPane blogcontainer = new JScrollPane(blog);
         blogcontainer.setBorder(BorderFactory.createEmptyBorder());
-        blogcontainer.setBounds(new Rectangle(0, 0, panel.getWidth(), panel.getHeight()-200));
+        blogcontainer.setBounds(new Rectangle(0, 0, panel.getWidth(), panel.getHeight() - 200));
 
         // Login form
         DirtPanel loginform = new DirtPanel();
@@ -72,11 +75,34 @@ class MainWindow extends Frame {
         Logo logo = new Logo();
 
         // Username field
-        JTextField username = new JTextField();
+        JTextField username = new JTextField("Username or Email");
+
+        username.addFocusListener(new FocusListener() {
+            public void focusGained(FocusEvent e) {
+                username.setText("");
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+
+            }
+        });
+
         username.setBounds(0, 14, 166, 22);
 
         // Password field
-        JPasswordField password = new JPasswordField();
+        JPasswordField password = new JPasswordField("Password");
+        password.addFocusListener(new FocusListener() {
+            public void focusGained(FocusEvent e) {
+                password.setText("");
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+
+            }
+        });
+
         password.setEchoChar('•');
         password.setBounds(0, 40, 166, 22);
 
@@ -112,6 +138,8 @@ class MainWindow extends Frame {
             if (launchargs != null) {
                 Wrapper mc = new Wrapper(launchargs);
                 mc.startMC();
+            } else {
+                password.setText("");
             }
         });
 
