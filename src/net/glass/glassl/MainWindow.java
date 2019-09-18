@@ -31,6 +31,7 @@ class MainWindow extends Frame {
         setLocationRelativeTo(null);
         pack();
         setPreferredSize(new Dimension(orgwidth + insets.left + insets.right, orgheight + insets.top + insets.bottom));
+        setMinimumSize(new Dimension(650, 400));
 
         // Container to make my brain hurt less
         Panel panel = new Panel();
