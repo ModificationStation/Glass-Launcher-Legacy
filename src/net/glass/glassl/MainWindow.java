@@ -75,7 +75,7 @@ class MainWindow extends Frame {
         Logo logo = new Logo();
 
         // Username field
-        JTextField username = new JTextField("Username or Password");
+        JTextField username = new JTextField("Username or Email");
 
         username.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
