@@ -134,7 +134,11 @@ class MainWindow extends Frame {
         login.setOpaque(false);
         login.addActionListener(event -> {
             logger.info((String) instsel.getSelectedItem());
-            String[] launchargs = {username.getText(), String.valueOf(password.getPassword()), (String) instsel.getSelectedItem()};
+            String pass = "";
+            if (password.getForeground() != Color.gray) {
+                pass = String.valueOf(password.getPassword());
+            }
+            String[] launchargs = {username.getText(), pass, (String) instsel.getSelectedItem()};
             launchargs = (new LaunchArgs()).getArgs(launchargs);
             if (launchargs != null) {
                 Wrapper mc = new Wrapper(launchargs);
