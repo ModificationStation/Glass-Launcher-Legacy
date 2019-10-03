@@ -25,8 +25,7 @@ public class Pastee {
     public Pastee(String text) {
         try {
             this.req = (HttpURLConnection) new URL("https://api.paste.ee/v1/pastes").openConnection();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return;
         }
@@ -71,8 +70,7 @@ public class Pastee {
             }
             logger.info(resj.toString());
             return (String) resp.get("link");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }

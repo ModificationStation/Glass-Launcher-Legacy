@@ -1,21 +1,14 @@
 package net.glass.glassl;
 
-import com.cedarsoftware.util.io.JsonObject;
-import com.cedarsoftware.util.io.JsonReader;
-import com.cedarsoftware.util.io.JsonWriter;
+import net.glass.glassl.util.JsonConfig;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
-import java.util.Scanner;
 
 public class OptionsWindow extends Dialog {
-    private JsonObject settings;
+    private JsonConfig settings;
     private String instpath;
 
     private JTextField javaargs;
@@ -25,42 +18,39 @@ public class OptionsWindow extends Dialog {
     private JCheckBox capeproxy;
     private JCheckBox soundproxy;
 
+    /**
+     * Sets up options window for given instance.
+     * @param frame Frame object to block while open.
+     * @param instance Target instance.
+     */
     public OptionsWindow(Frame frame, String instance) {
         super(frame);
         setModal(true);
         setLayout(new GridLayout());
         setResizable(false);
+        setTitle("Instance Options");
 
         instpath = Config.glasspath + "instances/" + instance + "/";
-        try {
-            settings = (JsonObject) JsonReader.jsonToJava(new Scanner(new FileInputStream(instpath + "/instance_config.json"), "UTF-8").useDelimiter("\\A").next());
-        }
-        catch (Exception e) {
-            settings = (JsonObject) JsonReader.jsonToJava(Config.defaultjson);
-        }
+        settings = new JsonConfig(instpath + "/instance_config.json", Config.defaultjson);
 
         JTabbedPane tabpane = new JTabbedPane();
         tabpane.setPreferredSize(new Dimension(580, 340));
 
         tabpane.addTab("Settings", makeInstSettings());
 
-        addWindowListener(new WindowAdapter() {
-                              public void windowClosing(WindowEvent we) {
-                                  settings.put("javaargs", javaargs.getText());
-                                  settings.put("maxram", maxram.getText());
-                                  settings.put("minram", minram.getText());
-                                  settings.put("proxyskin", skinproxy.isSelected());
-                                  settings.put("proxycape", capeproxy.isSelected());
-                                  settings.put("proxysound", soundproxy.isSelected());
-                                  try (PrintStream out = new PrintStream(new FileOutputStream(instpath + "instance_config.json"))) {
-                                      out.print(JsonWriter.objectToJson(settings, Config.prettyprint));
-                                  }
-                                  catch (FileNotFoundException e) {
-                                      e.printStackTrace();
-                                  }
-                                  dispose();
-                              }
-                          }
+        addWindowListener(
+            new WindowAdapter() {
+                public void windowClosing(WindowEvent we) {
+                    settings.set("javaargs", javaargs.getText());
+                    settings.set("maxram", maxram.getText());
+                    settings.set("minram", minram.getText());
+                    settings.set("proxyskin", skinproxy.isSelected());
+                    settings.set("proxycape", capeproxy.isSelected());
+                    settings.set("proxysound", soundproxy.isSelected());
+                    if (settings.saveFile())
+                    dispose();
+                  }
+            }
         );
 
         add(tabpane);
@@ -69,6 +59,11 @@ public class OptionsWindow extends Dialog {
         setVisible(true);
     }
 
+    /**
+     * Makes the things that do the thing for the instance JSON.
+     *
+     * @return The panel object containing all created components.
+     */
     private Panel makeInstSettings() {
         Panel instsettings = new Panel();
         instsettings.setLayout(null);

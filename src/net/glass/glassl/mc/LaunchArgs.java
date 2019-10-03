@@ -4,13 +4,16 @@ import com.cedarsoftware.util.io.JsonObject;
 import com.cedarsoftware.util.io.JsonReader;
 import com.cedarsoftware.util.io.JsonWriter;
 import net.glass.glassl.Config;
+import net.glass.glassl.util.JsonConfig;
 
 import javax.swing.*;
 import javax.xml.ws.http.HTTPException;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Scanner;
 
 import static net.glass.glassl.Main.logger;
 
@@ -39,9 +42,8 @@ public class LaunchArgs {
         String javaargs = getJavaArgs();
         String[] logininfo;
         if (args[1].isEmpty()) {
-            logininfo = new String[] {"", args[0]};
-        }
-        else {
+            logininfo = new String[]{"", args[0]};
+        } else {
             logininfo = login(args[0], args[1]);
         }
 
@@ -53,7 +55,7 @@ public class LaunchArgs {
         String session = logininfo[0];
         String username = logininfo[1];
 
-        return new String[] {
+        return new String[]{
                 username,
                 session,
                 version,
@@ -93,16 +95,14 @@ public class LaunchArgs {
                 throw new HTTPException(req.getResponseCode());
             }
             JsonObject profile = (JsonObject) session.get("selectedProfile");
-            return new String[] {(String) session.get("accessToken"), (String) profile.get("name")};
-        }
-        catch (Exception e) {
+            return new String[]{(String) session.get("accessToken"), (String) profile.get("name")};
+        } catch (Exception e) {
             e.printStackTrace();
             try {
                 JOptionPane.showMessageDialog(null, "Server responded with \"HTTP " + req.getResponseCode() + "\". Make sure your username and password are correct and try again.");
-            }
-            catch (IOException ex) {
+            } catch (IOException ex) {
                 e.printStackTrace();
-                JOptionPane.showMessageDialog(null,"Login failed! Make sure you have an internet connection!");
+                JOptionPane.showMessageDialog(null, "Login failed! Make sure you have an internet connection!");
             }
             return null;
         }
@@ -110,13 +110,11 @@ public class LaunchArgs {
 
     public String getVersion() {
         String version;
-        File jsonfile = new File(instpath + "/.minecraft/modpack.json");
+        JsonConfig instjson = new JsonConfig(instpath + "/.minecraft/modpack.json");
         try {
-            JsonObject instjson = (JsonObject) JsonReader.jsonToJava(new Scanner(new FileInputStream(jsonfile), "UTF-8").useDelimiter("\\A").next());
             //instjson = (JSONObject) instjson.get("modpack");
             version = (String) instjson.get("mcver");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             logger.severe("No instance config found!");
             e.printStackTrace();
             return "b1.7.3";
@@ -125,18 +123,13 @@ public class LaunchArgs {
     }
 
     public String getJavaArgs() {
-        File jsonfile = new File(instpath + "/instance_config.json");
-        String javaargs;
+        JsonConfig instjson = new JsonConfig(instpath + "/instance_config.json");
+        String javaargs = "";
 
-        try {
-            JsonObject instjson = (JsonObject) JsonReader.jsonToJava(new Scanner(new FileInputStream(jsonfile), "UTF-8").useDelimiter("\\A").next());
-            javaargs = "-Xmx" + instjson.get("maxram") + " -Xms" + instjson.get("minram") + " " + instjson.get("javaargs");
-        }
-        catch (Exception e) {
-            logger.severe("No instance config found!");
-            e.printStackTrace();
-            return "";
-        }
+        javaargs += "-Xmx" + instjson.get("maxram", "512");
+        javaargs += " -Xms" + instjson.get("minram", "64") + " ";
+        javaargs += instjson.get("javaargs", "");
+
         return javaargs;
     }
 }

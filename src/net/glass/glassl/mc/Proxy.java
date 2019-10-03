@@ -46,8 +46,7 @@ public class Proxy extends Thread {
                                 }
                             });
             Main.logger.info("Log format for proxy is oldhost : oldpath : newhost : newurl");
-        }
-        catch (RootCertificateException e) {
+        } catch (RootCertificateException e) {
             e.printStackTrace();
         }
     }

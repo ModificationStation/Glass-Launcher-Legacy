@@ -30,7 +30,7 @@ public class ProxyFilter extends HttpFiltersAdapter {
     @Override
     public HttpResponse clientToProxyRequest(HttpObject httpObject) {
 
-        if(httpObject instanceof HttpRequest) {
+        if (httpObject instanceof HttpRequest) {
             HttpRequest httpRequest = (HttpRequest) httpObject;
             String host = httpRequest.headers().get("Host");
             String path;

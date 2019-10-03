@@ -7,6 +7,7 @@ import net.glass.glassl.mc.LaunchArgs;
 import net.glass.glassl.mc.Wrapper;
 
 import javax.swing.*;
+import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -22,11 +23,17 @@ class MainWindow extends Frame {
     private int orgwidth = 854;
     private int orgheight = 480;
 
+    /**
+     * Sets up the main window object.
+     * @// TODO: 20/09/2019 To be split into a proper class with multiple functions.
+     * @param args Args passed from main. Unused.
+     * @param console The console for the launcher. Used to close the console.
+     */
     MainWindow(String[] args, Frame console) {
         // Setting the size, icon, location and layout of the launcher
         Insets insets = getInsets();
         logger.info("Starting...");
-        setTitle("Launcher");
+        setTitle("Glass Launcher " + Config.version);
         setIconImage(Toolkit.getDefaultToolkit().createImage(MainWindow.class.getResource("assets/glass.png")));
         setLayout(new GridLayout(1, 1));
         setLocationRelativeTo(null);
@@ -51,7 +58,7 @@ class MainWindow extends Frame {
 
         // Blog Window
         String page = new Scanner(MainWindow.class.getResourceAsStream("assets/blog.html"), "UTF-8").useDelimiter("\\A").next();
-        page = "<head><base href=\"" + MainWindow.class.getResource("assets/").toString() + "\"><link href=\"blog.css\" rel=\"stylesheet\" type=\"text/css\"></head>" + page;
+        page = page.replaceAll("\\$\\{root}\\$", MainWindow.class.getResource("assets/").toString());
         JTextPane blog = new JTextPane(
 
         );
@@ -59,6 +66,15 @@ class MainWindow extends Frame {
         blog.setText(page);
         blog.setBorder(BorderFactory.createEmptyBorder());
         blog.setEditable(false);
+        blog.addHyperlinkListener(event -> {
+            if (event.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
+                try {
+                    Desktop.getDesktop().browse(event.getURL().toURI());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         JScrollPane blogcontainer = new JScrollPane(blog);
         blogcontainer.setBorder(BorderFactory.createEmptyBorder());
         blogcontainer.setBounds(new Rectangle(0, 0, panel.getWidth(), panel.getHeight() - 200));
@@ -117,7 +133,6 @@ class MainWindow extends Frame {
         }
         instsel.setBounds(0, 66, 166, 22);
 
-
         // Options button
         JButton options = new JButton();
         options.setText("Options");
@@ -148,6 +163,15 @@ class MainWindow extends Frame {
             }
         });
 
+        // Instance manager button
+        JButton instancesButton = new JButton();
+        instancesButton.setText("Instances");
+        instancesButton.setBounds(168, 66, 70, 22);
+        instancesButton.setOpaque(false);
+        instancesButton.addActionListener(event -> {
+            new InstanceManagerWindow(this);
+        });
+
         // Adding widgets and making the launcher visible
         loginform.add(logo, BorderLayout.WEST);
         loginform.add(loginpanel, BorderLayout.EAST);
@@ -156,6 +180,7 @@ class MainWindow extends Frame {
         loginpanel.add(options);
         loginpanel.add(password);
         loginpanel.add(login);
+        loginpanel.add(instancesButton);
 
         panel.add(blogcontainer, BorderLayout.CENTER);
         panel.add(loginform, BorderLayout.SOUTH);

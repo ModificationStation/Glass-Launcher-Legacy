@@ -3,6 +3,10 @@ package net.glass.glassl;
 import net.glass.glassl.mc.Proxy;
 
 public class ProxyStandalone {
+    /**
+     * Main function of the standalone proxy
+     * @param args
+     */
     public static void main(String[] args) {
         boolean doSound = false;
         boolean doSkin = false;
@@ -10,11 +14,9 @@ public class ProxyStandalone {
         for (String arg : args) {
             if (arg.toLowerCase().equals("-dosound")) {
                 doSound = true;
-            }
-            else if (arg.toLowerCase().equals("-doskin")) {
+            } else if (arg.toLowerCase().equals("-doskin")) {
                 doSkin = true;
-            }
-            else if (arg.toLowerCase().equals("-docape")) {
+            } else if (arg.toLowerCase().equals("-docape")) {
                 doCape = true;
             }
         }
@@ -24,7 +26,7 @@ public class ProxyStandalone {
             doSkin = true;
             doCape = true;
         }
-        Proxy proxy = new Proxy(new boolean[] {doSound, doSkin, doCape});
+        Proxy proxy = new Proxy(new boolean[]{doSound, doSkin, doCape});
         proxy.start();
     }
 }

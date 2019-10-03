@@ -16,11 +16,7 @@ class DragDropHandler extends TransferHandler {
             return false;
         }
         JList.DropLocation dl = (JList.DropLocation) support.getDropLocation();
-        if (dl.getIndex() == -1) {
-            return false;
-        } else {
-            return true;
-        }
+        return dl.getIndex() != -1;
     }
 
     public boolean importData(TransferHandler.TransferSupport support) {
@@ -32,7 +28,7 @@ class DragDropHandler extends TransferHandler {
         try {
             int draggedImageIndex = Integer.parseInt((String) transferable.getTransferData(DataFlavor.stringFlavor));
 
-            JList.DropLocation dl = (JList.DropLocation)support.getDropLocation();
+            JList.DropLocation dl = (JList.DropLocation) support.getDropLocation();
             DefaultListModel model = list.model;
             Object draggedImage = model.get(draggedImageIndex);
             int dropIndex = dl.getIndex();

@@ -3,12 +3,9 @@ package net.glass.glassl.mc;
 import com.cedarsoftware.util.io.JsonObject;
 import com.cedarsoftware.util.io.JsonReader;
 import net.glass.glassl.Config;
+import net.glass.glassl.util.FileUtils;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -38,7 +35,7 @@ public class Wrapper {
         if (launchArgs[3].equals("true")) {
             args.add("-Dhttp.proxyHost=127.0.0.1");
             args.add("-Dhttp.proxyPort=" + Config.proxyport);
-            boolean[] proxyArgs = new boolean[] {
+            boolean[] proxyArgs = new boolean[]{
                     (boolean) instJson.get("proxysound"),
                     (boolean) instJson.get("proxyskin"),
                     (boolean) instJson.get("proxycape")
@@ -75,12 +72,10 @@ public class Wrapper {
         if (!confFile.exists()) {
             logger.info("Config file does not exist! Using defaults.");
             instJson = (JsonObject) JsonReader.jsonToJava(Config.defaultjson);
-        }
-        else {
+        } else {
             try {
-                instJson = (JsonObject) JsonReader.jsonToJava(readFile(confFile.getPath()));
-            }
-            catch (Exception e) {
+                instJson = (JsonObject) JsonReader.jsonToJava(FileUtils.readFile(confFile.getPath()));
+            } catch (Exception e) {
                 logger.info("Config file cannot be read! Using defaults.");
                 instJson = (JsonObject) JsonReader.jsonToJava(Config.defaultjson);
                 e.printStackTrace();
@@ -95,7 +90,7 @@ public class Wrapper {
 
         Map mcEnv = mcInit.environment();
         String newAppData = Config.glasspath + "instances/" + instance;
-        mcEnv.put("appdata",  newAppData);
+        mcEnv.put("appdata", newAppData);
         mcEnv.put("home", newAppData);
         mcEnv.put("user.home", newAppData);
 
@@ -111,12 +106,5 @@ public class Wrapper {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    static String readFile(String path)
-            throws IOException
-    {
-        byte[] encoded = Files.readAllBytes(Paths.get(path));
-        return new String(encoded, StandardCharsets.UTF_8);
     }
 }

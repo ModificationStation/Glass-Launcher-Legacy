@@ -25,11 +25,11 @@ public class ConsoleWindow extends Frame {
         addWindowListener(new WindowAdapter() {
                               public void windowClosing(WindowEvent we) {
                                   if (!Main.launcherActive()) {
-                                  	   Main.logger.info("Closing...");
-                                       dispose();
-                                       System.exit(0);
+                                      Main.logger.info("Closing...");
+                                      dispose();
+                                      System.exit(0);
                                   }
-								  Main.logger.info("Close the launcher using the main window!");
+                                  Main.logger.info("Close the launcher using the main window!");
                               }
                           }
         );

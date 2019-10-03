@@ -18,9 +18,8 @@ public class Logo extends JPanel {
             int w = logoimg.getWidth();
             int h = logoimg.getHeight();
             bgimage = logoimg.getScaledInstance(w, h, 16);
-            setPreferredSize(new Dimension(w+32, h+32));
-        }
-        catch (IOException e) {
+            setPreferredSize(new Dimension(w + 32, h + 32));
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

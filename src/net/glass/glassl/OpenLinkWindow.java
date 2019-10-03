@@ -5,6 +5,12 @@ import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
 
 public class OpenLinkWindow extends JOptionPane {
+
+    /**
+     * Used to make a pop-up clickable link.
+     * @param comp
+     * @param url
+     */
     OpenLinkWindow(Component comp, String url) {
         JLabel label = new JLabel();
         Font font = label.getFont();
@@ -14,7 +20,7 @@ public class OpenLinkWindow extends JOptionPane {
         style.append("font-size:" + font.getSize() + "pt;");
 
         JEditorPane link = new JEditorPane("text/html", "<html><body style=\"" + style + "\">" //
-                + "<a href=\""+ url + "\">" + url + "</a>" //
+                + "<a href=\"" + url + "\">" + url + "</a>" //
                 + "</body></html>");
         link.addHyperlinkListener(event -> {
             if (event.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {

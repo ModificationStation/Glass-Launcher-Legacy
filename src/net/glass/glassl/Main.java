@@ -27,17 +27,15 @@ public class Main {
             logger.setLevel(Level.ALL);
             file_handler.setLevel(Level.ALL);
             logger.info("Logging to " + logdir.toString());
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public static void main(String[] args) {
-        try{
+        try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         ConsoleWindow console = new ConsoleWindow();
@@ -54,9 +52,6 @@ public class Main {
     }
 
     public static boolean launcherActive() {
-        if (mainwin == null) {
-            return false;
-        }
-        return true;
+        return mainwin != null;
     }
 }
