@@ -3,8 +3,8 @@ package net.glasslauncher.legacy.mc;
 import com.cedarsoftware.util.io.JsonObject;
 import com.cedarsoftware.util.io.JsonReader;
 import net.glasslauncher.legacy.Config;
-import net.glasslauncher.legacy.Main;
 import net.glasslauncher.legacy.util.FileUtils;
+import proxy.Proxy;
 
 import java.io.File;
 import java.util.ArrayList;

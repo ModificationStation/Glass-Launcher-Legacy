@@ -1,4 +1,4 @@
-package net.glasslauncher.legacy.mc;
+package proxy;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.HttpRequest;
@@ -12,6 +12,7 @@ import org.littleshoot.proxy.impl.DefaultHttpProxyServer;
 import org.littleshoot.proxy.mitm.Authority;
 import org.littleshoot.proxy.mitm.CertificateSniffingMitmManager;
 import org.littleshoot.proxy.mitm.RootCertificateException;
+import proxy.web.ProxyHttpServer;
 
 import java.io.File;
 
@@ -23,6 +24,9 @@ public class Proxy extends Thread {
         try {
             // 1: args[sound, skin, cape]
             new File(Config.glasspath + "proxyconf").mkdirs();
+
+            ProxyHttpServer main = new ProxyHttpServer();
+            main.start();
 
             this.serverBoot =
                     DefaultHttpProxyServer.bootstrap()
@@ -45,7 +49,7 @@ public class Proxy extends Thread {
                                 }
                             });
             Main.logger.info("Log format for proxy is oldhost : oldpath : newhost : newurl");
-        } catch (RootCertificateException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

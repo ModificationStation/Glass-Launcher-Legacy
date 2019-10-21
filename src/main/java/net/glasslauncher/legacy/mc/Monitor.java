@@ -1,6 +1,7 @@
 package net.glasslauncher.legacy.mc;
 
 import net.glasslauncher.legacy.Main;
+import proxy.Proxy;
 
 import java.util.Timer;
 import java.util.TimerTask;

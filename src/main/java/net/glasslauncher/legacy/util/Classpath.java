@@ -16,7 +16,7 @@ public class Classpath {
     }
 
     public static void addFile(File f) throws IOException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        addURL(f.toURL());
+        addURL(f.toURI().toURL());
     }
 
     public static void addURL(URL u) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {

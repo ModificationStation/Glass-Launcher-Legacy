@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.HashMap;
 
 public class Config {
+    public static long skinCacheAgeLimit = 600L;
     /**
      * The port which the built-in proxy runs on.
      */
@@ -16,7 +17,7 @@ public class Config {
     /**
      * The version of the launcher.
      */
-    public static final String version = "v0.2";
+    public static final String version = "v0.3";
     /**
      * The path of the launcher's files.
      * @see #getDataPath(String)
@@ -28,6 +29,10 @@ public class Config {
      * @see #getDataPath(String)
      */
     public static final String pymclpath = getDataPath(".PyMCL");
+    /**
+     * The path of the launcher's cache files.
+     */
+    public static final String cachepath = glasspath + "cache/";
     /**
      * The path of the Java binary running the launcher.
      */

@@ -1,6 +1,6 @@
 package net.glasslauncher.legacy;
 
-import net.glasslauncher.legacy.mc.Proxy;
+import proxy.Proxy;
 
 public class ProxyStandalone {
     /**

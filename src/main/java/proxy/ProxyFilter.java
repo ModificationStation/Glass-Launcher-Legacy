@@ -1,8 +1,7 @@
-package net.glasslauncher.legacy.mc;
+package proxy;
 
-import io.netty.handler.codec.http.HttpObject;
-import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.HttpResponse;
+import io.netty.handler.codec.http.*;
+import io.netty.util.CharsetUtil;
 import net.glasslauncher.legacy.Main;
 import org.littleshoot.proxy.HttpFiltersAdapter;
 
@@ -11,7 +10,7 @@ import java.net.URL;
 import java.util.Arrays;
 
 public class ProxyFilter extends HttpFiltersAdapter {
-    private static String newHost = "resourceproxy.pymcl.net";
+    private static String newHost = "localhost:25561";
     private boolean doSoundFix;
     private boolean doSkinFix;
     private boolean doCapeFix;
@@ -27,8 +26,19 @@ public class ProxyFilter extends HttpFiltersAdapter {
         Main.logger.info(Arrays.toString(args));
     }
 
+    public HttpObject responsePre(HttpObject httpObject) {
+        System.out.println("Response is: " + httpObject);
+
+        if (httpObject instanceof HttpContent) {
+            System.out.println(((HttpContent) httpObject)
+                    .content().toString(CharsetUtil.UTF_8));
+        }
+        return httpObject;
+    };
+
+
     @Override
-    public HttpResponse clientToProxyRequest(HttpObject httpObject) {
+    public HttpResponse clientToProxyRequest(HttpObject httpObject) {// TODO: Redirect to localhost
 
         if (httpObject instanceof HttpRequest) {
             HttpRequest httpRequest = (HttpRequest) httpObject;
@@ -48,36 +58,36 @@ public class ProxyFilter extends HttpFiltersAdapter {
                     return null;
                 }
 
-                String end = null;
+                String doRedirect = null;
 
                 if (doSoundFix && (path.contains("MinecraftResources") || path.contains("/resources/"))) {
-                    end = path;
+                    doRedirect = path;
                 }
 
                 if (doSkinFix && path.contains("MinecraftSkins")) {
-                    end = "/skinapi.php?user=" + path.split("/")[2];
+                    doRedirect = "/skins/" + path.split("/")[2];
                 }
 
                 if (doCapeFix && path.contains("MinecraftCloaks")) {
-                    end = "/capeapi.php?user=" + path.split("/")[2];
+                    doRedirect = "/capes/" + path.split("/")[2];
                 }
 
                 if (host.contains("minecraft.net")) {
                     if (doSkinFix && path.contains("skin")) {
-                        end = "/skinapi.php?user=" + path.split("/")[2];
+                        doRedirect = "/skins/" + path.split("/")[2];
                     }
 
                     if (doCapeFix && path.contains("cloak")) {
-                        end = "/capeapi.php?user=" + path.split("=")[1];
+                        doRedirect = "/capes/" + path.split("/")[2];
                     }
                 }
 
-                if (end == null) {
+                if (doRedirect == null) {
                     Main.logger.info("Nulled!");
                     return null;
                 }
 
-                httpRequest.setUri("http://" + newHost + end);
+                httpRequest.setUri("http://" + newHost + doRedirect);
                 httpRequest.headers().set("Host", newHost);
                 Main.logger.info(host + " : " + path + " : " + httpRequest.headers().get("Host") + " : " + httpRequest.getUri());
             }
