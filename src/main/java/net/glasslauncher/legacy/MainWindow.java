@@ -5,6 +5,7 @@ import net.glasslauncher.legacy.components.HintTextField;
 import net.glasslauncher.legacy.components.Logo;
 import net.glasslauncher.legacy.mc.LaunchArgs;
 import net.glasslauncher.legacy.mc.Wrapper;
+import net.glasslauncher.legacy.util.JsonConfig;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -19,9 +20,11 @@ import java.util.Scanner;
 import static net.glasslauncher.legacy.Main.logger;
 
 class MainWindow extends Frame {
+    private int orgWidth = 854;
+    private int orgHeight = 480;
 
-    private int orgwidth = 854;
-    private int orgheight = 480;
+    private final Panel mainPanel = new Panel();
+    private JsonConfig launcherConfig = new JsonConfig(Config.glasspath + "launcher_config.json");
 
     /**
      * Sets up the main window object.
@@ -38,13 +41,12 @@ class MainWindow extends Frame {
         setLayout(new GridLayout(1, 1));
         setLocationRelativeTo(null);
         pack();
-        setPreferredSize(new Dimension(orgwidth + insets.left + insets.right, orgheight + insets.top + insets.bottom));
+        setPreferredSize(new Dimension(orgWidth + insets.left + insets.right, orgHeight + insets.top + insets.bottom));
         setMinimumSize(new Dimension(650, 400));
 
         // Container to make my brain hurt less
-        Panel panel = new Panel();
-        panel.setLayout(new BorderLayout());
-        add(panel);
+        mainPanel.setLayout(new BorderLayout());
+        add(mainPanel);
 
         // Makes it so the launcher closes when you press the close button
         addWindowListener(new WindowAdapter() {
@@ -56,28 +58,12 @@ class MainWindow extends Frame {
                           }
         );
 
-        // Blog Window
-        String page = new Scanner(MainWindow.class.getResourceAsStream("assets/blog.html"), "UTF-8").useDelimiter("\\A").next();
-        page = page.replaceAll("\\$\\{root}\\$", MainWindow.class.getResource("assets/").toString());
-        JTextPane blog = new JTextPane(
+        makeGUI();
+    }
 
-        );
-        blog.setContentType("text/html");
-        blog.setText(page);
-        blog.setBorder(BorderFactory.createEmptyBorder());
-        blog.setEditable(false);
-        blog.addHyperlinkListener(event -> {
-            if (event.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
-                try {
-                    Desktop.getDesktop().browse(event.getURL().toURI());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        JScrollPane blogcontainer = new JScrollPane(blog);
-        blogcontainer.setBorder(BorderFactory.createEmptyBorder());
-        blogcontainer.setBounds(new Rectangle(0, 0, panel.getWidth(), panel.getHeight() - 200));
+    private void makeGUI() {
+
+        JScrollPane blogcontainer = makeBlog();
 
         // Login form
         DirtPanel loginform = new DirtPanel();
@@ -93,6 +79,9 @@ class MainWindow extends Frame {
 
         // Username field
         HintTextField username = new HintTextField("Username or Email");
+        if (launcherConfig.get("lastusedname") != null) {
+            username.setText((String) launcherConfig.get("lastusedname"));
+        }
         username.setBounds(0, 14, 166, 22);
 
         // Password field
@@ -156,6 +145,8 @@ class MainWindow extends Frame {
             String[] launchargs = {username.getText(), pass, (String) instsel.getSelectedItem()};
             launchargs = (new LaunchArgs()).getArgs(launchargs);
             if (launchargs != null) {
+                launcherConfig.set("lastusedname", username.getText());
+                launcherConfig.saveFile();
                 Wrapper mc = new Wrapper(launchargs);
                 mc.startMC();
             } else {
@@ -183,11 +174,36 @@ class MainWindow extends Frame {
         loginpanel.add(login);
         loginpanel.add(instancesButton);
 
-        panel.add(blogcontainer, BorderLayout.CENTER);
-        panel.add(loginform, BorderLayout.SOUTH);
+        mainPanel.add(blogcontainer, BorderLayout.CENTER);
+        mainPanel.add(loginform, BorderLayout.SOUTH);
 
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
+    }
+
+    private JScrollPane makeBlog() {
+        String page = new Scanner(MainWindow.class.getResourceAsStream("assets/blog.html"), "UTF-8").useDelimiter("\\A").next();
+        page = page.replaceAll("\\$\\{root}\\$", MainWindow.class.getResource("assets/").toString());
+        JTextPane blog = new JTextPane(
+
+        );
+        blog.setContentType("text/html");
+        blog.setText(page);
+        blog.setBorder(BorderFactory.createEmptyBorder());
+        blog.setEditable(false);
+        blog.addHyperlinkListener(event -> {
+            if (event.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
+                try {
+                    Desktop.getDesktop().browse(event.getURL().toURI());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        JScrollPane blogcontainer = new JScrollPane(blog);
+        blogcontainer.setBorder(BorderFactory.createEmptyBorder());
+        blogcontainer.setBounds(new Rectangle(0, 0, mainPanel.getWidth(), mainPanel.getHeight() - 200));
+        return blogcontainer;
     }
 }

@@ -38,7 +38,7 @@ public class ProxyFilter extends HttpFiltersAdapter {
 
 
     @Override
-    public HttpResponse clientToProxyRequest(HttpObject httpObject) {// TODO: Redirect to localhost
+    public HttpResponse clientToProxyRequest(HttpObject httpObject) {
 
         if (httpObject instanceof HttpRequest) {
             HttpRequest httpRequest = (HttpRequest) httpObject;
