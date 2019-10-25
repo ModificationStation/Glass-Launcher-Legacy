@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class OptionsWindow extends Dialog {
+public class OptionsWindow extends JDialog {
     private JsonConfig settings;
     private String instpath;
 
@@ -47,8 +47,9 @@ public class OptionsWindow extends Dialog {
                     settings.set("proxyskin", skinproxy.isSelected());
                     settings.set("proxycape", capeproxy.isSelected());
                     settings.set("proxysound", soundproxy.isSelected());
-                    if (settings.saveFile())
-                    dispose();
+                    if (settings.saveFile()) {
+                        dispose();
+                    }
                   }
             }
         );

@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URISyntaxException;
 
-public class ConsoleWindow extends Frame {
+public class ConsoleWindow extends JFrame {
     private JTextArea textArea = new JTextArea();
     private final PrintStream oldout = System.out;
     private final PrintStream olderr = System.err;
@@ -61,7 +61,7 @@ public class ConsoleWindow extends Frame {
             }
         });
 
-        Panel panel = new Panel();
+        JPanel panel = new JPanel();
         panel.setLayout(new GridLayout());
         panel.add(textContainer);
         add(panel, BorderLayout.CENTER);

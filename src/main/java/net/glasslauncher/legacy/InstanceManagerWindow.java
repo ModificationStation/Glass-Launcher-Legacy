@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-class InstanceManagerWindow extends Dialog {
+class InstanceManagerWindow extends JDialog {
     InstanceManagerWindow(Frame frame) {
         super(frame);
         setModal(true);

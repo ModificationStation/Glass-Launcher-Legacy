@@ -19,7 +19,7 @@ import java.util.Scanner;
 
 import static net.glasslauncher.legacy.Main.logger;
 
-class MainWindow extends Frame {
+class MainWindow extends JFrame {
     private int orgWidth = 854;
     private int orgHeight = 480;
 
