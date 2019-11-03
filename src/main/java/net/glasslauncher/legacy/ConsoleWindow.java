@@ -21,6 +21,7 @@ public class ConsoleWindow extends JFrame {
 
     public ConsoleWindow() {
         // create all components and add them
+        setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
         setTitle("Glass Launcher Console");
         addWindowListener(new WindowAdapter() {
                               public void windowClosing(WindowEvent we) {
