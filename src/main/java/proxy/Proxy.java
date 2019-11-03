@@ -11,7 +11,6 @@ import org.littleshoot.proxy.HttpProxyServerBootstrap;
 import org.littleshoot.proxy.impl.DefaultHttpProxyServer;
 import org.littleshoot.proxy.mitm.Authority;
 import org.littleshoot.proxy.mitm.CertificateSniffingMitmManager;
-import org.littleshoot.proxy.mitm.RootCertificateException;
 import proxy.web.ProxyHttpServer;
 
 import java.io.File;
