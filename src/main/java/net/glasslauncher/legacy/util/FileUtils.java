@@ -1,20 +1,33 @@
 package net.glasslauncher.legacy.util;
 
 import net.glasslauncher.legacy.Main;
+import proxy.web.WebUtils;
 
 import java.io.*;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
+import java.util.Scanner;
 
 public class FileUtils {
 
-    public static String readFile(String path)
-            throws IOException {
-        byte[] encoded = Files.readAllBytes(Paths.get(path));
+    public static String readFile(String path) throws IOException, URISyntaxException {
+        return readFile(path, false);
+    }
+
+    public static String readFile(String path, boolean isJar)
+            throws IOException, URISyntaxException {
+        byte[] encoded;
+        if (isJar) {
+            String resLocation = path.split("(!)(?!.*\1)")[1].replaceAll("\\\\", "/");
+            encoded = convertStreamToString(Main.class.getResourceAsStream(resLocation)).getBytes(StandardCharsets.UTF_8);
+        } else {
+            encoded = Files.readAllBytes(Paths.get(path.replaceAll("\\\\", "/")));
+        }
         return new String(encoded, StandardCharsets.UTF_8);
     }
 
@@ -31,8 +44,8 @@ public class FileUtils {
      * Downloads given URL to target path.
      * @param urlStr File to download.
      * @param pathStr Path to save the file to (filename decided by URL).
-     * @param md5 MD5 to compare against.
-     * @return False if no file was downloaded, True if otherwise.
+     * @param md5 MD5 to compare against. Ignored if null.
+     * @return false if no file was downloaded, true if otherwise.
      */
     public static boolean downloadFile(String urlStr, String pathStr, String md5, String filename) {
         URL url;
@@ -67,6 +80,7 @@ public class FileUtils {
             while ((byteContent = inputStream.read(data, 0, 1024)) != -1) {
                 fileOS.write(data, 0, byteContent);
             }
+            fileOS.close();
         } catch (Exception e) {
             Main.logger.info("Failed to download file \"" + urlStr + "\":");
             e.printStackTrace();
@@ -112,5 +126,18 @@ public class FileUtils {
 
         //return complete hash
         return sb.toString();
+    }
+
+    private static void makeDirs(String path) {
+        try {
+            (new File(path)).mkdirs();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    static String convertStreamToString(InputStream is) {
+        Scanner s = new Scanner(is).useDelimiter("\\A");
+        return s.hasNext() ? s.next() : "";
     }
 }

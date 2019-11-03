@@ -9,6 +9,7 @@ import net.glasslauncher.legacy.Main;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.util.Set;
 
 public class JsonConfig {
     private JsonObject jsonObject;
@@ -23,7 +24,13 @@ public class JsonConfig {
     public JsonConfig(String path) {
         this.path = path;
         try {
-            this.jsonObject = (JsonObject) JsonReader.jsonToJava(FileUtils.readFile(path));
+            boolean isJar;
+            if (path.startsWith("jar:")) {
+                isJar = true;
+            } else {
+                isJar = false;
+            }
+            this.jsonObject = (JsonObject) JsonReader.jsonToJava(FileUtils.readFile(path, isJar));
         }
         catch (Exception e) {
             Main.logger.info("Failed to read JSON file:");
@@ -93,6 +100,15 @@ public class JsonConfig {
      */
     public void set(Object key, Object value) {
         jsonObject.put(key, value);
+    }
+
+    /**
+     * Gets keyset of the JSON object.
+     *
+     * @return The keyset of the JSON object.
+     */
+    public Set keySet() {
+        return jsonObject.keySet();
     }
 
     /**
