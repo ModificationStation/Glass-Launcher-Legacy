@@ -69,7 +69,7 @@ public class Config {
         } else if (os.contains("mac")) {
             return "osx";
         } else {
-            return "unix";
+            return "linux";
         }
     }
 
