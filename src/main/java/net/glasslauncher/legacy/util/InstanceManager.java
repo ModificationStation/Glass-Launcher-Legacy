@@ -6,6 +6,7 @@ import net.glasslauncher.legacy.Main;
 
 import java.io.File;
 import java.net.URL;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 
 public class InstanceManager {
@@ -62,11 +63,14 @@ public class InstanceManager {
         if (versionCacheJar.exists()) {
             try {
                 Files.copy(versionCacheJar.toPath(), new File(minecraftFolder + "/bin/minecraft.jar").toPath());
+            } catch (FileAlreadyExistsException e) {
+                Main.logger.info("Instance \"" + name + "\" already exists!");
+                return false;
             } catch (Exception e) {
                 e.printStackTrace();
-                try {
+                /*try {
                     org.apache.commons.io.FileUtils.deleteDirectory(new File(minecraftFolder));
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {}*/
                 return false;
             }
         } else {
@@ -77,9 +81,9 @@ public class InstanceManager {
                 FileUtils.downloadFile("https://launcher.mojang.com/v1/objects/" + versionID + "/client.jar", versionsCachePath, null, version + ".jar");
                 Files.copy(versionCacheJar.toPath(), new File(minecraftFolder + "/bin/minecraft.jar").toPath());
             } catch (Exception e) {
-                try {
+                /*try {
                     org.apache.commons.io.FileUtils.deleteDirectory(new File(minecraftFolder));
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {}*/
                 Main.logger.info("Version not found: \"" + version + "\". Aborting.");
                 return false;
             }
@@ -89,7 +93,20 @@ public class InstanceManager {
             FileUtils.downloadFile("https://files.pymcl.net/client/lwjgl/lwjgl." + Config.os + ".zip", versionsCachePath, null, "lwjgl.zip");
         }
         FileUtils.extractZip(lwjglCacheZip.getPath(), minecraftFolder + "/bin");
-
         return true;
+    }
+
+    public void addMod(String modpath, String instanceFolder) {
+        String minecraftFolder = instanceFolder + "/.minecraft";
+        try {
+            TempZipFile jarFile = new TempZipFile(minecraftFolder + "/bin/minecraft.jar");
+            if (jarFile.fileExists("META-INF")) {
+                jarFile.deleteFile("META-INF");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
     }
 }
