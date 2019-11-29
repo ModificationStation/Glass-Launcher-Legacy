@@ -1,10 +1,9 @@
 package net.glasslauncher.legacy.util;
 
+import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
-import proxy.web.WebUtils;
 
 import java.io.*;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -135,33 +134,47 @@ public class FileUtils {
         return s.hasNext() ? s.next() : "";
     }
 
+    /**
+     * Extracts a zip file to a given directory.
+     * Modified code from https://www.journaldev.com/960/java-unzip-file-example
+     * @param zipFilePath
+     * @param destDir
+     */
     public static void extractZip(String zipFilePath, String destDir) {
+        String destDirBypass;
+
         File dir = new File(destDir);
+        if (Config.os == "windows") {
+            destDirBypass = "\\\\?\\" + destDir;
+        } else {
+            destDirBypass = destDir;
+        }
         // create output directory if it doesn't exist
         if(!dir.exists()) dir.mkdirs();
-        FileInputStream fis;
         //buffer for read and write data to file
         byte[] buffer = new byte[1024];
         try {
-            fis = new FileInputStream(zipFilePath);
+            FileInputStream fis = new FileInputStream(zipFilePath);
             ZipInputStream zis = new ZipInputStream(fis);
             ZipEntry ze = zis.getNextEntry();
             while(ze != null){
                 String fileName = ze.getName();
-                File newFile = new File(destDir + File.separator + fileName);
-                System.out.println("Unzipping to " + newFile.getAbsolutePath());
                 if (ze.isDirectory()) {
-                    newFile.mkdirs();
+                    new File(destDir + "/" + fileName).mkdirs();
                 } else {
-                    FileOutputStream fos = new FileOutputStream(newFile);
+                    File newFile = new File(destDir + "/" + fileName);
+                    File newFileBypass = new File(destDirBypass + "/" + fileName);
+                    //create directories for sub directories in zip
+                    new File(newFile.getParent()).mkdirs();
+                    FileOutputStream fos = new FileOutputStream(newFileBypass);
                     int len;
                     while ((len = zis.read(buffer)) > 0) {
                         fos.write(buffer, 0, len);
                     }
                     fos.close();
+                    //close this ZipEntry
+                    zis.closeEntry();
                 }
-                //close this ZipEntry
-                zis.closeEntry();
                 ze = zis.getNextEntry();
             }
             //close last ZipEntry
@@ -173,4 +186,5 @@ public class FileUtils {
         }
 
     }
+
 }
