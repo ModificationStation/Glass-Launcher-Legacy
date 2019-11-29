@@ -80,7 +80,7 @@ public class Config {
      */
     private static String getDataPath(String name) {
         if (os.equals("windows")) {
-            return System.getenv("AppData") + "/" + name + "/";
+            return System.getenv("AppData").replaceAll("\\\\", "/") + "/" + name + "/";
         } else if (os.equals("osx")) {
             return System.getProperty("user.home") + "/Library/Application Support/" + name + "/";
         } else {
