@@ -8,8 +8,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 
 class InstanceManagerWindow extends JDialog {
+    private JPanel[] instanceWidgets = new JPanel[]{};
+    private JPanel deletePanel = new JPanel();
+
     InstanceManagerWindow(Frame frame) {
         super(frame);
         setModal(true);
@@ -26,8 +30,10 @@ class InstanceManagerWindow extends JDialog {
         setBounds(0, 0, 580, 340);
 
         JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         tabbedPane.setBounds(0, 0, 580, 340);
         tabbedPane.addTab("Create", makeCreateTab());
+        tabbedPane.addTab("Delete Instance", makeDeleteTab());
 
         add(tabbedPane);
 
@@ -35,10 +41,10 @@ class InstanceManagerWindow extends JDialog {
         setVisible(true);
     }
 
-    private Panel makeCreateTab() {
-        Panel createPane = new Panel();
-        createPane.setBounds(0, 0, 580, 340);
-        createPane.setLayout(null);
+    private JPanel makeCreateTab() {
+        JPanel createPanel = new JPanel();
+        createPanel.setBounds(0, 0, 580, 340);
+        createPanel.setLayout(null);
 
         // Local Modpack zip install.
         HintTextField installModpackDir = new HintTextField("Paste the path to your Modpack zip here!");
@@ -62,6 +68,7 @@ class InstanceManagerWindow extends JDialog {
         installModpackURLButton.setText("Install Modpack from URL");
         installModpackURLButton.setBounds(5, 34, 150, 22);
 
+        // Make blank instance
         HintTextField instanceName = new HintTextField("Instance name");
         instanceName.setBounds(155, 63, 194, 22);
 
@@ -78,13 +85,44 @@ class InstanceManagerWindow extends JDialog {
         });
         instanceVersionButton.setBounds(5, 63, 150, 22);
 
-        createPane.add(installModpackDir);
-        createPane.add(installModpackDirButton);
-        createPane.add(installModpackURL);
-        createPane.add(installModpackURLButton);
-        createPane.add(instanceName);
-        createPane.add(instanceVersion);
-        createPane.add(instanceVersionButton);
-        return createPane;
+        createPanel.add(installModpackDir);
+        createPanel.add(installModpackDirButton);
+        createPanel.add(installModpackURL);
+        createPanel.add(installModpackURLButton);
+        createPanel.add(instanceName);
+        createPanel.add(instanceVersion);
+        createPanel.add(instanceVersionButton);
+        return createPanel;
+    }
+
+    private JScrollPane makeDeleteTab() {
+        deletePanel.setLayout(new BoxLayout(deletePanel, BoxLayout.Y_AXIS));
+
+        updateInstanceList();
+
+        return new JScrollPane(deletePanel);
+    }
+
+    private void updateInstanceList() {
+        (new File(Config.glasspath + "instances")).mkdirs();
+        deletePanel.removeAll();
+        for (File instance : (new File(Config.glasspath + "instances").listFiles())) {
+            if (instance.isDirectory()) {
+                JButton deleteButton = new JButton();
+                deleteButton.setText("Delete \"" + instance.getName() + "\".");
+                deleteButton.setMinimumSize(new Dimension(540, 22));
+                deleteButton.setMaximumSize(new Dimension(540, 22));
+                deleteButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+                deleteButton.addActionListener((e) -> {
+                    try {
+                        //FileUtils.deleteDirectory(new File(instance.toString()));
+                        Main.logger.info((new File(instance.toString())).toString());
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                });
+                deletePanel.add(deleteButton);
+            }
+        }
     }
 }
