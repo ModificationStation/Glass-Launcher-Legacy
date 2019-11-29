@@ -130,14 +130,6 @@ public class FileUtils {
         return sb.toString();
     }
 
-    private static void makeDirs(String path) {
-        try {
-            (new File(path)).mkdirs();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     static String convertStreamToString(InputStream is) {
         Scanner s = new Scanner(is).useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
