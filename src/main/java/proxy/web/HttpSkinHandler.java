@@ -11,10 +11,13 @@ import net.glasslauncher.legacy.Main;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Base64;
 
 public class HttpSkinHandler implements HttpHandler {
     private int isCape;
