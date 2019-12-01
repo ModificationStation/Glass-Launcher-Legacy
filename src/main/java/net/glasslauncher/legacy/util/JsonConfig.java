@@ -6,6 +6,7 @@ import com.cedarsoftware.util.io.JsonWriter;
 import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
@@ -30,7 +31,11 @@ public class JsonConfig {
             } else {
                 isJar = false;
             }
-            this.jsonObject = (JsonObject) JsonReader.jsonToJava(FileUtils.readFile(path, isJar));
+            if ((new File(path)).exists()) {
+                this.jsonObject = (JsonObject) JsonReader.jsonToJava(FileUtils.readFile(path, isJar));
+            } else {
+                this.jsonObject = new JsonObject();
+            }
         }
         catch (Exception e) {
             Main.logger.info("Failed to read JSON file:");
