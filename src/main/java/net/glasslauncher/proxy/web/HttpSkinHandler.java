@@ -1,4 +1,4 @@
-package proxy.web;
+package net.glasslauncher.proxy.web;
 
 import com.cedarsoftware.util.io.JsonObject;
 import com.cedarsoftware.util.io.JsonReader;

@@ -1,4 +1,4 @@
-package proxy;
+package net.glasslauncher.proxy;
 
 import io.netty.handler.codec.http.HttpContent;
 import io.netty.handler.codec.http.HttpObject;

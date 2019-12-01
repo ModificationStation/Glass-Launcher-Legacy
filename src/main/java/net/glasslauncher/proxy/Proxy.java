@@ -1,4 +1,4 @@
-package proxy;
+package net.glasslauncher.proxy;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.HttpRequest;
@@ -11,7 +11,7 @@ import org.littleshoot.proxy.HttpProxyServerBootstrap;
 import org.littleshoot.proxy.impl.DefaultHttpProxyServer;
 import org.littleshoot.proxy.mitm.Authority;
 import org.littleshoot.proxy.mitm.CertificateSniffingMitmManager;
-import proxy.web.ProxyHttpServer;
+import net.glasslauncher.proxy.web.ProxyHttpServer;
 
 import java.io.File;
 

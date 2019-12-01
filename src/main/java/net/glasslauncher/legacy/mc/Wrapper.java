@@ -4,7 +4,7 @@ import com.cedarsoftware.util.io.JsonObject;
 import com.cedarsoftware.util.io.JsonReader;
 import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.util.FileUtils;
-import proxy.Proxy;
+import net.glasslauncher.proxy.Proxy;
 
 import java.io.File;
 import java.util.ArrayList;

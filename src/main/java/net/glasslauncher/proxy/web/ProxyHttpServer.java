@@ -1,4 +1,4 @@
-package proxy.web;
+package net.glasslauncher.proxy.web;
 
 import com.sun.net.httpserver.HttpServer;
 
