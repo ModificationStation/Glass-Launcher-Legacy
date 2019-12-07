@@ -67,14 +67,9 @@ public class JsonConfig {
      *
      * @param key Key object to get the object with.
      * @return Returns the object that was found.
-     * @throws NullPointerException Thrown if found object is null.
      */
-    public Object get(Object key) throws NullPointerException {
-        Object obj = jsonObject.get(key);
-        if (obj == null) {
-            throw new NullPointerException("Value does not exist.");
-        }
-        return obj;
+    public Object get(Object key) {
+        return jsonObject.get(key);
     }
 
 
