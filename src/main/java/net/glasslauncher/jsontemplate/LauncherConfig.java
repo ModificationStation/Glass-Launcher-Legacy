@@ -7,10 +7,11 @@ import net.glasslauncher.legacy.util.JsonConfig;
 
 @Getter @Setter
 public class LauncherConfig extends JsonConfig {
+
+    @SerializedName("lastusedname")
+    private String lastUsedName = "";
+
     public LauncherConfig(String path) {
         super(path);
     }
-
-    @SerializedName("lastusedname")
-    private String lastUsedName;
 }

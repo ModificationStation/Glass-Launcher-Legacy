@@ -1,6 +1,7 @@
 package net.glasslauncher.legacy;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.Getter;
 import lombok.Setter;
 import net.glasslauncher.jsontemplate.LauncherConfig;
@@ -8,19 +9,21 @@ import net.glasslauncher.jsontemplate.MCVersions;
 import net.glasslauncher.legacy.util.JsonConfig;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
 public class Config {
-    public static void loadConfigFiles() throws FileNotFoundException {
-        Gson gson = new Gson();
+    public static void loadConfigFiles() {
+        gson = new GsonBuilder().setPrettyPrinting().create();
 
-        Main.getLogger().info(Config.class.getResource("/net/glasslauncher/legacy/assets/mcversions.json").toString());
         mcVersions = gson.fromJson(new InputStreamReader(Main.class.getResourceAsStream("assets/mcversions.json")), MCVersions.class);
-        launcherConfig = (LauncherConfig) JsonConfig.loadConfig(Config.getGlassPath() + "launcher_config.json", LauncherConfig.class, "{}");
+        launcherConfig = (LauncherConfig) JsonConfig.loadConfig(Config.getGlassPath() + "launcher_config.json", LauncherConfig.class);
+        if (launcherConfig == null) {
+            launcherConfig = new LauncherConfig(Config.getGlassPath() + "launcher_config.json");
+        }
     }
 
+    @Getter private static Gson gson;
     @Getter private static MCVersions mcVersions;
     @Getter private static LauncherConfig launcherConfig;
 
@@ -69,18 +72,6 @@ public class Config {
      * JSON format map that reduces clutter and makes the end JSON easy to read.
      */
     @Getter @Setter private static String easyMineLauncherFile;
-
-    /**
-     * Default JSON encoded string that is used for new or unreadable instance JSONs.
-     */
-    @Getter private static final String defaultInstanceJson = "{\n" +
-            "    \"javaargs\": \"\",\n" +
-            "    \"maxram\": \"512m\",\n" +
-            "    \"minram\": \"256m\",\n" +
-            "    \"proxycape\": false,\n" +
-            "    \"proxyskin\": false,\n" +
-            "    \"proxysound\": false\n" +
-            "}";
 
     /**
      * Gets the OS of the user.

@@ -72,13 +72,13 @@ public class Wrapper {
 
         if (!confFile.exists()) {
             Main.getLogger().info("Config file does not exist! Using defaults.");
-            instJson = gson.fromJson(Config.getDefaultInstanceJson(), InstanceConfig.class);
+            instJson = new InstanceConfig(instPath + "/instance_config.json");
         } else {
             try {
                 instJson = gson.fromJson(FileUtils.readFile(confFile.getPath()), InstanceConfig.class);
             } catch (Exception e) {
                 Main.getLogger().info("Config file cannot be read! Using defaults.");
-                instJson = gson.fromJson(Config.getDefaultInstanceJson(), InstanceConfig.class);
+                instJson = new InstanceConfig(instPath + "/instance_config.json");
                 e.printStackTrace();
             }
         }

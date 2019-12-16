@@ -108,7 +108,7 @@ class MainWindow extends JFrame {
         password.setBounds(0, 40, 166, 22);
 
         // Instance selector
-        JComboBox instsel = new JComboBox();
+        JComboBox<String> instsel = new JComboBox<>();
         File file = new File(Config.getGlassPath() + "instances");
         String[] instances = file.list((current, name) -> new File(current, name).isDirectory());
         if (instances != null) {

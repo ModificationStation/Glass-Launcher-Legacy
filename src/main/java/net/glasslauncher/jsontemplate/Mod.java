@@ -1,13 +1,14 @@
 package net.glasslauncher.jsontemplate;
 
+import com.google.gson.annotations.Expose;
 import lombok.Data;
 
 @Data
 public class Mod {
-    private String fileName;
-    private long type;
-    private String name;
-    private boolean enabled;
+    @Expose private String fileName;
+    @Expose private long type;
+    @Expose private String name;
+    @Expose private boolean enabled;
 
     public Mod(String modFileName, String modName, long modType, boolean modEnabled) {
         this.fileName = modFileName;

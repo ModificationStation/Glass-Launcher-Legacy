@@ -12,7 +12,7 @@ import java.lang.reflect.Type;
 
 @Data
 public abstract class JsonConfig {
-    private final Gson gson = (new GsonBuilder()).setPrettyPrinting().create();
+    private final Gson gson = (new GsonBuilder()).setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
     private final String path;
 
     /**
@@ -22,16 +22,12 @@ public abstract class JsonConfig {
         this.path = path;
     }
 
-    public static JsonConfig loadConfig(String path, Type pClass, String defaultJson) {
+    public static JsonConfig loadConfig(String path, Type pClass) {
         try {
             return (new Gson()).fromJson(new FileReader(path), pClass);
         } catch (Exception e) {
-            return (new Gson()).fromJson(defaultJson, pClass);
+            return null;
         }
-    }
-
-    public static JsonConfig loadConfig(String path, Type pClass) throws FileNotFoundException {
-        return (new Gson()).fromJson(new FileReader(path), pClass);
     }
 
     /**

@@ -12,9 +12,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Set;
 
 public class OptionsWindow extends JDialog {
-    private InstanceConfig settings;
+    private InstanceConfig instanceConfig;
     /*
     modList JSON:
     {
@@ -51,8 +52,14 @@ public class OptionsWindow extends JDialog {
         setTitle("Instance Options");
 
         instpath = Config.getGlassPath() + "instances/" + instance + "/";
-        settings = (InstanceConfig) JsonConfig.loadConfig(instpath + "/instance_config.json", InstanceConfig.class, Config.getDefaultInstanceJson());
-        modList = (ModList) JsonConfig.loadConfig(instpath + "mods/mods.json", ModList.class, "{}");
+        instanceConfig = (InstanceConfig) JsonConfig.loadConfig(instpath + "instance_config.json", InstanceConfig.class);
+        if (instanceConfig == null) {
+            instanceConfig = new InstanceConfig(instpath + "instance_config.json");
+        }
+        modList = (ModList) JsonConfig.loadConfig(instpath + "mods/mods.json", ModList.class);
+        if (modList == null) {
+            modList = new ModList(instpath + "mods/mods.json");
+        }
 
         JTabbedPane tabpane = new JTabbedPane();
         tabpane.setPreferredSize(new Dimension(837, 448 - tabpane.getInsets().top - tabpane.getInsets().bottom));
@@ -63,12 +70,12 @@ public class OptionsWindow extends JDialog {
         addWindowListener(
             new WindowAdapter() {
                 public void windowClosing(WindowEvent we) {
-                    settings.setJavaArgs(javaargs.getText());
-                    settings.setMinRam(maxram.getText());
-                    settings.setMinRam(minram.getText());
-                    settings.setProxySkin(skinproxy.isSelected());
-                    settings.setProxyCape(capeproxy.isSelected());
-                    settings.setProxySound(soundproxy.isSelected());
+                    instanceConfig.setJavaArgs(javaargs.getText());
+                    instanceConfig.setMinRam(maxram.getText());
+                    instanceConfig.setMinRam(minram.getText());
+                    instanceConfig.setProxySkin(skinproxy.isSelected());
+                    instanceConfig.setProxyCape(capeproxy.isSelected());
+                    instanceConfig.setProxySound(soundproxy.isSelected());
 
                     for (Object modObj : jarMods.toArray()) {
                         Mod mod;
@@ -85,7 +92,7 @@ public class OptionsWindow extends JDialog {
                         e.printStackTrace();
                     }
                     try {
-                        settings.saveFile();
+                        instanceConfig.saveFile();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -115,7 +122,7 @@ public class OptionsWindow extends JDialog {
 
         javaargs = new JTextField();
         javaargs.setBounds(150, 20, 400, 24);
-        javaargs.setText(settings.getJavaArgs());
+        javaargs.setText(instanceConfig.getJavaArgs());
         instsettings.add(javaargs);
 
         JLabel ramalloclabel = new JLabel("RAM Allocation:");
@@ -128,7 +135,7 @@ public class OptionsWindow extends JDialog {
 
         maxram = new JTextField();
         maxram.setBounds(245, 48, 100, 24);
-        maxram.setText(settings.getMaxRam());
+        maxram.setText(instanceConfig.getMaxRam());
         instsettings.add(maxram);
 
         JLabel minramlabel = new JLabel("Minimum:");
@@ -137,7 +144,7 @@ public class OptionsWindow extends JDialog {
 
         minram = new JTextField();
         minram.setBounds(450, 48, 100, 24);
-        minram.setText(settings.getMinRam());
+        minram.setText(instanceConfig.getMinRam());
         instsettings.add(minram);
 
         JLabel skinproxylabel = new JLabel("Enable Skin Proxy:");
@@ -146,7 +153,7 @@ public class OptionsWindow extends JDialog {
 
         skinproxy = new JCheckBox();
         skinproxy.setBounds(150, 97, 20, 20);
-        skinproxy.setSelected(settings.isProxySkin());
+        skinproxy.setSelected(instanceConfig.isProxySkin());
         instsettings.add(skinproxy);
 
         JLabel capeproxylabel = new JLabel("Enable Cape Proxy:");
@@ -155,7 +162,7 @@ public class OptionsWindow extends JDialog {
 
         capeproxy = new JCheckBox();
         capeproxy.setBounds(150, 125, 20, 20);
-        capeproxy.setSelected(settings.isProxyCape());
+        capeproxy.setSelected(instanceConfig.isProxyCape());
         instsettings.add(capeproxy);
 
         JLabel soundproxylabel = new JLabel("Enable Sound Proxy:");
@@ -164,7 +171,7 @@ public class OptionsWindow extends JDialog {
 
         soundproxy = new JCheckBox();
         soundproxy.setBounds(150, 153, 20, 20);
-        soundproxy.setSelected(settings.isProxySound());
+        soundproxy.setSelected(instanceConfig.isProxySound());
         instsettings.add(soundproxy);
 
         return instsettings;
@@ -177,7 +184,7 @@ public class OptionsWindow extends JDialog {
         jarMods = new ArrayList<>();
         File modsFile = new File(instpath + "mods");
         modsFile.mkdirs();
-        String[] keys = (String[]) modList.getJarMods().keySet().toArray();
+        Set<String> keys = modList.getJarMods().keySet();
         for (String key : keys) {
             jarMods.add(modList.getJarMods().get(key));
         }
