@@ -1,8 +1,10 @@
 package net.glasslauncher.legacy.mc;
 
-import com.cedarsoftware.util.io.JsonObject;
-import com.cedarsoftware.util.io.JsonReader;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import net.glasslauncher.jsontemplate.InstanceConfig;
 import net.glasslauncher.legacy.Config;
+import net.glasslauncher.legacy.Main;
 import net.glasslauncher.legacy.util.FileUtils;
 import net.glasslauncher.proxy.Proxy;
 
@@ -10,50 +12,48 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
 
-import static net.glasslauncher.legacy.Main.logger;
-
 public class Wrapper {
+    private final Gson gson = (new GsonBuilder()).setPrettyPrinting().create();
     private final String instance;
-    private final String instPath;
 
-    private ArrayList args;
-    private JsonObject instJson;
+    private ArrayList<String> args;
+    private InstanceConfig instJson;
 
     private Proxy proxy = null;
 
     public Wrapper(String[] launchArgs) {
         // 0: username, 1: session, 2: version, 3: doproxy, 4: instance
         if (launchArgs.length < 5) {
-            logger.severe("Got " + launchArgs.length + " args, expected 5.");
+            Main.getLogger().severe("Got " + launchArgs.length + " args, expected 5.");
         }
         this.instance = launchArgs[4];
-        this.instPath = Config.glasspath + "instances/" + instance + "/.minecraft";
+        String instPath = Config.getGlassPath() + "instances/" + instance + "/.minecraft";
 
         this.getConfig();
 
-        this.args = new ArrayList();
-        args.add(Config.javaBin);
+        this.args = new ArrayList<>();
+        args.add(Config.getJavaBin());
         if (launchArgs[3].equals("true")) {
             args.add("-Dhttp.proxyHost=127.0.0.1");
-            args.add("-Dhttp.proxyPort=" + Config.proxyport);
+            args.add("-Dhttp.proxyPort=" + Config.getProxyport());
             boolean[] proxyArgs = new boolean[]{
-                    (boolean) instJson.get("proxysound"),
-                    (boolean) instJson.get("proxyskin"),
-                    (boolean) instJson.get("proxycape")
+                    instJson.isProxySound(),
+                    instJson.isProxySkin(),
+                    instJson.isProxyCape()
             };
             proxy = new Proxy(proxyArgs);
             proxy.start();
         }
-        String javaArgs = instJson.get("javaargs").toString();
+        String javaArgs = instJson.getJavaArgs().toString();
         if (!javaArgs.isEmpty()) {
             for (String arg : javaArgs.split("- ")) {
                 args.add("-" + arg);
             }
         }
-        args.add("-Xmx" + instJson.get("maxram"));
-        args.add("-Xms" + instJson.get("minram"));
+        args.add("-Xmx" + instJson.getMaxRam());
+        args.add("-Xms" + instJson.getMinRam());
         args.add("-jar");
-        args.add(Config.glasspath + "lib/" + Config.easyMineLauncherFile);
+        args.add(Config.getGlassPath() + "lib/" + Config.getEasyMineLauncherFile());
         args.add("--lwjgl-dir=" + instPath + "/bin");
         args.add("--jar=" + instPath + "/bin/minecraft.jar");
         args.add("--native-dir=" + instPath + "/bin/natives");
@@ -63,22 +63,22 @@ public class Wrapper {
         args.add("--username=" + launchArgs[0]);
         args.add("--session-id=" + launchArgs[1]);
         args.add("--title=" + launchArgs[2]);
-        logger.info(args.toString());
+        Main.getLogger().info(args.toString());
     }
 
     private void getConfig() {
-        String instPath = Config.glasspath + "instances/" + instance;
+        String instPath = Config.getGlassPath() + "instances/" + instance;
         File confFile = new File(instPath + "/instance_config.json");
 
         if (!confFile.exists()) {
-            logger.info("Config file does not exist! Using defaults.");
-            instJson = (JsonObject) JsonReader.jsonToJava(Config.defaultjson);
+            Main.getLogger().info("Config file does not exist! Using defaults.");
+            instJson = gson.fromJson(Config.getDefaultInstanceJson(), InstanceConfig.class);
         } else {
             try {
-                instJson = (JsonObject) JsonReader.jsonToJava(FileUtils.readFile(confFile.getPath()));
+                instJson = gson.fromJson(FileUtils.readFile(confFile.getPath()), InstanceConfig.class);
             } catch (Exception e) {
-                logger.info("Config file cannot be read! Using defaults.");
-                instJson = (JsonObject) JsonReader.jsonToJava(Config.defaultjson);
+                Main.getLogger().info("Config file cannot be read! Using defaults.");
+                instJson = gson.fromJson(Config.getDefaultInstanceJson(), InstanceConfig.class);
                 e.printStackTrace();
             }
         }
@@ -89,8 +89,8 @@ public class Wrapper {
 
         ProcessBuilder mcInit = new ProcessBuilder(args);
 
-        Map mcEnv = mcInit.environment();
-        String newAppData = Config.glasspath + "instances/" + instance;
+        Map<String, String> mcEnv = mcInit.environment();
+        String newAppData = Config.getGlassPath() + "instances/" + instance;
         mcEnv.put("appdata", newAppData);
         mcEnv.put("home", newAppData);
         mcEnv.put("user.home", newAppData);

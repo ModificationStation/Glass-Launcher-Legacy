@@ -27,7 +27,7 @@ public class Migrator {
     public void migrate() {
         String[] instances = new File(oldpath, "instances").list(new DirFilenameFilter());
         if (instances.length < 1) {
-            Main.logger.severe("No instances found! Aborting.");
+            Main.getLogger().severe("No instances found! Aborting.");
             return;
         }
 
@@ -38,11 +38,11 @@ public class Migrator {
                 try {
                     moveDirectory(oldpath, newpath);
                 } catch (Exception e) {
-                    Main.logger.severe("Failed to migrate \"" + instance + "\"");
+                    Main.getLogger().severe("Failed to migrate \"" + instance + "\"");
                     e.printStackTrace();
                 }
             } else {
-                Main.logger.warning("Skipping \"" + instance + "\": File or directory already exists");
+                Main.getLogger().warning("Skipping \"" + instance + "\": File or directory already exists");
             }
         }
     }

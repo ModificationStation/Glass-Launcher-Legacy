@@ -20,7 +20,7 @@ public class Monitor {
                     if (proxy != null) {
                         proxy.exit();
                     }
-                    Main.logger.info("Minecraft exited with exit code " + mc.exitValue());
+                    Main.getLogger().info("Minecraft exited with exit code " + mc.exitValue());
                     timer.cancel();
                 }
             }

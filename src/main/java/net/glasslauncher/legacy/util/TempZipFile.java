@@ -17,7 +17,7 @@ public class TempZipFile {
     public TempZipFile(String zipFilePath) {
         File zipFile = new File(zipFilePath);
         originalPath = zipFilePath;
-        tempPath = Config.glasspath + "temp/" + zipFile.getName().replaceFirst("\\.zip$", "");
+        tempPath = Config.getGlassPath() + "temp/" + zipFile.getName().replaceFirst("\\.zip$", "");
         (new File(tempPath)).mkdirs();
 
         FileUtils.extractZip(zipFilePath, tempPath);
@@ -50,7 +50,7 @@ public class TempZipFile {
         try {
             original.delete();
         } catch (Exception e) {
-            Main.logger.info("Failed to delete/check read permissions for \"" + originalPath + "\"");
+            Main.getLogger().info("Failed to delete/check read permissions for \"" + originalPath + "\"");
             e.printStackTrace();
             return;
         }

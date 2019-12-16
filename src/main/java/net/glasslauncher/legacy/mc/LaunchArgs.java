@@ -1,24 +1,17 @@
 package net.glasslauncher.legacy.mc;
 
-import com.cedarsoftware.util.io.JsonObject;
-import com.cedarsoftware.util.io.JsonReader;
-import com.cedarsoftware.util.io.JsonWriter;
+import com.google.gson.Gson;
+import net.glasslauncher.jsontemplate.*;
 import net.glasslauncher.legacy.Config;
-import net.glasslauncher.legacy.util.JsonConfig;
+import net.glasslauncher.legacy.Main;
 
 import javax.swing.*;
 import javax.xml.ws.http.HTTPException;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import static net.glasslauncher.legacy.Main.logger;
-
 public class LaunchArgs {
-    private String instance;
     private String instpath;
     private HttpURLConnection req;
 
@@ -33,11 +26,11 @@ public class LaunchArgs {
     public String[] getArgs(String[] args) {
         // 0: username, 1: pass, 2: instance
         if (args.length != 3) {
-            logger.severe("Got " + args.length + " args, expected 3.");
+            Main.getLogger().severe("Got " + args.length + " args, expected 3.");
             return null;
         }
-        instance = args[2];
-        instpath = Config.glasspath + "instances/" + instance;
+        String instance = args[2];
+        instpath = Config.getGlassPath() + "instances/" + instance;
         String version = getVersion();
         String javaargs = getJavaArgs();
         String[] logininfo;
@@ -48,7 +41,7 @@ public class LaunchArgs {
         }
 
         if (logininfo == null) {
-            logger.severe("Aborting launch.");
+            Main.getLogger().severe("Aborting launch.");
             return null;
         }
 
@@ -65,20 +58,17 @@ public class LaunchArgs {
     }
 
     public String[] login(String username, String password) {
+        Gson gson = new Gson();
         try {
             req.setRequestMethod("POST");
             req.setRequestProperty("Content-Type", "application/json");
             req.setDoOutput(true);
             req.setDoInput(true);
             OutputStreamWriter wr = new OutputStreamWriter(req.getOutputStream());
-            JsonObject creds = new JsonObject();
-            creds.put("username", username);
-            creds.put("password", password);
-            JsonObject agent = new JsonObject();
-            agent.put("name", "Minecraft");
-            agent.put("version", 1);
-            creds.put("agent", agent);
-            wr.write(JsonWriter.objectToJson(creds));
+            LoginCreds creds = new LoginCreds();
+            creds.setUsername(username);
+            creds.setPassword(password);
+            wr.write(gson.toJson(creds));
             wr.flush();
 
             BufferedReader res = new BufferedReader(new InputStreamReader(req.getInputStream()));
@@ -86,16 +76,16 @@ public class LaunchArgs {
             for (String strline = ""; strline != null; strline = res.readLine()) {
                 resj.append(strline);
             }
-            JsonObject session = (JsonObject) JsonReader.jsonToJava(resj.toString());
+            LoginResponse session = gson.fromJson(resj.toString(), LoginResponse.class);
 
             if (req.getResponseCode() != 200) {
-                logger.severe("Error sending request!");
-                logger.severe("Code: " + req.getResponseCode());
-                logger.severe("Error: " + session.get("error"));
+                Main.getLogger().severe("Error sending request!");
+                Main.getLogger().severe("Code: " + req.getResponseCode());
+                Main.getLogger().severe("Error: " + session.getError());
                 throw new HTTPException(req.getResponseCode());
             }
-            JsonObject profile = (JsonObject) session.get("selectedProfile");
-            return new String[]{(String) session.get("accessToken"), (String) profile.get("name")};
+            LoginResponseAgent profile = session.getSelectedProfile();
+            return new String[]{session.getAccessToken(), profile.getName()};
         } catch (Exception e) {
             e.printStackTrace();
             try {
@@ -108,27 +98,43 @@ public class LaunchArgs {
         }
     }
 
-    public String getVersion() {
+    private String getVersion() {
         String version;
-        JsonConfig instjson = new JsonConfig(instpath + "/.minecraft/modpack.json");
+        ModpackConfig instjson;
         try {
-            //instjson = (JSONObject) instjson.get("modpack");
-            version = (String) instjson.get("mcver");
+            instjson = (new Gson()).fromJson(new FileReader(instpath + "/.minecraft/modpack.json"), ModpackConfig.class);
+            version = instjson.getMcVer();
         } catch (Exception e) {
-            logger.severe("No instance config found!");
+            Main.getLogger().severe("No instance config found!");
             e.printStackTrace();
             return "b1.7.3";
         }
         return version;
     }
 
-    public String getJavaArgs() {
-        JsonConfig instjson = new JsonConfig(instpath + "/instance_config.json");
+    private String getJavaArgs() {
+        InstanceConfig instjson;
+        try {
+            instjson = (new Gson()).fromJson(new FileReader(instpath + "/instance_config.json"), InstanceConfig.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
         String javaargs = "";
 
-        javaargs += "-Xmx" + instjson.get("maxram", "512");
-        javaargs += " -Xms" + instjson.get("minram", "64") + " ";
-        javaargs += instjson.get("javaargs", "");
+        if (instjson.getMaxRam() != null) {
+            javaargs += "-Xmx" + instjson.getMaxRam();
+        } else {
+            javaargs += "-Xmx512m";
+        }
+        if (instjson.getMinRam() != null) {
+            javaargs += "-Xms" + instjson.getMinRam();
+        } else {
+            javaargs += "-Xms64m";
+        }
+        if (instjson.getJavaArgs() != null) {
+            javaargs += instjson.getJavaArgs();
+        }
 
         return javaargs;
     }

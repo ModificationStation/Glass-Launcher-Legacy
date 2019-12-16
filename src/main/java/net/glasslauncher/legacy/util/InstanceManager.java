@@ -1,6 +1,5 @@
 package net.glasslauncher.legacy.util;
 
-import com.cedarsoftware.util.io.JsonObject;
 import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
 
@@ -18,7 +17,7 @@ public class InstanceManager {
      */
     public static boolean installModpack(String path) {
         path = path.replace("\\", "/");
-        Main.logger.info("Installing " + path);
+        Main.getLogger().info("Installing " + path);
         boolean isURL = true;
         try {
             try {
@@ -29,8 +28,8 @@ public class InstanceManager {
 
             String filename = path.substring(path.lastIndexOf('/') + 1);
             if (isURL) {
-                FileUtils.downloadFile(path, Config.cachepath + "instancezips");
-                installModpackZip(Config.cachepath + "instancezips", filename);
+                FileUtils.downloadFile(path, Config.getCachePath() + "instancezips");
+                installModpackZip(Config.getCachePath() + "instancezips", filename);
             } else {
                 if ((new File(path)).exists()) {
                     installModpackZip(path, filename);
@@ -46,15 +45,15 @@ public class InstanceManager {
     }
 
     private static boolean installModpackZip(String path, String filename) {
-        Main.logger.info(path + " : " + filename);
+        Main.getLogger().info(path + " : " + filename);
         createBlankInstance("b1.7.3", filename);
         return true;
     }
 
     public static boolean createBlankInstance(String version, String name) {
-        Main.logger.info("Creating instance \"" + name + "\" on version " + version);
-        String versionsCachePath = Config.cachepath + "versions";
-        String instanceFolder = Config.glasspath + "instances/" + name;
+        Main.getLogger().info("Creating instance \"" + name + "\" on version " + version);
+        String versionsCachePath = Config.getCachePath() + "versions";
+        String instanceFolder = Config.getInstancePath(name);
         String minecraftFolder = instanceFolder + "/.minecraft";
         (new File(versionsCachePath)).mkdirs();
         (new File(minecraftFolder + "/bin/")).mkdirs();
@@ -64,7 +63,7 @@ public class InstanceManager {
             try {
                 Files.copy(versionCacheJar.toPath(), new File(minecraftFolder + "/bin/minecraft.jar").toPath());
             } catch (FileAlreadyExistsException e) {
-                Main.logger.info("Instance \"" + name + "\" already exists!");
+                Main.getLogger().info("Instance \"" + name + "\" already exists!");
                 return false;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -74,23 +73,22 @@ public class InstanceManager {
                 return false;
             }
         } else {
-            JsonConfig jsonVersions = new JsonConfig(Main.class.getResource("assets/mcversions.json").toString());
 
             try {
-                String versionID = (String) ((JsonObject) jsonVersions.get(version)).get("url");
+                String versionID =Config.getMcVersions().getClient().get(version).getUrl();
                 FileUtils.downloadFile("https://launcher.mojang.com/v1/objects/" + versionID + "/client.jar", versionsCachePath, null, version + ".jar");
                 Files.copy(versionCacheJar.toPath(), new File(minecraftFolder + "/bin/minecraft.jar").toPath());
             } catch (Exception e) {
                 /*try {
                     org.apache.commons.io.FileUtils.deleteDirectory(new File(minecraftFolder));
                 } catch (Exception ignored) {}*/
-                Main.logger.info("Version not found: \"" + version + "\". Aborting.");
+                Main.getLogger().info("Version not found: \"" + version + "\". Aborting.");
                 return false;
             }
         }
         File lwjglCacheZip = new File(versionsCachePath + "/lwjgl.zip");
         if (!lwjglCacheZip.exists()) {
-            FileUtils.downloadFile("https://files.pymcl.net/client/lwjgl/lwjgl." + Config.os + ".zip", versionsCachePath, null, "lwjgl.zip");
+            FileUtils.downloadFile("https://files.pymcl.net/client/lwjgl/lwjgl." + Config.getOs() + ".zip", versionsCachePath, null, "lwjgl.zip");
         }
         FileUtils.extractZip(lwjglCacheZip.getPath(), minecraftFolder + "/bin");
         return true;

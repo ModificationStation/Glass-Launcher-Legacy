@@ -4,6 +4,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.HttpRequest;
 import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
+import net.glasslauncher.proxy.web.ProxyHttpServer;
 import org.littleshoot.proxy.HttpFilters;
 import org.littleshoot.proxy.HttpFiltersSourceAdapter;
 import org.littleshoot.proxy.HttpProxyServer;
@@ -11,7 +12,6 @@ import org.littleshoot.proxy.HttpProxyServerBootstrap;
 import org.littleshoot.proxy.impl.DefaultHttpProxyServer;
 import org.littleshoot.proxy.mitm.Authority;
 import org.littleshoot.proxy.mitm.CertificateSniffingMitmManager;
-import net.glasslauncher.proxy.web.ProxyHttpServer;
 
 import java.io.File;
 
@@ -22,16 +22,16 @@ public class Proxy extends Thread {
     public Proxy(boolean[] args) {
         try {
             // 1: args[sound, skin, cape]
-            new File(Config.glasspath + "proxyconf").mkdirs();
+            new File(Config.getGlassPath() + "proxyconf").mkdirs();
 
             ProxyHttpServer main = new ProxyHttpServer();
             main.start();
 
             this.serverBoot =
                     DefaultHttpProxyServer.bootstrap()
-                            .withPort(Config.proxyport)
+                            .withPort(Config.getProxyport())
                             .withManInTheMiddle(new CertificateSniffingMitmManager(new Authority(
-                                    new File(Config.glasspath + "proxyconf"),
+                                    new File(Config.getGlassPath() + "proxyconf"),
                                     "glass-launcher-proxy-mitm",
                                     "thisisranlocallysothisdoesntmatter".toCharArray(),
                                     "Glass Launcher",
@@ -47,7 +47,7 @@ public class Proxy extends Thread {
                                     return proxyFilter;
                                 }
                             });
-            Main.logger.info("Log format for proxy is oldhost : oldpath : newhost : newurl");
+            Main.getLogger().info("Log format for proxy is oldhost : oldpath : newhost : newurl");
         } catch (Exception e) {
             e.printStackTrace();
         }

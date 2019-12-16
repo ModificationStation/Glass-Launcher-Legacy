@@ -1,12 +1,13 @@
 package net.glasslauncher.proxy.web;
 
-import com.cedarsoftware.util.io.JsonObject;
-import com.cedarsoftware.util.io.JsonReader;
-import com.cedarsoftware.util.io.JsonWriter;
+import com.google.gson.Gson;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import net.glasslauncher.legacy.Config;
+import net.glasslauncher.jsontemplate.Profile;
+import net.glasslauncher.jsontemplate.ProfileProperties;
+import net.glasslauncher.jsontemplate.TextureURLs;
+import net.glasslauncher.jsontemplate.Textures;
 import net.glasslauncher.legacy.Main;
 
 import javax.imageio.ImageIO;
@@ -18,6 +19,7 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.Map;
 
 public class HttpSkinHandler implements HttpHandler {
     private int isCape;
@@ -73,22 +75,22 @@ public class HttpSkinHandler implements HttpHandler {
     }
 
     public static BufferedImage[] getImages(String username) throws IOException {
+        Gson gson = new Gson();
         String uuid = WebUtils.getUUID(username);
         if (uuid == null) {
             return null;
         }
-        JsonObject profile = WebUtils.getJsonFromURL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid);
+        Profile profile = gson.fromJson(WebUtils.getJsonFromURL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid), Profile.class);
 
-        // It doesnt work if I just try casting the object. Don't ask why.
-        JsonObject properties = (JsonObject) JsonReader.jsonToJava(JsonWriter.objectToJson(((Object[]) profile.get("properties"))[0],Config.prettyprint));
+        ProfileProperties properties = profile.getProperties()[0];
 
-        byte[] base64 = ((String) properties.get("value")).getBytes(StandardCharsets.UTF_8);
-        Main.logger.info(new String(Base64.getDecoder().decode(base64)));
-        JsonObject textures = (JsonObject) JsonReader.jsonToJava(new String(Base64.getDecoder().decode(base64)));
+        byte[] base64 = (properties.getValue()).getBytes(StandardCharsets.UTF_8);
+        Main.getLogger().info(new String(Base64.getDecoder().decode(base64)));
+        Textures textures = gson.fromJson(new String(Base64.getDecoder().decode(base64)), Textures.class);
 
-        textures = (JsonObject) textures.get("textures");
-        JsonObject skin = (JsonObject) textures.get("SKIN");
-        JsonObject cape = (JsonObject) textures.get("CAPE");
+        TextureURLs textureURLs = textures.getTextures();
+        Map skin = textureURLs.getSKIN();
+        Map cape = textureURLs.getCAPE();
 
         BufferedImage[] images = new BufferedImage[2];
 

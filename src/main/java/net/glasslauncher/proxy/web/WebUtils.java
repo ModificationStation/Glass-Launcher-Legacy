@@ -1,7 +1,7 @@
 package net.glasslauncher.proxy.web;
 
-import com.cedarsoftware.util.io.JsonObject;
-import com.cedarsoftware.util.io.JsonReader;
+import com.google.gson.Gson;
+import net.glasslauncher.jsontemplate.Profile;
 import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
 
@@ -14,21 +14,21 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class WebUtils {
-    public static JsonObject getJsonFromURL(String url) throws IOException {
+    public static String getJsonFromURL(String url) throws IOException {
         HttpURLConnection req = (HttpURLConnection) new URL(url).openConnection();
         BufferedReader res = new BufferedReader(new InputStreamReader(req.getInputStream()));
         StringBuilder resj = new StringBuilder();
         for (String strline = ""; strline != null; strline = res.readLine()) {
             resj.append(strline);
         }
-        Main.logger.info(url);
-        Main.logger.info(resj.toString());
-        return (JsonObject) JsonReader.jsonToJava(resj.toString());
+        Main.getLogger().info(url);
+        Main.getLogger().info(resj.toString());
+        return resj.toString();
     }
 
     public static String getUUID(String username) throws IOException {
-        JsonObject profile = getJsonFromURL("https://api.mojang.com/users/profiles/minecraft/" + username + "?at=" + (new Date()).getTime() / 1000L);
-        return (String) profile.get("id");
+        Profile profile = (new Gson()).fromJson(getJsonFromURL("https://api.mojang.com/users/profiles/minecraft/" + username + "?at=" + (new Date()).getTime() / 1000L), Profile.class);
+        return profile.getId();
     }
 
     /**
@@ -38,7 +38,7 @@ public class WebUtils {
      * @return The file object if it was found and within age limit, else return null.
      */
     public static File checkCache(String path) {
-        File file = new File(Config.cachepath + "webproxy/" + path);
+        File file = new File(Config.getCachePath() + "webproxy/" + path);
         if (file.exists()) {
             BasicFileAttributes fileAttributes;
             try {
@@ -47,7 +47,7 @@ public class WebUtils {
                 e.printStackTrace();
                 return null;
             }
-            if (fileAttributes.lastModifiedTime().to(TimeUnit.SECONDS) < (new Date().getTime()) / 1000L - Config.skinCacheAgeLimit) {
+            if (fileAttributes.lastModifiedTime().to(TimeUnit.SECONDS) < (new Date().getTime()) / 1000L - Config.getSkinCacheAgeLimit()) {
                 return null;
             }
             return file;
@@ -56,11 +56,11 @@ public class WebUtils {
     }
 
     public static File getCache(String path) {
-        return new File(Config.cachepath + "webproxy/" + path);
+        return new File(Config.getCachePath() + "webproxy/" + path);
     }
 
     public static void makeCacheFolders(String path) {
-        (new File(Config.cachepath + "webproxy/" + path)).mkdirs();
+        (new File(Config.getCachePath() + "webproxy/" + path)).mkdirs();
     }
 
     public static void putCache(File file, byte[] bytes) throws IOException {

@@ -1,55 +1,79 @@
 package net.glasslauncher.legacy;
 
+import com.google.gson.Gson;
+import lombok.Getter;
+import lombok.Setter;
+import net.glasslauncher.jsontemplate.LauncherConfig;
+import net.glasslauncher.jsontemplate.MCVersions;
+import net.glasslauncher.legacy.util.JsonConfig;
+
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 
 public class Config {
-    public static long skinCacheAgeLimit = 600L;
+    public static void loadConfigFiles() throws FileNotFoundException {
+        Gson gson = new Gson();
+
+        Main.getLogger().info(Config.class.getResource("/net/glasslauncher/legacy/assets/mcversions.json").toString());
+        mcVersions = gson.fromJson(new InputStreamReader(Main.class.getResourceAsStream("assets/mcversions.json")), MCVersions.class);
+        launcherConfig = (LauncherConfig) JsonConfig.loadConfig(Config.getGlassPath() + "launcher_config.json", LauncherConfig.class, "{}");
+    }
+
+    @Getter private static MCVersions mcVersions;
+    @Getter private static LauncherConfig launcherConfig;
+
+    @Getter private static final long skinCacheAgeLimit = 600L;
+
     /**
      * The port which the built-in proxy runs on.
      */
-    public static int proxyport = 25560;
+    @Getter private static final int proxyport = 25560;
+
     /**
      * The current OS of the user.
-     * @see #getOS()
+     * @see #getOSString()
      */
-    public static final String os = getOS();
+    @Getter private static final String os = getOSString();
+
     /**
      * The version of the launcher.
      */
-    public static final String version = "v0.3";
+    @Getter private static final String version = "v0.3";
+
     /**
      * The path of the launcher's files.
      * @see #getDataPath(String)
      */
-    public static final String glasspath = getDataPath(".PyMCL");
+    @Getter private static final String glassPath = getDataPath(".PyMCL");
+
     /**
      * The path of PyMCL's files.
      * Used for importing.
      * @see #getDataPath(String)
      */
-    public static final String pymclpath = getDataPath(".PyMCL");
+    @Getter private static final String pymclPath = getDataPath(".PyMCL");
+
     /**
      * The path of the launcher's cache files.
      */
-    public static final String cachepath = glasspath + "cache/";
+    @Getter private static final String cachePath = glassPath + "cache/";
+
     /**
      * The path of the Java binary running the launcher.
      */
-    public static final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
+    @Getter private static final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
+
     /**
      * JSON format map that reduces clutter and makes the end JSON easy to read.
      */
-    public static String easyMineLauncherFile;
+    @Getter @Setter private static String easyMineLauncherFile;
 
-    public static HashMap prettyprint = new HashMap() {{
-        put("PRETTY_PRINT", true);
-        put("TYPE", false);
-    }};
     /**
      * Default JSON encoded string that is used for new or unreadable instance JSONs.
      */
-    public static final String defaultjson = "{\n" +
+    @Getter private static final String defaultInstanceJson = "{\n" +
             "    \"javaargs\": \"\",\n" +
             "    \"maxram\": \"512m\",\n" +
             "    \"minram\": \"256m\",\n" +
@@ -62,7 +86,7 @@ public class Config {
      * Gets the OS of the user.
      * @return "windows" | "osx" | "unix"
      */
-    private static String getOS() {
+    private static String getOSString() {
         String os = (System.getProperty("os.name")).toLowerCase();
         if (os.contains("win")) {
             return "windows";
@@ -99,6 +123,16 @@ public class Config {
         if (instance == null || instance.isEmpty()) {
             throw new IllegalArgumentException("Instance cannot be empty or null!");
         }
-        return glasspath + "instances/" + instance + "/";
+        return glassPath + "instances/" + instance + "/";
     }
+
+    @Getter private static final HashMap<String, String> glassDeps = new HashMap<String, String>() {{
+        put("http://easyminelauncher.bonsaimind.org/EasyMineLauncher_v1.0.jar", "D7873F0A7A97AD78DB711BAF7D24B795");
+        put("https://repo1.maven.org/maven2/com/google/code/gson/gson/2.8.6/gson-2.8.6.jar", "310f5841387183aca7900fead98d4858");
+        put("https://repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.63/bcprov-jdk15on-1.63.jar", "D357114F1605C034EBCB99F3C9D36F7E");
+        put("https://repo1.maven.org/maven2/org/bouncycastle/bcpkix-jdk15on/1.63/bcpkix-jdk15on-1.63.jar", "C7DC9B66A0535F44DD088BABEA47B506");
+        put("https://repo1.maven.org/maven2/commons-io/commons-io/2.4/commons-io-2.4.jar", "7F97854DC04C119D461FED14F5D8BB96");
+        put("https://repo1.maven.org/maven2/com/github/ganskef/littleproxy-mitm/1.1.0/littleproxy-mitm-1.1.0.jar", "B1FD7C2BFCD32BCF5873D298484DABBA");
+        put("https://github.com/adamfisk/LittleProxy/releases/download/littleproxy-1.1.2/littleproxy-1.1.2-littleproxy-shade.jar", "05613C6D1BB1A8F826711BA54569311E");
+    }};
 }

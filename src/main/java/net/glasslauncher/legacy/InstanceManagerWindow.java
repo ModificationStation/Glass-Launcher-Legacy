@@ -2,13 +2,13 @@ package net.glasslauncher.legacy;
 
 import net.glasslauncher.legacy.components.HintTextField;
 import net.glasslauncher.legacy.util.InstanceManager;
-import net.glasslauncher.legacy.util.JsonConfig;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.util.Objects;
 
 class InstanceManagerWindow extends JDialog {
     private JPanel[] instanceWidgets = new JPanel[]{};
@@ -22,7 +22,7 @@ class InstanceManagerWindow extends JDialog {
         setTitle("Instance Manager");
         addWindowListener(new WindowAdapter() {
                               public void windowClosing(WindowEvent we) {
-                                      Main.logger.info("Closing instance manager...");
+                                      Main.getLogger().info("Closing instance manager...");
                                       dispose();
                               }
                           }
@@ -72,8 +72,8 @@ class InstanceManagerWindow extends JDialog {
         HintTextField instanceName = new HintTextField("Instance name");
         instanceName.setBounds(155, 63, 194, 22);
 
-        JComboBox instanceVersion = new JComboBox();
-        for (Object version : (new JsonConfig(Main.class.getResource("assets/mcversions.json").toString())).keySet()) {
+        JComboBox<String> instanceVersion = new JComboBox<>();
+        for (String version : Config.getMcVersions().getClient().keySet()) {
             instanceVersion.addItem(version);
         }
         instanceVersion.setBounds(351, 63, 194, 22);
@@ -104,9 +104,9 @@ class InstanceManagerWindow extends JDialog {
     }
 
     private void updateInstanceList() {
-        (new File(Config.glasspath + "instances")).mkdirs();
+        (new File(Config.getGlassPath() + "instances")).mkdirs();
         deletePanel.removeAll();
-        for (File instance : (new File(Config.glasspath + "instances").listFiles())) {
+        for (File instance : (Objects.requireNonNull(new File(Config.getGlassPath() + "instances").listFiles()))) {
             if (instance.isDirectory()) {
                 JButton deleteButton = new JButton();
                 deleteButton.setText("Delete \"" + instance.getName() + "\".");
@@ -116,7 +116,7 @@ class InstanceManagerWindow extends JDialog {
                 deleteButton.addActionListener((e) -> {
                     try {
                         //FileUtils.deleteDirectory(new File(instance.toString()));
-                        Main.logger.info((new File(instance.toString())).toString());
+                        Main.getLogger().info((new File(instance.toString())).toString());
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }

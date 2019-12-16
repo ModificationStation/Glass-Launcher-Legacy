@@ -26,7 +26,7 @@ public class ProxyFilter extends HttpFiltersAdapter {
         this.doSoundFix = args[0];
         this.doSkinFix = args[1];
         this.doCapeFix = args[2];
-        Main.logger.info(Arrays.toString(args));
+        Main.getLogger().info(Arrays.toString(args));
     }
 
     public HttpObject responsePre(HttpObject httpObject) {
@@ -48,7 +48,7 @@ public class ProxyFilter extends HttpFiltersAdapter {
             String host = httpRequest.headers().get("Host");
             String path;
 
-            Main.logger.info(httpRequest.getUri());
+            Main.getLogger().info(httpRequest.getUri());
             if (httpRequest.getUri().startsWith("http://") || httpRequest.getUri().startsWith("https://")) {
                 if (httpRequest.getUri().contains("pymcl.net")) {
                     return null;
@@ -86,13 +86,13 @@ public class ProxyFilter extends HttpFiltersAdapter {
                 }
 
                 if (doRedirect == null) {
-                    Main.logger.info("Nulled!");
+                    Main.getLogger().info("Nulled!");
                     return null;
                 }
 
                 httpRequest.setUri("http://" + newHost + doRedirect);
                 httpRequest.headers().set("Host", newHost);
-                Main.logger.info(host + " : " + path + " : " + httpRequest.headers().get("Host") + " : " + httpRequest.getUri());
+                Main.getLogger().info(host + " : " + path + " : " + httpRequest.headers().get("Host") + " : " + httpRequest.getUri());
             }
         }
         return null;

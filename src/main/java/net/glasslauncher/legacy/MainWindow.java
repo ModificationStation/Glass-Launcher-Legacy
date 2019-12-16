@@ -5,7 +5,6 @@ import net.glasslauncher.legacy.components.HintTextField;
 import net.glasslauncher.legacy.components.Logo;
 import net.glasslauncher.legacy.mc.LaunchArgs;
 import net.glasslauncher.legacy.mc.Wrapper;
-import net.glasslauncher.legacy.util.JsonConfig;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -17,14 +16,11 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.Scanner;
 
-import static net.glasslauncher.legacy.Main.logger;
-
 class MainWindow extends JFrame {
     private int orgWidth = 854;
     private int orgHeight = 480;
 
     private final Panel mainPanel = new Panel();
-    private JsonConfig launcherConfig = new JsonConfig(Config.glasspath + "launcher_config.json");
 
     /**
      * Sets up the main window object.
@@ -35,8 +31,8 @@ class MainWindow extends JFrame {
     MainWindow(String[] args, Frame console) {
         // Setting the size, icon, location and layout of the launcher
         Insets insets = getInsets();
-        logger.info("Starting...");
-        setTitle("Glass Launcher " + Config.version);
+        Main.getLogger().info("Starting...");
+        setTitle("Glass Launcher " + Config.getVersion());
         setIconImage(Toolkit.getDefaultToolkit().createImage(MainWindow.class.getResource("assets/glass.png")));
         setLayout(new GridLayout(1, 1));
         setLocationRelativeTo(null);
@@ -79,8 +75,8 @@ class MainWindow extends JFrame {
 
         // Username field
         HintTextField username = new HintTextField("Username or Email");
-        if (launcherConfig.get("lastusedname") != null) {
-            username.setText((String) launcherConfig.get("lastusedname"));
+        if (Config.getLauncherConfig().getLastUsedName() != null) {
+            username.setText(Config.getLauncherConfig().getLastUsedName());
         }
         username.setBounds(0, 14, 166, 22);
 
@@ -113,7 +109,7 @@ class MainWindow extends JFrame {
 
         // Instance selector
         JComboBox instsel = new JComboBox();
-        File file = new File(Config.glasspath + "instances");
+        File file = new File(Config.getGlassPath() + "instances");
         String[] instances = file.list((current, name) -> new File(current, name).isDirectory());
         if (instances != null) {
             for (String instance : instances) {
@@ -137,7 +133,7 @@ class MainWindow extends JFrame {
         login.setBounds(168, 40, 70, 22);
         login.setOpaque(false);
         login.addActionListener(event -> {
-            logger.info((String) instsel.getSelectedItem());
+            Main.getLogger().info((String) instsel.getSelectedItem());
             String pass = "";
             if (password.getForeground() != Color.gray) {
                 pass = String.valueOf(password.getPassword());
@@ -145,8 +141,8 @@ class MainWindow extends JFrame {
             String[] launchargs = {username.getText(), pass, (String) instsel.getSelectedItem()};
             launchargs = (new LaunchArgs()).getArgs(launchargs);
             if (launchargs != null) {
-                launcherConfig.set("lastusedname", username.getText());
-                launcherConfig.saveFile();
+                Config.getLauncherConfig().setLastUsedName(username.getText());
+                Config.getLauncherConfig().saveFile();
                 Wrapper mc = new Wrapper(launchargs);
                 mc.startMC();
             } else {

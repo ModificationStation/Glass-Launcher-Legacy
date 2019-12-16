@@ -1,5 +1,6 @@
 package net.glasslauncher.legacy;
 
+import lombok.Getter;
 import net.glasslauncher.legacy.util.Classpath;
 import net.glasslauncher.legacy.util.FileUtils;
 
@@ -9,13 +10,12 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.HashMap;
 import java.util.logging.*;
 
 public class Main {
-    public static Logger logger = Logger.getLogger("launcher");
-
-    private static ArrayList libs = new ArrayList();
+    @Getter private static Logger logger = Logger.getLogger("launcher");
+    private static ArrayList<String> libs = new ArrayList<>();
     private static MainWindow mainwin = null;
 
     private static void makeLogger() {
@@ -24,9 +24,9 @@ public class Main {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
             LocalDateTime now = LocalDateTime.now();
             String time = dtf.format(now);
-            File logdir = new File(Config.glasspath + "/glass-logs/launcher");
+            File logdir = new File(Config.getGlassPath() + "/glass-logs/launcher");
             logdir.mkdirs();
-            Handler file_handler = new FileHandler(Config.glasspath + "/glass-logs/launcher/" + time + ".log");
+            Handler file_handler = new FileHandler(Config.getGlassPath()+ "/glass-logs/launcher/" + time + ".log");
             SimpleFormatter format = new SimpleFormatter();
             logger.addHandler(file_handler);
             file_handler.setFormatter(format);
@@ -49,15 +49,21 @@ public class Main {
         makeLogger();
 
         getDeps();
-        Config.easyMineLauncherFile = (String) libs.get(0);
+        Config.setEasyMineLauncherFile(libs.get(0));
 
         for (Object lib : libs.toArray()) {
             try {
-                Classpath.addFile(Config.glasspath + "lib/" + lib);
+                Classpath.addFile(Config.getGlassPath() + "lib/" + lib);
             } catch (Exception e) {
                 logger.info("Failed to load \"" + lib + "\".");
                 e.printStackTrace();
             }
+        }
+
+        try {
+            Config.loadConfigFiles();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         for (String arg : args) {
@@ -66,36 +72,23 @@ public class Main {
                 return;
             }
         }
-
         mainwin = new MainWindow(args, console);
     }
 
     /**
-     * Downloads all dependencies listed in dependencies.gradle.
-     * Format for downloadable dependency is: " {4}//[url],[md5]".
-     *
-     * @return True if any were downloaded, False if none were downloaded.
+     * Downloads all dependencies listed in Config.Deps.cactusDeps.
      */
-    public static void getDeps() {
-        logger.info("Checking dependencies...");
-        String file;
-        try {
-            file = new Scanner(MainWindow.class.getResourceAsStream("/dependencies.gradle"), "UTF-8").useDelimiter("\\A").next();
-        } catch (Exception e) {
-            logger.info("Failed to get dependencies from dependencies.gradle.");
-            e.printStackTrace();
-            return;
-        }
-        for (String line : file.split("\n")) {
-            if (line.startsWith("    // ")) {
-                String[] parts = line.replaceFirst(" {4}// ", "").split(",");
-                try {
-                    libs.add(parts[0].substring(parts[0].lastIndexOf('/') + 1));
-                    FileUtils.downloadFile(parts[0], Config.glasspath + "lib/" + "", parts[1].replace("\r", "").replace("\n", ""));
-                } catch (Exception e) {
-                    logger.info("Failed to download dependency. Invalid formatting?");
-                    e.printStackTrace();
-                }
+    private static void getDeps() {
+        getLogger().info("Checking dependencies...");
+        HashMap<String, String> deps = Config.getGlassDeps();
+
+        for (String dep : deps.keySet()) {
+            try {
+                FileUtils.downloadFile(dep, Config.getGlassPath() + "/lib/", deps.get(dep));
+                libs.add(dep.substring(dep.lastIndexOf('/') + 1));
+            } catch (Exception e) {
+                getLogger().info("Failed to download dependency. Invalid formatting?");
+                e.printStackTrace();
             }
         }
     }

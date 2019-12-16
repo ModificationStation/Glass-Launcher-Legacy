@@ -1,128 +1,47 @@
 package net.glasslauncher.legacy.util;
 
-import com.cedarsoftware.util.io.JsonObject;
-import com.cedarsoftware.util.io.JsonReader;
-import com.cedarsoftware.util.io.JsonWriter;
-import net.glasslauncher.legacy.Config;
-import net.glasslauncher.legacy.Main;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import lombok.Data;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.PrintStream;
-import java.util.Set;
+import java.lang.reflect.Type;
 
-public class JsonConfig {
-    private JsonObject jsonObject;
-    private String path;
+@Data
+public abstract class JsonConfig {
+    private final Gson gson = (new GsonBuilder()).setPrettyPrinting().create();
+    private final String path;
 
     /**
-     * Reads JSON file from disk.
-     * Creates an empty JSON object if file can't be read.
-     *
      * @param path Path to the JSON file.
      */
     public JsonConfig(String path) {
         this.path = path;
+    }
+
+    public static JsonConfig loadConfig(String path, Type pClass, String defaultJson) {
         try {
-            boolean isJar;
-            if (path.startsWith("jar:")) {
-                isJar = true;
-            } else {
-                isJar = false;
-            }
-            if ((new File(path)).exists()) {
-                this.jsonObject = (JsonObject) JsonReader.jsonToJava(FileUtils.readFile(path, isJar));
-            } else {
-                this.jsonObject = new JsonObject();
-            }
-        }
-        catch (Exception e) {
-            Main.logger.info("Failed to read JSON file:");
-            e.printStackTrace();
-            this.jsonObject = new JsonObject();
+            return (new Gson()).fromJson(new FileReader(path), pClass);
+        } catch (Exception e) {
+            return (new Gson()).fromJson(defaultJson, pClass);
         }
     }
 
-    /**
-     * Reads JSON file from disk.
-     * Creates JSON object with supplied JSON encoded string if file can't be read.
-     *
-     * @param path Path to the JSON file.
-     */
-    public JsonConfig(String path, String defaultJSON) {
-        this.path = path;
-        try {
-            this.jsonObject = (JsonObject) JsonReader.jsonToJava(FileUtils.readFile(path));
-        }
-        catch (Exception e) {
-            Main.logger.info("Failed to read JSON file:");
-            e.printStackTrace();
-            this.jsonObject = (JsonObject) JsonReader.jsonToJava(defaultJSON);
-        }
-    }
-
-    /**
-     * Gets object from given key object.
-     *
-     * @param key Key object to get the object with.
-     * @return Returns the object that was found.
-     */
-    public Object get(Object key) {
-        return jsonObject.get(key);
-    }
-
-
-    /**
-     * Gets object from given key object.
-     * Returns defaultObj if object found by key is null.
-     *
-     * @param key Target JSON key to get the object with.
-     * @param defaultObj Object to return if object found be key is null.
-     * @return Returns the object that was found.
-     */
-    public Object get(Object key, Object defaultObj) {
-        Object obj = defaultObj;
-        try {
-            obj = jsonObject.get(key);
-        }
-        catch (Exception e) {
-            set(key, defaultObj);
-        }
-        return obj;
-    }
-
-    /**
-     * Sets given key object to value object.
-     *
-     * @param key Target JSON key.
-     * @param value Value for JSON key.
-     */
-    public void set(Object key, Object value) {
-        jsonObject.put(key, value);
-    }
-
-    /**
-     * Gets keyset of the JSON object.
-     *
-     * @return The keyset of the JSON object.
-     */
-    public Set keySet() {
-        return jsonObject.keySet();
+    public static JsonConfig loadConfig(String path, Type pClass) throws FileNotFoundException {
+        return (new Gson()).fromJson(new FileReader(path), pClass);
     }
 
     /**
      * Saves the JSON object stored in memory.
-     *
-     * @return true on success, false on an error.
      */
-    public boolean saveFile() {
+    public void saveFile() {
         try (PrintStream out = new PrintStream(new FileOutputStream(path))) {
-            out.print(JsonWriter.objectToJson(jsonObject, Config.prettyprint));
-            return true;
+            out.print(gson.toJson(this));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        return false;
     }
 }
