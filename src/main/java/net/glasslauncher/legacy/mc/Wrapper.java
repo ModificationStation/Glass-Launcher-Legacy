@@ -44,7 +44,7 @@ public class Wrapper {
             proxy = new Proxy(proxyArgs);
             proxy.start();
         }
-        String javaArgs = instJson.getJavaArgs().toString();
+        String javaArgs = instJson.getJavaArgs();
         if (!javaArgs.isEmpty()) {
             for (String arg : javaArgs.split("- ")) {
                 args.add("-" + arg);
@@ -63,7 +63,6 @@ public class Wrapper {
         args.add("--username=" + launchArgs[0]);
         args.add("--session-id=" + launchArgs[1]);
         args.add("--title=" + launchArgs[2]);
-        Main.getLogger().info(args.toString());
     }
 
     private void getConfig() {

@@ -2,12 +2,14 @@ package net.glasslauncher.legacy.util;
 
 import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
+import org.apache.commons.io.IOUtils;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 public class TempZipFile {
@@ -18,7 +20,15 @@ public class TempZipFile {
         File zipFile = new File(zipFilePath);
         originalPath = zipFilePath;
         tempPath = Config.getGlassPath() + "temp/" + zipFile.getName().replaceFirst("\\.zip$", "");
-        (new File(tempPath)).mkdirs();
+        File tempFile = new File(tempPath);
+        if (tempFile.exists()) {
+            try {
+                org.apache.commons.io.FileUtils.deleteDirectory(tempFile);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        tempFile.mkdirs();
 
         FileUtils.extractZip(zipFilePath, tempPath);
     }
@@ -47,6 +57,10 @@ public class TempZipFile {
 
     public void close(boolean doSave) {
         File original = new File(originalPath);
+        String destDirBypass = "";
+        if (Config.getOs() == "windows") {
+            destDirBypass = "\\\\?\\";
+        }
         try {
             original.delete();
         } catch (Exception e) {
@@ -59,27 +73,33 @@ public class TempZipFile {
             if (fileList == null) {
                 return;
             }
-
             File f = new File(originalPath);
-            for (File file : fileList) {
-                byte[] data = Files.readAllBytes(Paths.get(tempPath + "/" + file));
-                ZipOutputStream out = new ZipOutputStream(new FileOutputStream(f));
-                ZipEntry e = new ZipEntry(file.toPath().relativize((new File(tempPath)).toPath()).toString());
-                out.putNextEntry(e);
-
-                out.write(data, 0, data.length);
-                out.closeEntry();
-
-                out.close();
-            }
+            ZipOutputStream zipFile = new ZipOutputStream(new FileOutputStream(f));
+            addDir(new File(tempPath), zipFile);
+            zipFile.flush();
+            zipFile.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         try {
-            org.apache.commons.io.FileUtils.deleteDirectory(new File(tempPath));
+            org.apache.commons.io.FileUtils.deleteDirectory(new File(destDirBypass + tempPath));
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void addDir(File sourceDir, ZipOutputStream zip) throws IOException {
+        File[] contents = sourceDir.listFiles();
+        for(File file : contents) {
+            if(file.isDirectory()){
+                addDir(file, zip);
+            } else {
+                zip.putNextEntry(new ZipEntry((Paths.get(tempPath).relativize(sourceDir.toPath()) + "/" + file.getName()).replaceAll("^/+", "")));
+                Path rn_demo = Paths.get(String.valueOf(file));
+                Files.copy(rn_demo, zip);
+            }
+        }
+        zip.closeEntry();
     }
 }

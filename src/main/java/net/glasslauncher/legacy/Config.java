@@ -14,8 +14,7 @@ import java.util.HashMap;
 
 public class Config {
     public static void loadConfigFiles() {
-        gson = new GsonBuilder().setPrettyPrinting().create();
-
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         mcVersions = gson.fromJson(new InputStreamReader(Main.class.getResourceAsStream("assets/mcversions.json")), MCVersions.class);
         launcherConfig = (LauncherConfig) JsonConfig.loadConfig(Config.getGlassPath() + "launcher_config.json", LauncherConfig.class);
         if (launcherConfig == null) {
@@ -23,7 +22,6 @@ public class Config {
         }
     }
 
-    @Getter private static Gson gson;
     @Getter private static MCVersions mcVersions;
     @Getter private static LauncherConfig launcherConfig;
 

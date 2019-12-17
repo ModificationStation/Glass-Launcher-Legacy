@@ -29,6 +29,6 @@ public class Mod {
     }
 
     public String toString() {
-        return name;
+        return fileName;
     }
 }

@@ -6,13 +6,13 @@ import lombok.Getter;
 import lombok.Setter;
 import net.glasslauncher.legacy.util.JsonConfig;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter @Setter
 public class ModList extends JsonConfig {
     @SerializedName("jarmods")
-    @Expose private Map<String, Mod> jarMods = new HashMap<>();
+    @Expose private List<Mod> jarMods = new ArrayList<>();
 
     /**
      * @param path Path to the JSON file.

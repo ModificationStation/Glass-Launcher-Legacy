@@ -1,8 +1,10 @@
 package net.glasslauncher.legacy.util;
 
+import net.glasslauncher.jsontemplate.Mod;
 import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
 
+import javax.swing.*;
 import java.io.File;
 import java.net.URL;
 import java.nio.file.FileAlreadyExistsException;
@@ -94,17 +96,35 @@ public class InstanceManager {
         return true;
     }
 
-    public void addMod(String modpath, String instanceFolder) {
+    public static void addMod(String modpath, String instanceFolder) {
         String minecraftFolder = instanceFolder + "/.minecraft";
         try {
             TempZipFile jarFile = new TempZipFile(minecraftFolder + "/bin/minecraft.jar");
             if (jarFile.fileExists("META-INF")) {
                 jarFile.deleteFile("META-INF");
             }
-
+            jarFile.mergeZip(modpath);
+            jarFile.close();
         } catch (Exception e) {
             e.printStackTrace();
-            return;
+        }
+    }
+
+    public static void addMods(String instance, ListModel<Mod> mods) {
+        instance = Config.getGlassPath() + "instances/" + instance;
+        try {
+            TempZipFile jarFile = new TempZipFile(instance + "/.minecraft/bin/minecraft.jar");
+            if (jarFile.fileExists("META-INF")) {
+                jarFile.deleteFile("META-INF");
+            }
+            for (int i = 0; i < mods.getSize(); i++) {
+                if (mods.getElementAt(i).isEnabled()) {
+                    jarFile.mergeZip(instance + "/mods/" + mods.getElementAt(i).getFileName());
+                }
+            }
+            jarFile.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

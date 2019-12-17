@@ -1,5 +1,7 @@
 package net.glasslauncher.legacy.components;
 
+import net.glasslauncher.legacy.Main;
+
 import javax.swing.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -37,6 +39,9 @@ class DragDropHandler extends TransferHandler {
             }
             model.removeElement(draggedImage);
             model.add(dropIndex, draggedImage);
+            for(int i = 0; i< model.getSize();i++) {
+                Main.getLogger().info(model.get(i).toString());
+            }
             return true;
         } catch (Exception e) {
             e.printStackTrace();
