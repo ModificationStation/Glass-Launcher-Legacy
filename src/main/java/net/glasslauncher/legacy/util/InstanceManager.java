@@ -69,21 +69,29 @@ public class InstanceManager {
                 return false;
             } catch (Exception e) {
                 e.printStackTrace();
-                /*try {
+                try {
                     org.apache.commons.io.FileUtils.deleteDirectory(new File(minecraftFolder));
-                } catch (Exception ignored) {}*/
-                return false;
+                } catch (Exception ex) {
+                    e.printStackTrace();
+                    ex.printStackTrace();
+                }
             }
+            return false;
         } else {
-
             try {
-                String versionID =Config.getMcVersions().getClient().get(version).getUrl();
-                FileUtils.downloadFile("https://launcher.mojang.com/v1/objects/" + versionID + "/client.jar", versionsCachePath, null, version + ".jar");
+                String url = Config.getMcVersions().getClient().get(version).getUrl();
+                if (!(url.startsWith("https://") || url.startsWith("http://"))) {
+                    url = "https://launcher.mojang.com/v1/objects/" + Config.getMcVersions().getClient().get(version).getUrl() + "/client.jar";
+                }
+                FileUtils.downloadFile(url , versionsCachePath, null, version + ".jar");
                 Files.copy(versionCacheJar.toPath(), new File(minecraftFolder + "/bin/minecraft.jar").toPath());
             } catch (Exception e) {
-                /*try {
+                try {
                     org.apache.commons.io.FileUtils.deleteDirectory(new File(minecraftFolder));
-                } catch (Exception ignored) {}*/
+                } catch (Exception ex) {
+                    e.printStackTrace();
+                    ex.printStackTrace();
+                }
                 Main.getLogger().info("Version not found: \"" + version + "\". Aborting.");
                 return false;
             }
