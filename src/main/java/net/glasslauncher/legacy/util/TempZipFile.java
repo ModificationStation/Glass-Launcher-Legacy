@@ -11,12 +11,16 @@ import java.util.concurrent.TimeUnit;
 public class TempZipFile {
     private final String originalPath;
     private final String tempPath;
+    private String destDirBypass = "";
 
     public TempZipFile(String zipFilePath) {
+        if (Config.getOs().equals("windows")) {
+            destDirBypass = "\\\\?\\";
+        }
         File zipFile = new File(zipFilePath);
         originalPath = zipFilePath;
         tempPath = Config.getGlassPath() + "temp/" + zipFile.getName().replaceFirst("\\.zip$", "");
-        File tempFile = new File(tempPath);
+        File tempFile = new File(destDirBypass + tempPath);
         if (tempFile.exists()) {
             try {
                 org.apache.commons.io.FileUtils.deleteDirectory(tempFile);
@@ -61,10 +65,6 @@ public class TempZipFile {
 
     public void close(boolean doSave) {
         File original = new File(originalPath);
-        String destDirBypass = "";
-        if (Config.getOs() == "windows") {
-            destDirBypass = "\\\\?\\";
-        }
         try {
             original.delete();
         } catch (Exception e) {
@@ -98,7 +98,7 @@ public class TempZipFile {
         }
 
         try {
-            //org.apache.commons.io.FileUtils.deleteDirectory(new File(destDirBypass + tempPath));
+            org.apache.commons.io.FileUtils.deleteDirectory(new File(destDirBypass + tempPath));
         } catch (Exception e) {
             e.printStackTrace();
         }
