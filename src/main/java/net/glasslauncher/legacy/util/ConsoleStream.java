@@ -24,7 +24,7 @@ public class ConsoleStream extends OutputStream {
                             textArea.setText(textArea.getText() + buffer);
                             textArea.setCaretPosition(textArea.getDocument().getLength());
                             jcons.print(buffer);
-                            textArea.update(textArea.getGraphics());
+                            textArea.repaint();
                             buffer = "";
                         }
                     }
