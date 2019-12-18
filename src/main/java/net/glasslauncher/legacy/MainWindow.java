@@ -22,6 +22,8 @@ class MainWindow extends JFrame {
 
     private final Panel mainPanel = new Panel();
 
+    private JComboBox<String> instsel;
+
     /**
      * Sets up the main window object.
      * @// TODO: 20/09/2019 To be split into a proper class with multiple functions.
@@ -108,14 +110,8 @@ class MainWindow extends JFrame {
         password.setBounds(0, 40, 166, 22);
 
         // Instance selector
-        JComboBox<String> instsel = new JComboBox<>();
-        File file = new File(Config.getGlassPath() + "instances");
-        String[] instances = file.list((current, name) -> new File(current, name).isDirectory());
-        if (instances != null) {
-            for (String instance : instances) {
-                instsel.addItem(instance);
-            }
-        }
+        instsel = new JComboBox<>();
+        refreshInstanceList();
         instsel.setBounds(0, 66, 166, 22);
 
         // Options button
@@ -158,6 +154,7 @@ class MainWindow extends JFrame {
         instancesButton.setMargin(new Insets(0, 0, 0, 0));
         instancesButton.addActionListener(event -> {
             new InstanceManagerWindow(this);
+            refreshInstanceList();
         });
 
         // Adding widgets and making the launcher visible
@@ -201,5 +198,17 @@ class MainWindow extends JFrame {
         blogcontainer.setBorder(BorderFactory.createEmptyBorder());
         blogcontainer.setBounds(new Rectangle(0, 0, mainPanel.getWidth(), mainPanel.getHeight() - 200));
         return blogcontainer;
+    }
+
+    private void refreshInstanceList() {
+        Main.getLogger().info("Refreshing instance list...");
+        instsel.setModel(new DefaultComboBoxModel<>());
+        File file = new File(Config.getGlassPath() + "instances");
+        String[] instances = file.list((current, name) -> new File(current, name).isDirectory());
+        if (instances != null) {
+            for (String instance : instances) {
+                instsel.addItem(instance);
+            }
+        }
     }
 }
