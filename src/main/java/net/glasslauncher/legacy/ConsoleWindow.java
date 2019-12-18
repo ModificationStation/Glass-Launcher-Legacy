@@ -27,13 +27,13 @@ public class ConsoleWindow extends JFrame {
                               public void windowClosing(WindowEvent we) {
                                   if (!Main.isLauncherActive()) {
                                       Main.getLogger().info("Closing...");
-                                      dispose();
                                       System.exit(0);
                                   }
                                   Main.getLogger().info("Close the launcher using the main window!");
                               }
                           }
         );
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
         try {
             setIconImage(ImageIO.read(ConsoleWindow.class.getResource("assets/glass.png").toURI().toURL()));
