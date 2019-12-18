@@ -2,6 +2,7 @@ package net.glasslauncher.legacy;
 
 import net.glasslauncher.legacy.components.HintTextField;
 import net.glasslauncher.legacy.util.InstanceManager;
+import org.apache.commons.io.FileUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -106,6 +107,7 @@ class InstanceManagerWindow extends JDialog {
     private void updateInstanceList() {
         (new File(Config.getGlassPath() + "instances")).mkdirs();
         deletePanel.removeAll();
+        deletePanel.repaint();
         for (File instance : (Objects.requireNonNull(new File(Config.getGlassPath() + "instances").listFiles()))) {
             if (instance.isDirectory()) {
                 JButton deleteButton = new JButton();
@@ -115,8 +117,8 @@ class InstanceManagerWindow extends JDialog {
                 deleteButton.setAlignmentX(Component.CENTER_ALIGNMENT);
                 deleteButton.addActionListener((e) -> {
                     try {
-                        //FileUtils.deleteDirectory(new File(instance.toString()));
-                        Main.getLogger().info((new File(instance.toString())).toString());
+                        FileUtils.deleteDirectory(instance);
+                        updateInstanceList();
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
