@@ -2,15 +2,11 @@ package net.glasslauncher.legacy.util;
 
 import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
-import org.apache.commons.io.IOUtils;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipOutputStream;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class TempZipFile {
     private final String originalPath;
@@ -35,8 +31,16 @@ public class TempZipFile {
 
     public void deleteFile(String relativePath) {
         File fileToDelete = new File(tempPath + "/" + relativePath);
-        if (fileToDelete.exists()) {
-            fileToDelete.delete();
+        try {
+            if (fileToDelete.exists()) {
+                if (fileToDelete.isDirectory()) {
+                    org.apache.commons.io.FileUtils.deleteDirectory(fileToDelete);
+                } else {
+                    fileToDelete.delete();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -69,37 +73,34 @@ public class TempZipFile {
             return;
         }
         try {
-            File[] fileList = (new File(tempPath)).listFiles();
-            if (fileList == null) {
-                return;
+            List<String> args = new ArrayList<>();
+            args.add("jar");
+            args.add("cMf");
+            args.add(originalPath);
+            args.add("./*");
+            ProcessBuilder processBuilder = new ProcessBuilder(args);
+            processBuilder.redirectInput(ProcessBuilder.Redirect.INHERIT);
+            processBuilder.directory(new File(tempPath));
+            Process zipProcess = processBuilder.start();
+            zipProcess.waitFor(10, TimeUnit.MINUTES);
+            if (zipProcess.isAlive()) {
+                Main.getLogger().warning("Zip process has been running for longer than 10 minutes! Terminating process...");
+                Main.getLogger().warning("Target folder to zip was: \"" + tempPath + "\"");
+                zipProcess.destroy();
+                zipProcess.waitFor(10, TimeUnit.SECONDS);
+                if (zipProcess.isAlive()) {
+                    Main.getLogger().warning("Zip process has taken longer than 10 seconds to terminate! Force terminating process...");
+                    zipProcess.destroyForcibly();
+                }
             }
-            File f = new File(originalPath);
-            ZipOutputStream zipFile = new ZipOutputStream(new FileOutputStream(f));
-            addDir(new File(tempPath), zipFile);
-            zipFile.flush();
-            zipFile.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         try {
-            org.apache.commons.io.FileUtils.deleteDirectory(new File(destDirBypass + tempPath));
+            //org.apache.commons.io.FileUtils.deleteDirectory(new File(destDirBypass + tempPath));
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private void addDir(File sourceDir, ZipOutputStream zip) throws IOException {
-        File[] contents = sourceDir.listFiles();
-        for(File file : contents) {
-            if(file.isDirectory()){
-                addDir(file, zip);
-            } else {
-                zip.putNextEntry(new ZipEntry((Paths.get(tempPath).relativize(sourceDir.toPath()) + "/" + file.getName()).replaceAll("^/+", "")));
-                Path rn_demo = Paths.get(String.valueOf(file));
-                Files.copy(rn_demo, zip);
-            }
-        }
-        zip.closeEntry();
     }
 }
