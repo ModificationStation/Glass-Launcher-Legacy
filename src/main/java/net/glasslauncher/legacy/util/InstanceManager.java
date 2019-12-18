@@ -47,7 +47,6 @@ public class InstanceManager {
     }
 
     private static boolean installModpackZip(String path, String filename) {
-        Main.getLogger().info(path + " : " + filename);
         createBlankInstance("b1.7.3", filename);
         return true;
     }

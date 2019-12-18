@@ -3,9 +3,11 @@ package net.glasslauncher.legacy.util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.Data;
-import net.glasslauncher.legacy.Main;
 
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.PrintStream;
 import java.lang.reflect.Type;
 
 @Data
@@ -34,7 +36,6 @@ public abstract class JsonConfig {
      */
     public void saveFile() {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        Main.getLogger().info(path + " : " + (new File(path)).exists());
         try {
             PrintStream out = new PrintStream(new FileOutputStream(path));
             out.print(gson.toJson(this));
