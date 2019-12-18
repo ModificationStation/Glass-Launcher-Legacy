@@ -1,32 +1,29 @@
 package net.glasslauncher.legacy;
 
+import com.google.gson.Gson;
 import net.glasslauncher.jsontemplate.InstanceConfig;
 import net.glasslauncher.jsontemplate.Mod;
 import net.glasslauncher.jsontemplate.ModList;
 import net.glasslauncher.legacy.components.DragDropList;
 import net.glasslauncher.legacy.util.InstanceManager;
 import net.glasslauncher.legacy.util.JsonConfig;
+import org.apache.commons.io.FileUtils;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.jar.JarEntry;
 
 public class OptionsWindow extends JDialog {
     private InstanceConfig instanceConfig;
-    /*
-    modList JSON:
-    {
-        "mod file name": {
-            "name": "the mods name",
-            "type": <0-2>,
-            "enabled": <true|false>
-        }
-    }
-     */
     private ModList modList;
     private ArrayList<Mod> jarMods;
     private ArrayList<Mod> loaderMods;
@@ -89,7 +86,6 @@ public class OptionsWindow extends JDialog {
                         try {
                             Mod mod = (Mod) listModel.getElementAt(i);
                             modList.getJarMods().add(mod);
-                            Main.getLogger().info(mod.getFileName());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -199,33 +195,9 @@ public class OptionsWindow extends JDialog {
         modsPanel.setLayout(null);
 
         jarMods = new ArrayList<>();
-        File modsFolder = new File(instpath + "mods");
-        modsFolder.mkdirs();
-        File[] mods = modsFolder.listFiles();
-        if (mods != null) {
-            for (Mod mod : modList.getJarMods()) {
-                if ((new File(instpath + "mods/" + mod.getFileName())).exists()) {
-                    jarMods.add(mod);
-                }
-            }
-            for (File modFile : mods) {
-                boolean trip = false;
-                for (Mod jarMod : modList.getJarMods()) {
-                    if (jarMod.getFileName().equals(modFile.getName())) {
-                        trip = true;
-                    }
-                }
-                if (!trip && (modFile.getName().endsWith(".jar") || modFile.getName().endsWith(".zip"))) {
-                    String modName = modFile.getName();
-                    if (modName.contains(".")) {
-                        modName = modName.substring(0, modName.lastIndexOf('.'));
-                    }
-                    jarMods.add(new Mod(modFile.getName(), modName, 0, true));
-                }
-            }
-        }
         JScrollPane modListScroll = new JScrollPane();
         modDragDropList = new DragDropList(jarMods);
+        refreshModList();
         modListScroll.setBounds(0, 0, 200, 200);
         modListScroll.setViewportView(modDragDropList);
 
@@ -264,10 +236,76 @@ public class OptionsWindow extends JDialog {
         });
         applyModsButton.setBounds(0, 242, 200, 22);
 
+        JButton addModsButton = new JButton();
+        addModsButton.setText("Add Mods");
+        addModsButton.addActionListener(event -> {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileFilter(new FileNameExtensionFilter("Mod Zip (*.zip;*.jar)", "zip", "jar"));
+            fileChooser.setMultiSelectionEnabled(true);
+            fileChooser.showOpenDialog(this);
+            File[] files = fileChooser.getSelectedFiles();
+            try {
+                for (File file : files) {
+                    FileUtils.copyFile(file, new File(instpath + "mods/" + file.getName()));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            refreshModList();
+        });
+        addModsButton.setBounds(0, 274, 200, 22);
+
+        JButton removeModsButton = new JButton();
+        removeModsButton.setText("Remove Selected Mods");
+        removeModsButton.addActionListener(event -> {
+            for (Object modObj : modDragDropList.getSelectedValuesList()) {
+                Mod mod = (Mod) modObj;
+                (new File(instpath + "mods/" + mod.getFileName())).delete();
+            }
+            refreshModList();
+        });
+        removeModsButton.setBounds(0, 306, 200, 22);
+
         modsPanel.add(modListScroll);
         modsPanel.add(toggleModsButton);
         modsPanel.add(applyModsButton);
+        modsPanel.add(addModsButton);
+        modsPanel.add(removeModsButton);
 
         return modsPanel;
+    }
+
+    private void refreshModList() {
+        jarMods = new ArrayList<>();
+        File modsFolder = new File(instpath + "mods");
+        modsFolder.mkdirs();
+        File[] mods = modsFolder.listFiles();
+        if (mods != null) {
+            for (Mod mod : modList.getJarMods()) {
+                if ((new File(instpath + "mods/" + mod.getFileName())).exists()) {
+                    jarMods.add(jarMods.size(), mod);
+                }
+            }
+            for (File modFile : mods) {
+                boolean trip = false;
+                for (Mod jarMod : modList.getJarMods()) {
+                    if (jarMod.getFileName().equals(modFile.getName())) {
+                        trip = true;
+                    }
+                }
+                if (!trip && (modFile.getName().endsWith(".jar") || modFile.getName().endsWith(".zip"))) {
+                    String modName = modFile.getName();
+                    if (modName.contains(".")) {
+                        modName = modName.substring(0, modName.lastIndexOf('.'));
+                    }
+                    jarMods.add(jarMods.size(), new Mod(modFile.getName(), modName, 0, true));
+                }
+            }
+        }
+        modDragDropList.model.clear();
+        for (Mod mod : jarMods) {
+            modDragDropList.model.addElement(mod);
+        }
+        modDragDropList.repaint();
     }
 }
