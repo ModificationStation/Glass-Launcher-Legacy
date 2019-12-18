@@ -3,7 +3,6 @@ package net.glasslauncher.proxy.web;
 import com.google.gson.Gson;
 import net.glasslauncher.jsontemplate.Profile;
 import net.glasslauncher.legacy.Config;
-import net.glasslauncher.legacy.Main;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -21,8 +20,6 @@ public class WebUtils {
         for (String strline = ""; strline != null; strline = res.readLine()) {
             resj.append(strline);
         }
-        Main.getLogger().info(url);
-        Main.getLogger().info(resj.toString());
         return resj.toString();
     }
 

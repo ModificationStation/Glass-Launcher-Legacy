@@ -31,6 +31,17 @@ public class Config {
      * The port which the built-in proxy runs on.
      */
     @Getter private static final int proxyport = 25560;
+    @Getter private static final int proxywebport = 25561;
+    @Getter private static String[] proxyIgnoredHosts = new String[] {
+            "pymcl.net",
+            "localhost",
+            "127.0.0.1",
+            "mojang.com",
+            "icebergcraft.com",
+            "betacraft.ovh",
+            "retrocraft.net",
+            "textures.minecraft.net"
+    };
 
     /**
      * The current OS of the user.

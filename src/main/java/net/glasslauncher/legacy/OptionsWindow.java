@@ -4,24 +4,16 @@ import net.glasslauncher.jsontemplate.InstanceConfig;
 import net.glasslauncher.jsontemplate.Mod;
 import net.glasslauncher.jsontemplate.ModList;
 import net.glasslauncher.legacy.components.DragDropList;
-import net.glasslauncher.legacy.util.FileUtils;
 import net.glasslauncher.legacy.util.InstanceManager;
 import net.glasslauncher.legacy.util.JsonConfig;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.zip.ZipFile;
 
 public class OptionsWindow extends JDialog {
     private InstanceConfig instanceConfig;
@@ -49,6 +41,7 @@ public class OptionsWindow extends JDialog {
     private JCheckBox skinproxy;
     private JCheckBox capeproxy;
     private JCheckBox soundproxy;
+    private JCheckBox loginproxy;
 
     /**
      * Sets up options window for given instance.
@@ -88,6 +81,7 @@ public class OptionsWindow extends JDialog {
                     instanceConfig.setProxySkin(skinproxy.isSelected());
                     instanceConfig.setProxyCape(capeproxy.isSelected());
                     instanceConfig.setProxySound(soundproxy.isSelected());
+                    instanceConfig.setProxyLogin(loginproxy.isSelected());
 
                     modList.setJarMods(new ArrayList<>());
                     ListModel listModel = modDragDropList.model;
@@ -187,6 +181,15 @@ public class OptionsWindow extends JDialog {
         soundproxy.setBounds(150, 153, 20, 20);
         soundproxy.setSelected(instanceConfig.isProxySound());
         instsettings.add(soundproxy);
+
+        JLabel loginproxylabel = new JLabel("Enable Login Proxy:");
+        loginproxylabel.setBounds(20, 180, 120, 20);
+        instsettings.add(loginproxylabel);
+
+        loginproxy = new JCheckBox();
+        loginproxy.setBounds(150, 181, 20, 20);
+        loginproxy.setSelected(instanceConfig.isProxyLogin());
+        instsettings.add(loginproxy);
 
         return instsettings;
     }

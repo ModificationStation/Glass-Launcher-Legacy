@@ -1,22 +1,18 @@
 package net.glasslauncher.proxy;
 
-import io.netty.handler.codec.http.HttpContent;
 import io.netty.handler.codec.http.HttpObject;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
-import io.netty.util.CharsetUtil;
-import net.glasslauncher.legacy.Main;
+import net.glasslauncher.legacy.Config;
 import org.littleshoot.proxy.HttpFiltersAdapter;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Arrays;
-
 public class ProxyFilter extends HttpFiltersAdapter {
-    private static String newHost = "localhost:25561";
+    private static String[] ignoredHosts = Config.getProxyIgnoredHosts();
+    private static String newHost = "localhost:" + Config.getProxywebport();
     private boolean doSoundFix;
     private boolean doSkinFix;
     private boolean doCapeFix;
+    private boolean doLoginFix;
 
     ProxyFilter(HttpRequest originalRequest) {
         super(originalRequest);
@@ -26,19 +22,8 @@ public class ProxyFilter extends HttpFiltersAdapter {
         this.doSoundFix = args[0];
         this.doSkinFix = args[1];
         this.doCapeFix = args[2];
-        Main.getLogger().info(Arrays.toString(args));
+        this.doLoginFix = args[3];
     }
-
-    public HttpObject responsePre(HttpObject httpObject) {
-        System.out.println("Response is: " + httpObject);
-
-        if (httpObject instanceof HttpContent) {
-            System.out.println(((HttpContent) httpObject)
-                    .content().toString(CharsetUtil.UTF_8));
-        }
-        return httpObject;
-    };
-
 
     @Override
     public HttpResponse clientToProxyRequest(HttpObject httpObject) {
@@ -48,34 +33,42 @@ public class ProxyFilter extends HttpFiltersAdapter {
             String host = httpRequest.headers().get("Host");
             String path;
 
-            Main.getLogger().info(httpRequest.getUri());
             if (httpRequest.getUri().startsWith("http://") || httpRequest.getUri().startsWith("https://")) {
-                if (httpRequest.getUri().contains("pymcl.net")) {
-                    return null;
+                String uri = httpRequest.getUri();
+                for (String ignoredHost : ignoredHosts) {
+                    if (uri.contains(ignoredHost)) {
+                        return null;
+                    }
                 }
 
                 try {
-                    path = new URL(httpRequest.getUri()).getPath();
-                } catch (MalformedURLException e) {
+                    path = httpRequest.getUri().replaceFirst("htt[ps]*://" + host, "");
+                } catch (Exception e) {
                     e.printStackTrace();
                     return null;
                 }
 
                 String doRedirect = null;
 
-                if (doSoundFix && (path.contains("MinecraftResources") || path.contains("/resources/"))) {
-                    doRedirect = path;
-                }
+                if (host.contains("amazonaws.com")) {
+                	System.out.println("amazonaws.com");
+                    if (doSoundFix && (path.contains("MinecraftResources") || path.contains("/resources/"))) {
+                        httpRequest.setUri("http://resourceproxy.pymcl.net" + path);
+                        httpRequest.headers().set("Host", "resourceproxy.pymcl.net");
+                        return null;
+                    }
 
-                if (doSkinFix && path.contains("MinecraftSkins")) {
-                    doRedirect = "/skins/" + path.split("/")[2];
-                }
+                    if (doSkinFix && path.contains("MinecraftSkins")) {
+                        doRedirect = "/skins/" + path.split("/")[2];
+                    }
 
-                if (doCapeFix && path.contains("MinecraftCloaks")) {
-                    doRedirect = "/capes/" + path.split("/")[2];
+                    if (doCapeFix && path.contains("MinecraftCloaks")) {
+                        doRedirect = "/capes/" + path.split("/")[2];
+                    }
                 }
 
                 if (host.contains("minecraft.net")) {
+                	System.out.println("minecraft.net");
                     if (doSkinFix && path.contains("skin")) {
                         doRedirect = "/skins/" + path.split("/")[2];
                     }
@@ -83,16 +76,26 @@ public class ProxyFilter extends HttpFiltersAdapter {
                     if (doCapeFix && path.contains("cloak")) {
                         doRedirect = "/capes/" + path.split("/")[2];
                     }
+
+                    if (doLoginFix && path.contains("game/joinserver")) {
+                    	System.out.println("joinserver");
+                    	doRedirect = path.replaceFirst("game/joinserver.jsp?", "join/");
+                    }
+
+                    if (doLoginFix && path.contains("game/checkserver")) {
+                    	System.out.println("checkserver");
+                    	doRedirect = path.replaceFirst("game/checkserver.jsp?", "join/");
+                    }
                 }
 
                 if (doRedirect == null) {
-                    Main.getLogger().info("Nulled!");
                     return null;
                 }
 
+
+
                 httpRequest.setUri("http://" + newHost + doRedirect);
                 httpRequest.headers().set("Host", newHost);
-                Main.getLogger().info(host + " : " + path + " : " + httpRequest.headers().get("Host") + " : " + httpRequest.getUri());
             }
         }
         return null;

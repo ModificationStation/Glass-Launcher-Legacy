@@ -3,7 +3,6 @@ package net.glasslauncher.proxy;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.HttpRequest;
 import net.glasslauncher.legacy.Config;
-import net.glasslauncher.legacy.Main;
 import net.glasslauncher.proxy.web.ProxyHttpServer;
 import org.littleshoot.proxy.HttpFilters;
 import org.littleshoot.proxy.HttpFiltersSourceAdapter;
@@ -22,7 +21,6 @@ public class Proxy extends Thread {
     public Proxy(boolean[] args) {
         try {
             // 1: args[sound, skin, cape]
-            new File(Config.getGlassPath() + "proxyconf").mkdirs();
 
             ProxyHttpServer main = new ProxyHttpServer();
             main.start();
@@ -31,7 +29,7 @@ public class Proxy extends Thread {
                     DefaultHttpProxyServer.bootstrap()
                             .withPort(Config.getProxyport())
                             .withManInTheMiddle(new CertificateSniffingMitmManager(new Authority(
-                                    new File(Config.getGlassPath() + "proxyconf"),
+                                    new File(Config.getCachePath()),
                                     "glass-launcher-proxy-mitm",
                                     "thisisranlocallysothisdoesntmatter".toCharArray(),
                                     "Glass Launcher",
@@ -47,7 +45,6 @@ public class Proxy extends Thread {
                                     return proxyFilter;
                                 }
                             });
-            Main.getLogger().info("Log format for proxy is oldhost : oldpath : newhost : newurl");
         } catch (Exception e) {
             e.printStackTrace();
         }

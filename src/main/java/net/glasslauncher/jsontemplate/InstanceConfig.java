@@ -10,6 +10,7 @@ public class InstanceConfig extends JsonConfig {
     @Expose private boolean proxySound = false;
     @Expose private boolean proxySkin = false;
     @Expose private boolean proxyCape = false;
+    @Expose private boolean proxyLogin = false;
     @Expose private String maxRam = "512m";
     @Expose private String minRam = "64m";
     @Expose private String javaArgs = "";

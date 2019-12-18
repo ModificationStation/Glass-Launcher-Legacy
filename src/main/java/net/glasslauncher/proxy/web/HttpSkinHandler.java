@@ -8,7 +8,6 @@ import net.glasslauncher.jsontemplate.Profile;
 import net.glasslauncher.jsontemplate.ProfileProperties;
 import net.glasslauncher.jsontemplate.TextureURLs;
 import net.glasslauncher.jsontemplate.Textures;
-import net.glasslauncher.legacy.Main;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -68,6 +67,7 @@ public class HttpSkinHandler implements HttpHandler {
             os.write(response);
             os.close();
         } catch (Exception e) {
+        	System.out.println("glass-netfix: Failed to handle skin:");
             e.printStackTrace();
             t.sendResponseHeaders(500, 0);
             t.close();
@@ -75,18 +75,17 @@ public class HttpSkinHandler implements HttpHandler {
     }
 
     public static BufferedImage[] getImages(String username) throws IOException {
-        Gson gson = new Gson();
         String uuid = WebUtils.getUUID(username);
         if (uuid == null) {
             return null;
         }
-        Profile profile = gson.fromJson(WebUtils.getJsonFromURL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid), Profile.class);
+        Profile profile = (new Gson()).fromJson(WebUtils.getJsonFromURL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid), Profile.class);
 
+        // It doesnt work if I just try casting the object. Don't ask why.
         ProfileProperties properties = profile.getProperties()[0];
 
         byte[] base64 = (properties.getValue()).getBytes(StandardCharsets.UTF_8);
-        Main.getLogger().info(new String(Base64.getDecoder().decode(base64)));
-        Textures textures = gson.fromJson(new String(Base64.getDecoder().decode(base64)), Textures.class);
+        Textures textures = (new Gson()).fromJson(new String(Base64.getDecoder().decode(base64)), Textures.class);
 
         TextureURLs textureURLs = textures.getTextures();
         Map skin = textureURLs.getSKIN();

@@ -39,7 +39,8 @@ public class Wrapper {
             boolean[] proxyArgs = new boolean[]{
                     instJson.isProxySound(),
                     instJson.isProxySkin(),
-                    instJson.isProxyCape()
+                    instJson.isProxyCape(),
+                    instJson.isProxyLogin()
             };
             proxy = new Proxy(proxyArgs);
             proxy.start();
