@@ -23,7 +23,9 @@ public abstract class JsonConfig {
 
     public static JsonConfig loadConfig(String path, Type pClass) {
         try {
-            JsonConfig jsonObj = (new Gson()).fromJson(new FileReader(path), pClass);
+            FileReader fileReader = new FileReader(path);
+            JsonConfig jsonObj = (new Gson()).fromJson(fileReader, pClass);
+            fileReader.close();
             jsonObj.setPath(path);
             return jsonObj;
         } catch (Exception e) {
@@ -39,6 +41,8 @@ public abstract class JsonConfig {
         try {
             PrintStream out = new PrintStream(new FileOutputStream(path));
             out.print(gson.toJson(this));
+            out.flush();
+            out.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
