@@ -1,9 +1,6 @@
 package net.glasslauncher.jsontemplate;
 
-import lombok.Setter;
-
-@Setter
 public class LoginCredsAgent {
-    private String name;
-    private long version;
+    private String name = "Minecraft";
+    private long version = 1;
 }
