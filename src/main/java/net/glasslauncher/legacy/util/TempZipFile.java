@@ -49,13 +49,28 @@ public class TempZipFile {
     }
 
     public boolean fileExists(String relativePath) {
-        return (new File(tempPath + "/" + relativePath)).exists();
+        return getFile(relativePath).exists();
+    }
+
+    public File getFile(String relativePath) {
+        return new File(tempPath + "/" + relativePath);
     }
 
     public void mergeZip(String zipToMergePath) {
         File zipToMerge = new File(zipToMergePath);
         if (zipToMerge.exists()) {
             FileUtils.extractZip(zipToMergePath, tempPath);
+        }
+    }
+
+    public void moveContentsToDir(String target) {
+        File targetPath = new File(target);
+        if (targetPath.exists() && targetPath.isDirectory()) {
+            try {
+                org.apache.commons.io.FileUtils.moveDirectoryToDirectory(new File(tempPath), targetPath, false);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

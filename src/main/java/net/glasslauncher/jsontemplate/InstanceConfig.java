@@ -14,6 +14,7 @@ public class InstanceConfig extends JsonConfig {
     @Expose private String maxRam = "512m";
     @Expose private String minRam = "64m";
     @Expose private String javaArgs = "";
+    @Expose private String version = "none";
 
     /**
      * @param path Path to the JSON file.

@@ -31,7 +31,15 @@ public class Config {
      * The port which the built-in proxy runs on.
      */
     @Getter private static final int proxyport = 25560;
+
+    /**
+     * The port which the built-in webserver for the proxy runs on.
+     */
     @Getter private static final int proxywebport = 25561;
+
+    /**
+     * The hosts
+     */
     @Getter private static String[] proxyIgnoredHosts = new String[] {
             "pymcl.net",
             "localhost",
