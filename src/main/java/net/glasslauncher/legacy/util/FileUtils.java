@@ -2,6 +2,7 @@ package net.glasslauncher.legacy.util;
 
 import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
+import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -10,8 +11,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
+import java.util.Enumeration;
 import java.util.Scanner;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 public class FileUtils {
@@ -152,36 +155,24 @@ public class FileUtils {
         // create output directory if it doesn't exist
         if(!dir.exists()) dir.mkdirs();
         //buffer for read and write data to file
-        byte[] buffer = new byte[1024];
-        try {
-            FileInputStream fis = new FileInputStream(zipFilePath);
-            ZipInputStream zis = new ZipInputStream(fis);
-            ZipEntry ze = zis.getNextEntry();
-            while(ze != null){
-                String fileName = ze.getName();
-                if (ze.isDirectory()) {
-                    new File(destDir + "/" + fileName).mkdirs();
+        try (ZipFile zipFile = new ZipFile(zipFilePath)) {
+            Enumeration<? extends ZipEntry> entries = zipFile.entries();
+            while (entries.hasMoreElements()) {
+                ZipEntry entry = entries.nextElement();
+                File entryDestination = new File(dir, entry.getName());
+                if (entry.isDirectory()) {
+                    entryDestination.mkdirs();
                 } else {
-                    File newFile = new File(destDir + "/" + fileName);
-                    File newFileBypass = new File(destDirBypass + "/" + fileName);
-                    //create directories for sub directories in zip
-                    new File(newFile.getParent()).mkdirs();
-                    FileOutputStream fos = new FileOutputStream(newFileBypass);
-                    int len;
-                    while ((len = zis.read(buffer)) > 0) {
-                        fos.write(buffer, 0, len);
-                    }
-                    fos.close();
-                    //close this ZipEntry
-                    zis.closeEntry();
+                    entryDestination.getParentFile().mkdirs();
+                    InputStream in = zipFile.getInputStream(entry);
+                    entryDestination.createNewFile();
+                    OutputStream out = new FileOutputStream(entryDestination);
+                    IOUtils.copy(in, out);
+                    IOUtils.closeQuietly(in);
+                    out.close();
                 }
-                ze = zis.getNextEntry();
             }
-            //close last ZipEntry
-            zis.closeEntry();
-            zis.close();
-            fis.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
