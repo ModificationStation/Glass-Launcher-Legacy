@@ -1,6 +1,5 @@
 package net.glasslauncher.legacy;
 
-import com.google.gson.Gson;
 import net.glasslauncher.jsontemplate.InstanceConfig;
 import net.glasslauncher.jsontemplate.Mod;
 import net.glasslauncher.jsontemplate.ModList;
@@ -17,10 +16,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.jar.JarEntry;
 
 public class OptionsWindow extends JDialog {
     private InstanceConfig instanceConfig;
