@@ -8,12 +8,6 @@ dependencies {
     testCompile group: 'org.littleshoot', name: 'littleproxy', version: '1.1.2'
     // https://repo1.maven.org/maven2/com/github/ganskef/littleproxy-mitm
     compile group: 'com.github.ganskef', name: 'littleproxy-mitm', version: '1.1.0'
-    // https://repo1.maven.org/maven2/commons-io/commons-io
-    //compile group: 'commons-io', name: 'commons-io', version: '2.4'
-    // https://repo1.maven.org/maven2/org/bouncycastle/bcpkix-jdk15on
-    //compile group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.63'
-    //// https://repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on
-    compile group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.63'
     // https://repo1.maven.org/maven2/com/google/code/gson/gson
     implementation 'com.google.code.gson:gson:2.8.6'
 
