@@ -14,6 +14,7 @@ import java.net.URL;
 public class LaunchArgs {
     private String instpath;
     private HttpURLConnection req;
+    private InstanceConfig instjson;
 
     {
         try {
@@ -31,6 +32,12 @@ public class LaunchArgs {
         }
         String instance = args[2];
         instpath = Config.getGlassPath() + "instances/" + instance;
+        try {
+            instjson = (new Gson()).fromJson(new FileReader(instpath + "/instance_config.json"), InstanceConfig.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
         String version = getVersion();
         String javaargs = getJavaArgs();
         String[] logininfo;
@@ -52,7 +59,7 @@ public class LaunchArgs {
                 username,
                 session,
                 version,
-                "true",
+                getProxyArg(),
                 instance
         };
     }
@@ -99,27 +106,10 @@ public class LaunchArgs {
     }
 
     private String getVersion() {
-        String version;
-        ModpackConfig instjson;
-        try {
-            instjson = (new Gson()).fromJson(new FileReader(instpath + "/.minecraft/modpack.json"), ModpackConfig.class);
-            version = instjson.getMcVer();
-        } catch (Exception e) {
-            Main.getLogger().severe("No instance config found!");
-            e.printStackTrace();
-            return "b1.7.3";
-        }
-        return version;
+        return instjson.getVersion();
     }
 
     private String getJavaArgs() {
-        InstanceConfig instjson;
-        try {
-            instjson = (new Gson()).fromJson(new FileReader(instpath + "/instance_config.json"), InstanceConfig.class);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "";
-        }
         String javaargs = "";
 
         if (instjson.getMaxRam() != null) {
@@ -137,5 +127,9 @@ public class LaunchArgs {
         }
 
         return javaargs;
+    }
+
+    private String getProxyArg() {
+        return String.valueOf(instjson.isProxySound() || instjson.isProxyCape() || instjson.isProxySkin() || instjson.isProxyLogin());
     }
 }

@@ -1,8 +1,10 @@
 package net.glasslauncher.proxy;
 
+import com.sun.net.httpserver.HttpServer;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.HttpRequest;
 import net.glasslauncher.legacy.Config;
+import net.glasslauncher.legacy.Main;
 import net.glasslauncher.proxy.web.ProxyHttpServer;
 import org.littleshoot.proxy.HttpFilters;
 import org.littleshoot.proxy.HttpFiltersSourceAdapter;
@@ -16,14 +18,14 @@ import java.io.File;
 
 public class Proxy extends Thread {
     private HttpProxyServerBootstrap serverBoot;
-    private HttpProxyServer server;
+    private HttpProxyServer httpProxyServer;
+    private HttpServer httpServer;
 
     public Proxy(boolean[] args) {
         try {
             // 1: args[sound, skin, cape]
 
-            ProxyHttpServer main = new ProxyHttpServer();
-            main.start();
+            httpServer = ProxyHttpServer.start();
 
             this.serverBoot =
                     DefaultHttpProxyServer.bootstrap()
@@ -51,10 +53,14 @@ public class Proxy extends Thread {
     }
 
     public void start() {
-        server = serverBoot.start();
+        httpProxyServer = serverBoot.start();
+        httpServer.start();
+        Main.getLogger().info("Proxy servers started!");
     }
 
     public void exit() {
-        server.stop();
+        httpProxyServer.stop();
+        httpServer.stop(0);
+        Main.getLogger().info("Proxy servers stopped!");
     }
 }

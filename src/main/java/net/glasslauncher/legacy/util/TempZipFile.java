@@ -66,7 +66,7 @@ public class TempZipFile {
 
     public void copyContentsToDir(String relative, String target) {
         File targetPath = new File(target);
-        File relativePath = new File(relative);
+        File relativePath = new File(tempPath + "/" + relative);
         if (targetPath.exists() && targetPath.isDirectory()) {
             for (File file : Objects.requireNonNull(relativePath.listFiles())) {
                 try {

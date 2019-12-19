@@ -4,6 +4,8 @@ import net.glasslauncher.jsontemplate.InstanceConfig;
 import net.glasslauncher.jsontemplate.Mod;
 import net.glasslauncher.jsontemplate.ModList;
 import net.glasslauncher.legacy.components.DragDropList;
+import net.glasslauncher.legacy.components.JBackgroundImagePanel;
+import net.glasslauncher.legacy.components.JBackgroundImageTabbedPane;
 import net.glasslauncher.legacy.util.InstanceManager;
 import net.glasslauncher.legacy.util.JsonConfig;
 import org.apache.commons.io.FileUtils;
@@ -19,6 +21,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 
 public class OptionsWindow extends JDialog {
+    private JPanel panel;
     private InstanceConfig instanceConfig;
     private ModList modList;
     private ArrayList<Mod> jarMods;
@@ -38,15 +41,17 @@ public class OptionsWindow extends JDialog {
 
     /**
      * Sets up options window for given instance.
-     * @param frame Frame object to block while open.
+     * @param panel Frame object to block while open.
      * @param instance Target instance.
      */
-    public OptionsWindow(Frame frame, String instance) {
-        super(frame);
+    public OptionsWindow(Frame panel, String instance) {
+        super(panel);
         setModal(true);
         setLayout(new GridLayout());
         setResizable(false);
         setTitle("Instance Options");
+        this.panel = new JPanel();
+        add(this.panel);
 
         instName = instance;
         instpath = Config.getGlassPath() + "instances/" + instance + "/";
@@ -60,6 +65,7 @@ public class OptionsWindow extends JDialog {
         }
 
         JTabbedPane tabpane = new JTabbedPane();
+        tabpane.setOpaque(false);
         tabpane.setPreferredSize(new Dimension(837, 448 - tabpane.getInsets().top - tabpane.getInsets().bottom));
 
         tabpane.addTab("Settings", makeInstSettings());
@@ -101,7 +107,7 @@ public class OptionsWindow extends JDialog {
             }
         );
 
-        add(tabpane);
+        this.panel.add(tabpane);
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
@@ -112,8 +118,9 @@ public class OptionsWindow extends JDialog {
      *
      * @return The panel object containing all created components.
      */
-    private Panel makeInstSettings() {
-        Panel instsettings = new Panel();
+    private JPanel makeInstSettings() {
+        JPanel instsettings = new JPanel();
+        instsettings.setOpaque(false);
         instsettings.setLayout(null);
 
         JLabel javaargslabel = new JLabel("Java Arguments:");
@@ -152,6 +159,7 @@ public class OptionsWindow extends JDialog {
         instsettings.add(skinproxylabel);
 
         skinproxy = new JCheckBox();
+        skinproxy.setOpaque(false);
         skinproxy.setBounds(150, 97, 20, 20);
         skinproxy.setSelected(instanceConfig.isProxySkin());
         instsettings.add(skinproxy);
@@ -161,6 +169,7 @@ public class OptionsWindow extends JDialog {
         instsettings.add(capeproxylabel);
 
         capeproxy = new JCheckBox();
+        capeproxy.setOpaque(false);
         capeproxy.setBounds(150, 125, 20, 20);
         capeproxy.setSelected(instanceConfig.isProxyCape());
         instsettings.add(capeproxy);
@@ -170,6 +179,7 @@ public class OptionsWindow extends JDialog {
         instsettings.add(soundproxylabel);
 
         soundproxy = new JCheckBox();
+        soundproxy.setOpaque(false);
         soundproxy.setBounds(150, 153, 20, 20);
         soundproxy.setSelected(instanceConfig.isProxySound());
         instsettings.add(soundproxy);
@@ -179,6 +189,7 @@ public class OptionsWindow extends JDialog {
         instsettings.add(loginproxylabel);
 
         loginproxy = new JCheckBox();
+        loginproxy.setOpaque(false);
         loginproxy.setBounds(150, 181, 20, 20);
         loginproxy.setSelected(instanceConfig.isProxyLogin());
         instsettings.add(loginproxy);
@@ -188,13 +199,14 @@ public class OptionsWindow extends JDialog {
 
     private JPanel makeMods() {
         JPanel modsPanel = new JPanel();
+        modsPanel.setOpaque(false);
         modsPanel.setLayout(null);
 
         jarMods = new ArrayList<>();
         JScrollPane modListScroll = new JScrollPane();
         modDragDropList = new DragDropList(jarMods);
         refreshModList();
-        modListScroll.setBounds(0, 0, 200, 200);
+        modListScroll.setBounds(20, 20, 200, 200);
         modListScroll.setViewportView(modDragDropList);
 
         JButton toggleModsButton = new JButton();
@@ -210,7 +222,7 @@ public class OptionsWindow extends JDialog {
             }
             modDragDropList.repaint();
         });
-        toggleModsButton.setBounds(0, 210, 200, 22);
+        toggleModsButton.setBounds(20, 230, 200, 22);
 
         JButton applyModsButton = new JButton();
         applyModsButton.setText("Apply Current Mod Configuration");
@@ -230,7 +242,7 @@ public class OptionsWindow extends JDialog {
             }
             InstanceManager.addMods(instName, modDragDropList.model);
         });
-        applyModsButton.setBounds(0, 242, 200, 22);
+        applyModsButton.setBounds(20, 262, 200, 22);
 
         JButton addModsButton = new JButton();
         addModsButton.setText("Add Mods");
@@ -249,10 +261,11 @@ public class OptionsWindow extends JDialog {
             }
             refreshModList();
         });
-        addModsButton.setBounds(0, 274, 200, 22);
+        addModsButton.setBounds(20, 294, 200, 22);
 
         JButton removeModsButton = new JButton();
         removeModsButton.setText("Remove Selected Mods");
+        removeModsButton.setForeground(new Color(81, 0, 0));
         removeModsButton.addActionListener(event -> {
             for (Object modObj : modDragDropList.getSelectedValuesList()) {
                 Mod mod = (Mod) modObj;
@@ -260,7 +273,7 @@ public class OptionsWindow extends JDialog {
             }
             refreshModList();
         });
-        removeModsButton.setBounds(0, 306, 200, 22);
+        removeModsButton.setBounds(20, 326, 200, 22);
 
         modsPanel.add(modListScroll);
         modsPanel.add(toggleModsButton);
