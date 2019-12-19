@@ -137,9 +137,6 @@ public class Config {
     @Getter private static final HashMap<String, String> glassDeps = new HashMap<String, String>() {{
         put("http://easyminelauncher.bonsaimind.org/EasyMineLauncher_v1.0.jar", "D7873F0A7A97AD78DB711BAF7D24B795");
         put("https://repo1.maven.org/maven2/com/google/code/gson/gson/2.8.6/gson-2.8.6.jar", "310f5841387183aca7900fead98d4858");
-        put("https://repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.63/bcprov-jdk15on-1.63.jar", "D357114F1605C034EBCB99F3C9D36F7E");
-        put("https://repo1.maven.org/maven2/org/bouncycastle/bcpkix-jdk15on/1.63/bcpkix-jdk15on-1.63.jar", "C7DC9B66A0535F44DD088BABEA47B506");
-        put("https://repo1.maven.org/maven2/commons-io/commons-io/2.4/commons-io-2.4.jar", "7F97854DC04C119D461FED14F5D8BB96");
         put("https://repo1.maven.org/maven2/com/github/ganskef/littleproxy-mitm/1.1.0/littleproxy-mitm-1.1.0.jar", "B1FD7C2BFCD32BCF5873D298484DABBA");
         put("https://github.com/adamfisk/LittleProxy/releases/download/littleproxy-1.1.2/littleproxy-1.1.2-littleproxy-shade.jar", "05613C6D1BB1A8F826711BA54569311E");
     }};
