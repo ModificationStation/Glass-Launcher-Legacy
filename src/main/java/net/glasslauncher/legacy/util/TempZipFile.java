@@ -6,6 +6,7 @@ import net.glasslauncher.legacy.Main;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class TempZipFile {
@@ -63,13 +64,20 @@ public class TempZipFile {
         }
     }
 
-    public void moveContentsToDir(String target) {
+    public void copyContentsToDir(String relative, String target) {
         File targetPath = new File(target);
+        File relativePath = new File(relative);
         if (targetPath.exists() && targetPath.isDirectory()) {
-            try {
-                org.apache.commons.io.FileUtils.moveDirectoryToDirectory(new File(tempPath), targetPath, false);
-            } catch (Exception e) {
-                e.printStackTrace();
+            for (File file : Objects.requireNonNull(relativePath.listFiles())) {
+                try {
+                    if (file.isFile()) {
+                        org.apache.commons.io.FileUtils.copyFileToDirectory(file, targetPath);
+                    } else {
+                        org.apache.commons.io.FileUtils.copyDirectoryToDirectory(file, targetPath);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
