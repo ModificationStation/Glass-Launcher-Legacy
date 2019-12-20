@@ -1,7 +1,10 @@
 package net.glasslauncher.legacy.mc;
 
 import com.google.gson.Gson;
-import net.glasslauncher.jsontemplate.*;
+import net.glasslauncher.jsontemplate.InstanceConfig;
+import net.glasslauncher.jsontemplate.LoginCreds;
+import net.glasslauncher.jsontemplate.LoginResponse;
+import net.glasslauncher.jsontemplate.LoginResponseAgent;
 import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
 
@@ -31,7 +34,7 @@ public class LaunchArgs {
             return null;
         }
         String instance = args[2];
-        instpath = Config.getGlassPath() + "instances/" + instance;
+        instpath = Config.getGLASS_PATH() + "instances/" + instance;
         try {
             instjson = (new Gson()).fromJson(new FileReader(instpath + "/instance_config.json"), InstanceConfig.class);
         } catch (Exception e) {
@@ -39,7 +42,6 @@ public class LaunchArgs {
             return null;
         }
         String version = getVersion();
-        String javaargs = getJavaArgs();
         String[] logininfo;
         if (args[1].isEmpty()) {
             logininfo = new String[]{"", args[0]};

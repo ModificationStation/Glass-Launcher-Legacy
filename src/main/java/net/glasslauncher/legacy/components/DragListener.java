@@ -11,7 +11,7 @@ class DragListener implements DragSourceListener, DragGestureListener {
 
     DragListener(DragDropList list) {
         this.list = list;
-        DragGestureRecognizer dgr = ds.createDefaultDragGestureRecognizer(list,
+        ds.createDefaultDragGestureRecognizer(list,
                 DnDConstants.ACTION_MOVE, this);
 
     }

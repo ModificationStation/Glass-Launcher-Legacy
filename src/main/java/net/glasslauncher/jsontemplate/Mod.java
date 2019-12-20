@@ -17,17 +17,6 @@ public class Mod {
         this.enabled = modEnabled;
     }
 
-    /**
-     * Sets mod type.
-     * 0: Jar mod
-     * 1: Loader mod
-     * @param modType 0-1(inclusive) int.
-     */
-    public void setType(long modType) {
-        if (modType < 0 || modType > 1)
-        this.type = modType;
-    }
-
     public String toString() {
         return name;
     }

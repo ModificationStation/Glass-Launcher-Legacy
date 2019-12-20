@@ -14,10 +14,6 @@ public class HintTextField extends JTextField {
         this(hint, Color.black, Color.gray);
     }
 
-    public HintTextField(String hint, Color defaultColor) {
-        this(hint, defaultColor, Color.gray);
-    }
-
     public HintTextField(String hint, Color defaultColor, Color hintColor) {
         this.defaultColor = defaultColor;
         this.hintColor = hintColor;

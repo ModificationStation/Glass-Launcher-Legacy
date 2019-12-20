@@ -9,7 +9,8 @@ import javax.swing.*;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
-import java.nio.file.*;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
 import java.util.Objects;
 
 public class InstanceManager {
@@ -17,9 +18,8 @@ public class InstanceManager {
     /**
      * Detects what kind of modpack zip has been provided and then calls the related install function for the type.
      * @param path Path to instance zip file.
-     * @return true if succeeded, false otherwise.
      */
-    public static boolean installModpack(String path) {
+    public static void installModpack(String path) {
         path = path.replace("\\", "/");
         Main.getLogger().info("Installing " + path);
         boolean isURL = true;
@@ -32,23 +32,19 @@ public class InstanceManager {
 
             String filename = path.substring(path.lastIndexOf('/') + 1);
             if (isURL) {
-                FileUtils.downloadFile(path, Config.getCachePath() + "instancezips");
-                installModpackZip(Config.getCachePath() + "instancezips", filename);
+                FileUtils.downloadFile(path, Config.getCACHE_PATH() + "instancezips");
+                installModpackZip(Config.getCACHE_PATH() + "instancezips", filename);
             } else {
                 if ((new File(path)).exists()) {
                     installModpackZip(path, filename);
-                } else {
-                    return false;
                 }
             }
-            return true;
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
         }
     }
 
-    private static boolean installModpackZip(String path, String filename) {
+    private static void installModpackZip(String path, String filename) {
         TempZipFile instanceZipFile = new TempZipFile(path);
         try {
             boolean isMultiMC = false;
@@ -70,9 +66,9 @@ public class InstanceManager {
 
             if (isMultiMC) {
                 Main.getLogger().info("Provided instance is a MultiMC instance. Importing...");
-                if ((new File(Config.getGlassPath() + "instances/" + filename)).exists()) {
+                if ((new File(Config.getGLASS_PATH() + "instances/" + filename)).exists()) {
                     Main.getLogger().info("Instance \"" + filename + "\" already exists!");
-                    return false;
+                    return;
                 }
                 InputStream inputStream = mmcPackURL.openStream();
                 String jsonText = FileUtils.convertStreamToString(inputStream);
@@ -80,24 +76,21 @@ public class InstanceManager {
                 MultiMCPack multiMCPack = (new Gson()).fromJson(jsonText, MultiMCPack.class);
                 importMultiMC(new File(path), filename, mmcZipInstDir, multiMCPack);
 
-                return true;
             } else if (instanceZipFile.getFile("instance_config.json").exists()) {
                 InstanceConfig instanceConfig = new InstanceConfig(instanceZipFile.getFile("instance_config.json").getPath());
                 createBlankInstance(instanceConfig.getVersion(), filename);
-                instanceZipFile.copyContentsToDir("", Config.getGlassPath() + "instances/" + filename);
-                return true;
+                instanceZipFile.copyContentsToDir("", Config.getGLASS_PATH() + "instances/" + filename);
             }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            //instanceZipFile.close(false);
+            instanceZipFile.close(false);
         }
-        return false;
     }
 
-    public static boolean createBlankInstance(String version, String name) {
+    public static void createBlankInstance(String version, String name) {
         Main.getLogger().info("Creating instance \"" + name + "\" on version " + version);
-        String versionsCachePath = Config.getCachePath() + "versions";
+        String versionsCachePath = Config.getCACHE_PATH() + "versions";
         String instanceFolder = Config.getInstancePath(name);
         String minecraftFolder = instanceFolder + "/.minecraft";
         (new File(versionsCachePath)).mkdirs();
@@ -110,7 +103,7 @@ public class InstanceManager {
                     Files.copy(versionCacheJar.toPath(), new File(minecraftFolder + "/bin/minecraft.jar").toPath());
                 } catch (FileAlreadyExistsException e) {
                     Main.getLogger().info("Instance \"" + name + "\" already exists!");
-                    return false;
+                    return;
                 } catch (Exception e) {
                     e.printStackTrace();
                     try {
@@ -119,7 +112,7 @@ public class InstanceManager {
                         e.printStackTrace();
                         ex.printStackTrace();
                     }
-                    return false;
+                    return;
                 }
             } else {
                 try {
@@ -136,50 +129,33 @@ public class InstanceManager {
                         e.printStackTrace();
                         ex.printStackTrace();
                     }
-                    return false;
+                    return;
                 }
             }
             File lwjglCacheZip = new File(versionsCachePath + "/lwjgl.zip");
             if (!lwjglCacheZip.exists()) {
-                FileUtils.downloadFile("https://files.pymcl.net/client/lwjgl/lwjgl." + Config.getOs() + ".zip", versionsCachePath, null, "lwjgl.zip");
+                FileUtils.downloadFile("https://files.pymcl.net/client/lwjgl/lwjgl." + Config.getOS() + ".zip", versionsCachePath, null, "lwjgl.zip");
             }
             FileUtils.extractZip(lwjglCacheZip.getPath(), minecraftFolder + "/bin");
-            return true;
+            return;
         }
         if (version.equals("custom")) {
             File lwjglCacheZip = new File(versionsCachePath + "/lwjgl.zip");
             if (!lwjglCacheZip.exists()) {
-                FileUtils.downloadFile("https://files.pymcl.net/client/lwjgl/lwjgl." + Config.getOs() + ".zip", versionsCachePath, null, "lwjgl.zip");
+                FileUtils.downloadFile("https://files.pymcl.net/client/lwjgl/lwjgl." + Config.getOS() + ".zip", versionsCachePath, null, "lwjgl.zip");
             }
             FileUtils.extractZip(lwjglCacheZip.getPath(), minecraftFolder + "/bin");
-            return true;
-        }
-        else {
+        } else {
             try {
                 org.apache.commons.io.FileUtils.deleteDirectory(new File(minecraftFolder));
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return false;
-        }
-    }
-
-    public static void addMod(String modpath, String instanceFolder) {
-        String minecraftFolder = instanceFolder + "/.minecraft";
-        try {
-            TempZipFile jarFile = new TempZipFile(minecraftFolder + "/bin/minecraft.jar");
-            if (jarFile.fileExists("META-INF")) {
-                jarFile.deleteFile("META-INF");
-            }
-            jarFile.mergeZip(modpath);
-            jarFile.close();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
     public static void addMods(String instance, ListModel<Mod> mods) {
-        instance = Config.getGlassPath() + "instances/" + instance;
+        instance = Config.getGLASS_PATH() + "instances/" + instance;
         try {
             TempZipFile jarFile = new TempZipFile(instance + "/.minecraft/bin/minecraft.jar");
             if (jarFile.fileExists("META-INF")) {
@@ -198,7 +174,7 @@ public class InstanceManager {
 
     private static void importMultiMC(File file, String instance, String mmcZipInstDir, MultiMCPack multiMCPack) throws GenericInvalidVersionException{
         TempZipFile mmcZip = new TempZipFile(file.getPath());
-        String instPath = Config.getGlassPath() + "instances/" + instance;
+        String instPath = Config.getGLASS_PATH() + "instances/" + instance;
         InstanceConfig instanceConfig = new InstanceConfig(instPath + "/instance_config.json");
         ModList modList = new ModList(instPath + "/mods/mods.json");
         boolean hasCustomJar = false;

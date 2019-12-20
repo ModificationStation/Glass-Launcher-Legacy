@@ -56,7 +56,7 @@ public class ConsoleWindow extends JFrame {
             Pastee paste = new Pastee(textArea.getText());
             String url = paste.post();
             if (url != null) {
-                new OpenLinkWindow(null, url);
+                new OpenLinkWindow(this, url);
             } else {
                 JOptionPane.showMessageDialog(null, "An error occurred while uploading. Try again later.");
             }

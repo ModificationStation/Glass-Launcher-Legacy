@@ -1,5 +1,6 @@
 package net.glasslauncher.legacy;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.Getter;
@@ -16,31 +17,31 @@ public class Config {
     public static void loadConfigFiles() {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         mcVersions = gson.fromJson(new InputStreamReader(Main.class.getResourceAsStream("assets/mcversions.json")), MCVersions.class);
-        launcherConfig = (LauncherConfig) JsonConfig.loadConfig(Config.getGlassPath() + "launcher_config.json", LauncherConfig.class);
+        launcherConfig = (LauncherConfig) JsonConfig.loadConfig(Config.getGLASS_PATH() + "launcher_config.json", LauncherConfig.class);
         if (launcherConfig == null) {
-            launcherConfig = new LauncherConfig(Config.getGlassPath() + "launcher_config.json");
+            launcherConfig = new LauncherConfig(Config.getGLASS_PATH() + "launcher_config.json");
         }
     }
 
     @Getter private static MCVersions mcVersions;
     @Getter private static LauncherConfig launcherConfig;
 
-    @Getter private static final long skinCacheAgeLimit = 600L;
+    @Getter private static final long CACHE_AGE_LIMIT = 600L;
 
     /**
      * The port which the built-in proxy runs on.
      */
-    @Getter private static final int proxyport = 25560;
+    @Getter private static final int PROXY_PORT = 25560;
 
     /**
      * The port which the built-in webserver for the proxy runs on.
      */
-    @Getter private static final int proxywebport = 25561;
+    @Getter private static final int PROXY_WEB_PORT = 25561;
 
     /**
      * The hosts
      */
-    @Getter private static String[] proxyIgnoredHosts = new String[] {
+    @Getter private static String[] PROXY_IGNORED_HOSTS = new String[] {
             "pymcl.net",
             "localhost",
             "127.0.0.1",
@@ -55,35 +56,35 @@ public class Config {
      * The current OS of the user.
      * @see #getOSString()
      */
-    @Getter private static final String os = getOSString();
+    @Getter private static final String OS = getOSString();
 
     /**
      * The version of the launcher.
      */
-    @Getter private static final String version = "v0.3";
+    @Getter private static final String VERSION = "v0.3";
 
     /**
      * The path of the launcher's files.
      * @see #getDataPath(String)
      */
-    @Getter private static final String glassPath = getDataPath(".PyMCL");
+    @Getter private static final String GLASS_PATH = getDataPath(".PyMCL");
 
     /**
      * The path of PyMCL's files.
      * Used for importing.
      * @see #getDataPath(String)
      */
-    @Getter private static final String pymclPath = getDataPath(".PyMCL");
+    @Getter private static final String PYMCL_PATH = getDataPath(".PyMCL");
 
     /**
      * The path of the launcher's cache files.
      */
-    @Getter private static final String cachePath = glassPath + "cache/";
+    @Getter private static final String CACHE_PATH = GLASS_PATH + "cache/";
 
     /**
      * The path of the Java binary running the launcher.
      */
-    @Getter private static final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
+    @Getter private static final String JAVA_BIN = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
 
     /**
      * JSON format map that reduces clutter and makes the end JSON easy to read.
@@ -111,9 +112,9 @@ public class Config {
      * @return A full path to the data folder.
      */
     private static String getDataPath(String name) {
-        if (os.equals("windows")) {
+        if (OS.equals("windows")) {
             return System.getenv("AppData").replaceAll("\\\\", "/") + "/" + name + "/";
-        } else if (os.equals("osx")) {
+        } else if (OS.equals("osx")) {
             return System.getProperty("user.home") + "/Library/Application Support/" + name + "/";
         } else {
 
@@ -131,13 +132,13 @@ public class Config {
         if (instance == null || instance.isEmpty()) {
             throw new IllegalArgumentException("Instance cannot be empty or null!");
         }
-        return glassPath + "instances/" + instance + "/";
+        return GLASS_PATH + "instances/" + instance + "/";
     }
 
-    @Getter private static final HashMap<String, String> glassDeps = new HashMap<String, String>() {{
-        put("http://easyminelauncher.bonsaimind.org/EasyMineLauncher_v1.0.jar", "D7873F0A7A97AD78DB711BAF7D24B795");
-        put("https://repo1.maven.org/maven2/com/google/code/gson/gson/2.8.6/gson-2.8.6.jar", "310f5841387183aca7900fead98d4858");
-        put("https://repo1.maven.org/maven2/com/github/ganskef/littleproxy-mitm/1.1.0/littleproxy-mitm-1.1.0.jar", "B1FD7C2BFCD32BCF5873D298484DABBA");
-        put("https://github.com/adamfisk/LittleProxy/releases/download/littleproxy-1.1.2/littleproxy-1.1.2-littleproxy-shade.jar", "05613C6D1BB1A8F826711BA54569311E");
-    }};
+    @Getter private static final ImmutableMap<String, String> GLASS_DEPS = ImmutableMap.<String, String>builder()
+        .put("http://easyminelauncher.bonsaimind.org/EasyMineLauncher_v1.0.jar", "D7873F0A7A97AD78DB711BAF7D24B795")
+        .put("https://repo1.maven.org/maven2/com/google/code/gson/gson/2.8.6/gson-2.8.6.jar", "310f5841387183aca7900fead98d4858")
+        .put("https://repo1.maven.org/maven2/com/github/ganskef/littleproxy-mitm/1.1.0/littleproxy-mitm-1.1.0.jar", "B1FD7C2BFCD32BCF5873D298484DABBA")
+        .put("https://github.com/adamfisk/LittleProxy/releases/download/littleproxy-1.1.2/littleproxy-1.1.2-littleproxy-shade.jar", "05613C6D1BB1A8F826711BA54569311E")
+        .build();
 }

@@ -30,13 +30,13 @@ class DragDropHandler extends TransferHandler {
 
             JList.DropLocation dl = (JList.DropLocation) support.getDropLocation();
             DefaultListModel model = list.model;
-            Object draggedImage = model.get(draggedImageIndex);
+            Object draggedObject = model.get(draggedImageIndex);
             int dropIndex = dl.getIndex();
-            if (model.indexOf(draggedImage) < dropIndex) {
+            if (model.indexOf(draggedObject) < dropIndex) {
                 dropIndex--;
             }
-            model.removeElement(draggedImage);
-            model.add(dropIndex, draggedImage);
+            model.removeElement(draggedObject);
+            model.add(dropIndex, draggedObject);
             return true;
         } catch (Exception e) {
             e.printStackTrace();

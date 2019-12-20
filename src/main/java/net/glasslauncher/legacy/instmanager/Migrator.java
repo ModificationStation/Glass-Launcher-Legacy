@@ -4,6 +4,7 @@ import net.glasslauncher.legacy.Main;
 import net.glasslauncher.legacy.util.DirFilenameFilter;
 
 import java.io.File;
+import java.util.Objects;
 
 import static org.apache.commons.io.FileUtils.moveDirectory;
 
@@ -25,7 +26,7 @@ public class Migrator {
      * @// TODO: 20/09/2019 Finish importing the entire file structure and porting JSONs to new formats.
      */
     public void migrate() {
-        String[] instances = new File(oldpath, "instances").list(new DirFilenameFilter());
+        String[] instances = Objects.requireNonNull(new File(oldpath, "instances").list(new DirFilenameFilter()));
         if (instances.length < 1) {
             Main.getLogger().severe("No instances found! Aborting.");
             return;

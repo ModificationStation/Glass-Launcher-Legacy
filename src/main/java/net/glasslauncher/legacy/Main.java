@@ -24,9 +24,9 @@ public class Main {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
             LocalDateTime now = LocalDateTime.now();
             String time = dtf.format(now);
-            File logdir = new File(Config.getGlassPath() + "/glass-logs/launcher");
+            File logdir = new File(Config.getGLASS_PATH() + "/glass-logs/launcher");
             logdir.mkdirs();
-            Handler file_handler = new FileHandler(Config.getGlassPath()+ "/glass-logs/launcher/" + time + ".log");
+            Handler file_handler = new FileHandler(Config.getGLASS_PATH()+ "/glass-logs/launcher/" + time + ".log");
             SimpleFormatter format = new SimpleFormatter();
             logger.addHandler(file_handler);
             file_handler.setFormatter(format);
@@ -53,7 +53,7 @@ public class Main {
 
         for (Object lib : libs.toArray()) {
             try {
-                Classpath.addFile(Config.getGlassPath() + "lib/" + lib);
+                Classpath.addFile(Config.getGLASS_PATH() + "lib/" + lib);
             } catch (Exception e) {
                 logger.info("Failed to load \"" + lib + "\".");
                 e.printStackTrace();
@@ -72,7 +72,7 @@ public class Main {
                 return;
             }
         }
-        mainwin = new MainWindow(args, console);
+        mainwin = new MainWindow(console);
     }
 
     /**
@@ -80,11 +80,10 @@ public class Main {
      */
     private static void getDeps() {
         getLogger().info("Checking dependencies...");
-        HashMap<String, String> deps = Config.getGlassDeps();
 
-        for (String dep : deps.keySet()) {
+        for (String dep : Config.getGLASS_DEPS().keySet()) {
             try {
-                FileUtils.downloadFile(dep, Config.getGlassPath() + "/lib/", deps.get(dep));
+                FileUtils.downloadFile(dep, Config.getGLASS_PATH() + "/lib/", Config.getGLASS_DEPS().get(dep));
                 libs.add(dep.substring(dep.lastIndexOf('/') + 1));
             } catch (Exception e) {
                 getLogger().info("Failed to download dependency. Invalid formatting?");

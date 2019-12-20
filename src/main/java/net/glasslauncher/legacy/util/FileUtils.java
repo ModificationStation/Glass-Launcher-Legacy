@@ -5,7 +5,6 @@ import net.glasslauncher.legacy.Main;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -15,16 +14,15 @@ import java.util.Enumeration;
 import java.util.Scanner;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 
 public class FileUtils {
 
-    public static String readFile(String path) throws IOException, URISyntaxException {
+    public static String readFile(String path) throws IOException {
         return readFile(path, false);
     }
 
     public static String readFile(String path, boolean isJar)
-            throws IOException, URISyntaxException {
+            throws IOException {
         byte[] encoded;
         if (isJar) {
             String resLocation = path.split("(!)(?!.*\1)")[1].replaceAll("\\\\", "/");
@@ -107,12 +105,12 @@ public class FileUtils {
 
         //Create byte array to read data in chunks
         byte[] byteArray = new byte[1024];
-        int bytesCount = 0;
+        int bytesCount;
 
         //Read file data and update in message digest
         while ((bytesCount = fis.read(byteArray)) != -1) {
             digest.update(byteArray, 0, bytesCount);
-        };
+        }
 
         //close the stream; We don't need it now.
         fis.close();
@@ -123,9 +121,8 @@ public class FileUtils {
         //This bytes[] has bytes in decimal format;
         //Convert it to hexadecimal format
         StringBuilder sb = new StringBuilder();
-        for(int i=0; i< bytes.length ;i++)
-        {
-            sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+        for (byte b : bytes) {
+            sb.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
         }
 
         //return complete hash
@@ -144,14 +141,7 @@ public class FileUtils {
      * @param destDir
      */
     public static void extractZip(String zipFilePath, String destDir) {
-        String destDirBypass;
-
         File dir = new File(destDir);
-        if (Config.getOs() == "windows") {
-            destDirBypass = "\\\\?\\" + destDir;
-        } else {
-            destDirBypass = destDir;
-        }
         // create output directory if it doesn't exist
         if(!dir.exists()) dir.mkdirs();
         //buffer for read and write data to file

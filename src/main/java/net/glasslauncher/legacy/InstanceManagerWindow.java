@@ -12,7 +12,6 @@ import java.io.File;
 import java.util.Objects;
 
 class InstanceManagerWindow extends JDialog {
-    private JPanel[] instanceWidgets = new JPanel[]{};
     private JPanel deletePanel = new JPanel();
 
     InstanceManagerWindow(Frame frame) {
@@ -105,10 +104,10 @@ class InstanceManagerWindow extends JDialog {
     }
 
     private void updateInstanceList() {
-        (new File(Config.getGlassPath() + "instances")).mkdirs();
+        (new File(Config.getGLASS_PATH() + "instances")).mkdirs();
         deletePanel.removeAll();
         deletePanel.repaint();
-        for (File instance : (Objects.requireNonNull(new File(Config.getGlassPath() + "instances").listFiles()))) {
+        for (File instance : (Objects.requireNonNull(new File(Config.getGLASS_PATH() + "instances").listFiles()))) {
             if (instance.isDirectory()) {
                 JButton deleteButton = new JButton();
                 deleteButton.setText("Delete \"" + instance.getName() + "\".");

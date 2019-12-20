@@ -1,7 +1,5 @@
 package net.glasslauncher.legacy.components;
 
-import net.glasslauncher.legacy.Main;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;

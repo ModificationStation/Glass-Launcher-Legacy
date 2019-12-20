@@ -27,14 +27,13 @@ class MainWindow extends JFrame {
     /**
      * Sets up the main window object.
      * @// TODO: 20/09/2019 To be split into a proper class with multiple functions.
-     * @param args Args passed from main. Unused.
      * @param console The console for the launcher. Used to close the console.
      */
-    MainWindow(String[] args, Frame console) {
+    MainWindow(Frame console) {
         // Setting the size, icon, location and layout of the launcher
         Insets insets = getInsets();
         Main.getLogger().info("Starting...");
-        setTitle("Glass Launcher " + Config.getVersion());
+        setTitle("Glass Launcher " + Config.getVERSION());
         setIconImage(Toolkit.getDefaultToolkit().createImage(MainWindow.class.getResource("assets/glass.png")));
         setLayout(new GridLayout(1, 1));
         setLocationRelativeTo(null);
@@ -203,7 +202,7 @@ class MainWindow extends JFrame {
     private void refreshInstanceList() {
         Main.getLogger().info("Refreshing instance list...");
         instsel.setModel(new DefaultComboBoxModel<>());
-        File file = new File(Config.getGlassPath() + "instances");
+        File file = new File(Config.getGLASS_PATH() + "instances");
         String[] instances = file.list((current, name) -> new File(current, name).isDirectory());
         if (instances != null) {
             for (String instance : instances) {

@@ -27,15 +27,15 @@ public class Wrapper {
             Main.getLogger().severe("Got " + launchArgs.length + " args, expected 5.");
         }
         this.instance = launchArgs[4];
-        String instPath = Config.getGlassPath() + "instances/" + instance + "/.minecraft";
+        String instPath = Config.getGLASS_PATH() + "instances/" + instance + "/.minecraft";
 
         this.getConfig();
 
         this.args = new ArrayList<>();
-        args.add(Config.getJavaBin());
+        args.add(Config.getJAVA_BIN());
         if (launchArgs[3].equals("true")) {
             args.add("-Dhttp.proxyHost=127.0.0.1");
-            args.add("-Dhttp.proxyPort=" + Config.getProxyport());
+            args.add("-Dhttp.proxyPort=" + Config.getPROXY_PORT());
             boolean[] proxyArgs = new boolean[]{
                     instJson.isProxySound(),
                     instJson.isProxySkin(),
@@ -54,7 +54,7 @@ public class Wrapper {
         args.add("-Xmx" + instJson.getMaxRam());
         args.add("-Xms" + instJson.getMinRam());
         args.add("-jar");
-        args.add(Config.getGlassPath() + "lib/" + Config.getEasyMineLauncherFile());
+        args.add(Config.getGLASS_PATH() + "lib/" + Config.getEasyMineLauncherFile());
         args.add("--lwjgl-dir=" + instPath + "/bin");
         args.add("--jar=" + instPath + "/bin/minecraft.jar");
         args.add("--native-dir=" + instPath + "/bin/natives");
@@ -67,7 +67,7 @@ public class Wrapper {
     }
 
     private void getConfig() {
-        String instPath = Config.getGlassPath() + "instances/" + instance;
+        String instPath = Config.getGLASS_PATH() + "instances/" + instance;
         File confFile = new File(instPath + "/instance_config.json");
 
         if (!confFile.exists()) {
@@ -90,7 +90,7 @@ public class Wrapper {
         ProcessBuilder mcInit = new ProcessBuilder(args);
 
         Map<String, String> mcEnv = mcInit.environment();
-        String newAppData = Config.getGlassPath() + "instances/" + instance;
+        String newAppData = Config.getGLASS_PATH() + "instances/" + instance;
         mcEnv.put("appdata", newAppData);
         mcEnv.put("home", newAppData);
         mcEnv.put("user.home", newAppData);

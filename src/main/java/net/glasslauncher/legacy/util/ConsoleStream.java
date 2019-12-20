@@ -34,7 +34,7 @@ public class ConsoleStream extends OutputStream {
     }
 
     @Override
-    public void write(int b) {
-        buffer += (char) b;
+    public void write(int i) {
+        buffer += (char) i;
     }
 }

@@ -35,7 +35,7 @@ public class WebUtils {
      * @return The file object if it was found and within age limit, else return null.
      */
     public static File checkCache(String path) {
-        File file = new File(Config.getCachePath() + "webproxy/" + path);
+        File file = new File(Config.getCACHE_PATH() + "webproxy/" + path);
         if (file.exists()) {
             BasicFileAttributes fileAttributes;
             try {
@@ -44,7 +44,7 @@ public class WebUtils {
                 e.printStackTrace();
                 return null;
             }
-            if (fileAttributes.lastModifiedTime().to(TimeUnit.SECONDS) < (new Date().getTime()) / 1000L - Config.getSkinCacheAgeLimit()) {
+            if (fileAttributes.lastModifiedTime().to(TimeUnit.SECONDS) < (new Date().getTime()) / 1000L - Config.getCACHE_AGE_LIMIT()) {
                 return null;
             }
             return file;
@@ -53,11 +53,11 @@ public class WebUtils {
     }
 
     public static File getCache(String path) {
-        return new File(Config.getCachePath() + "webproxy/" + path);
+        return new File(Config.getCACHE_PATH() + "webproxy/" + path);
     }
 
     public static void makeCacheFolders(String path) {
-        (new File(Config.getCachePath() + "webproxy/" + path)).mkdirs();
+        (new File(Config.getCACHE_PATH() + "webproxy/" + path)).mkdirs();
     }
 
     public static void putCache(File file, byte[] bytes) throws IOException {

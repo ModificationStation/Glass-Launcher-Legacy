@@ -8,7 +8,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 public class Classpath {
-    private static final Class[] parameters = new Class[]{URL.class};
+    private static final Class[] PARAMETERS = new Class[]{URL.class};
 
     public static void addFile(String s) throws IOException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         File f = new File(s);
@@ -22,9 +22,9 @@ public class Classpath {
     public static void addURL(URL u) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
 
         URLClassLoader sysloader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-        Class sysclass = URLClassLoader.class;
+        Class<URLClassLoader> sysclass = URLClassLoader.class;
 
-        Method method = sysclass.getDeclaredMethod("addURL", parameters);
+        Method method = sysclass.getDeclaredMethod("addURL", PARAMETERS);
         method.setAccessible(true);
         method.invoke(sysloader, u);
     }

@@ -4,8 +4,6 @@ import net.glasslauncher.jsontemplate.InstanceConfig;
 import net.glasslauncher.jsontemplate.Mod;
 import net.glasslauncher.jsontemplate.ModList;
 import net.glasslauncher.legacy.components.DragDropList;
-import net.glasslauncher.legacy.components.JBackgroundImagePanel;
-import net.glasslauncher.legacy.components.JBackgroundImageTabbedPane;
 import net.glasslauncher.legacy.util.InstanceManager;
 import net.glasslauncher.legacy.util.JsonConfig;
 import org.apache.commons.io.FileUtils;
@@ -25,7 +23,6 @@ public class OptionsWindow extends JDialog {
     private InstanceConfig instanceConfig;
     private ModList modList;
     private ArrayList<Mod> jarMods;
-    private ArrayList<Mod> loaderMods;
     DragDropList modDragDropList;
 
     private String instpath;
@@ -54,7 +51,7 @@ public class OptionsWindow extends JDialog {
         add(this.panel);
 
         instName = instance;
-        instpath = Config.getGlassPath() + "instances/" + instance + "/";
+        instpath = Config.getGLASS_PATH() + "instances/" + instance + "/";
         instanceConfig = (InstanceConfig) JsonConfig.loadConfig(instpath + "instance_config.json", InstanceConfig.class);
         if (instanceConfig == null) {
             instanceConfig = new InstanceConfig(instpath + "instance_config.json");
