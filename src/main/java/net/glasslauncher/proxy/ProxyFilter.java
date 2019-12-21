@@ -51,7 +51,6 @@ public class ProxyFilter extends HttpFiltersAdapter {
                 String doRedirect = null;
 
                 if (host.contains("amazonaws.com")) {
-                	System.out.println("amazonaws.com");
                     if (doSoundFix && (path.contains("MinecraftResources") || path.contains("/resources/"))) {
                         httpRequest.setUri("http://resourceproxy.pymcl.net" + path);
                         httpRequest.headers().set("Host", "resourceproxy.pymcl.net");
@@ -68,7 +67,6 @@ public class ProxyFilter extends HttpFiltersAdapter {
                 }
 
                 if (host.contains("minecraft.net")) {
-                	System.out.println("minecraft.net");
                     if (doSkinFix && path.contains("skin")) {
                         doRedirect = "/skins/" + path.split("/")[2];
                     }
@@ -78,12 +76,10 @@ public class ProxyFilter extends HttpFiltersAdapter {
                     }
 
                     if (doLoginFix && path.contains("game/joinserver")) {
-                    	System.out.println("joinserver");
                     	doRedirect = path.replaceFirst("game/joinserver.jsp?", "join/");
                     }
 
                     if (doLoginFix && path.contains("game/checkserver")) {
-                    	System.out.println("checkserver");
                     	doRedirect = path.replaceFirst("game/checkserver.jsp?", "join/");
                     }
                 }

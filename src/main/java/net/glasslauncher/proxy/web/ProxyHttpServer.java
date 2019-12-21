@@ -11,7 +11,7 @@ public final class ProxyHttpServer {
         HttpServer server = HttpServer.create(new InetSocketAddress(Config.getPROXY_WEB_PORT()), 0);
         server.createContext("/skins/", new HttpSkinHandler(0));
         server.createContext("/capes/", new HttpSkinHandler(1));
-        //server.createContext("/join/", new HttpJoinHandler());
+        server.createContext("/join/", new HttpJoinHandler());
         server.setExecutor(null); // creates a default executor
         return server;
     }
