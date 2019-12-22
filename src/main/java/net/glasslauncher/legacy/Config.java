@@ -11,7 +11,6 @@ import net.glasslauncher.legacy.util.JsonConfig;
 
 import java.io.File;
 import java.io.InputStreamReader;
-import java.util.HashMap;
 
 public class Config {
     public static void loadConfigFiles() {

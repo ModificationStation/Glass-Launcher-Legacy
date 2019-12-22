@@ -1,11 +1,11 @@
 package net.glasslauncher.legacy.util;
 
-import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -33,21 +33,41 @@ public class FileUtils {
         return new String(encoded, StandardCharsets.UTF_8);
     }
 
-    public static boolean downloadFile(String urlStr, String path) {
-        return downloadFile(urlStr, path, null);
+    /**
+     * Downloads given URL to target pathStr.
+     * @param urlStr File to download.
+     * @param pathStr Path to save the file to (filename decided by URL).
+     * @return false if no file was downloaded, true if otherwise.
+     */
+    public static boolean downloadFile(String urlStr, String pathStr) {
+        return downloadFile(urlStr, pathStr, null);
     }
 
-    public static boolean downloadFile(String urlStr, String path, String md5) {
-        String filename = urlStr.substring(urlStr.lastIndexOf('/') + 1);
-        return downloadFile(urlStr, path, md5, filename);
+
+    /**
+     * Downloads given URL to target pathStr.
+     * @param urlStr File to download.
+     * @param pathStr Path to save the file to (filename decided by URL).
+     * @param md5 MD5 to compare against. Ignored if null.
+     * @return false if no file was downloaded if it was meant to be, true if otherwise.
+     */
+    public static boolean downloadFile(String urlStr, String pathStr, String md5) {
+        String filename;
+        try {
+            filename = URLDecoder.decode(urlStr.substring(urlStr.lastIndexOf('/') + 1), StandardCharsets.UTF_8.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return downloadFile(urlStr, pathStr, md5, filename);
     }
 
     /**
      * Downloads given URL to target path.
      * @param urlStr File to download.
-     * @param pathStr Path to save the file to (filename decided by URL).
+     * @param pathStr Path to save the file to.
      * @param md5 MD5 to compare against. Ignored if null.
-     * @return false if no file was downloaded, true if otherwise.
+     * @return false if no file was downloaded if it was meant to be, true if otherwise.
      */
     public static boolean downloadFile(String urlStr, String pathStr, String md5, String filename) {
         URL url;
@@ -98,7 +118,7 @@ public class FileUtils {
      * @return
      * @throws IOException
      */
-    private static String getFileChecksum(MessageDigest digest, File file) throws IOException
+    public static String getFileChecksum(MessageDigest digest, File file) throws IOException
     {
         //Get file input stream for reading the file content
         FileInputStream fis = new FileInputStream(file);

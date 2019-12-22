@@ -79,7 +79,7 @@ public class HttpSkinHandler implements HttpHandler {
         if (uuid == null) {
             return null;
         }
-        Profile profile = (new Gson()).fromJson(WebUtils.getJsonFromURL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid), Profile.class);
+        Profile profile = (new Gson()).fromJson(WebUtils.getStringFromURL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid), Profile.class);
 
         // It doesnt work if I just try casting the object. Don't ask why.
         ProfileProperties properties = profile.getProperties()[0];

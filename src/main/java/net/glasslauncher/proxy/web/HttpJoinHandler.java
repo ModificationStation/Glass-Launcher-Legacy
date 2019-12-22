@@ -1,5 +1,12 @@
 package net.glasslauncher.proxy.web;
 
+import com.google.gson.Gson;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import net.glasslauncher.jsontemplate.Profile;
+import net.glasslauncher.jsontemplate.ServerJoin;
+import net.glasslauncher.legacy.Main;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -8,14 +15,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Scanner;
-
-import com.google.gson.Gson;
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-
-import net.glasslauncher.jsontemplate.Profile;
-import net.glasslauncher.jsontemplate.ServerJoin;
-import net.glasslauncher.legacy.Main;
 
 public class HttpJoinHandler implements HttpHandler {
 

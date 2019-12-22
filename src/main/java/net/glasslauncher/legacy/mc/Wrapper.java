@@ -1,11 +1,9 @@
 package net.glasslauncher.legacy.mc;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import net.glasslauncher.jsontemplate.InstanceConfig;
 import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
-import net.glasslauncher.legacy.util.FileUtils;
+import net.glasslauncher.legacy.util.JsonConfig;
 import net.glasslauncher.proxy.Proxy;
 
 import java.io.File;
@@ -13,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class Wrapper {
-    private final Gson gson = (new GsonBuilder()).setPrettyPrinting().create();
     private final String instance;
 
     private ArrayList<String> args;
@@ -63,7 +60,7 @@ public class Wrapper {
         args.add("--width=870");
         args.add("--username=" + launchArgs[0]);
         args.add("--session-id=" + launchArgs[1]);
-        args.add("--title=" + launchArgs[2]);
+        args.add("--title=Minecraft " + launchArgs[2]);
     }
 
     private void getConfig() {
@@ -75,7 +72,7 @@ public class Wrapper {
             instJson = new InstanceConfig(instPath + "/instance_config.json");
         } else {
             try {
-                instJson = gson.fromJson(FileUtils.readFile(confFile.getPath()), InstanceConfig.class);
+                instJson = (InstanceConfig) JsonConfig.loadConfig(confFile.getPath(), InstanceConfig.class);
             } catch (Exception e) {
                 Main.getLogger().info("Config file cannot be read! Using defaults.");
                 instJson = new InstanceConfig(instPath + "/instance_config.json");

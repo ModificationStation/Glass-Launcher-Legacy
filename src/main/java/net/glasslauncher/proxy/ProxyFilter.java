@@ -52,7 +52,7 @@ public class ProxyFilter extends HttpFiltersAdapter {
 
                 if (host.contains("amazonaws.com")) {
                     if (doSoundFix && (path.contains("MinecraftResources") || path.contains("/resources/"))) {
-                        httpRequest.setUri("http://resourceproxy.pymcl.net" + path);
+                        httpRequest.setUri("http://mcresources.modification-station.net" + path);
                         httpRequest.headers().set("Host", "resourceproxy.pymcl.net");
                         return null;
                     }
@@ -87,8 +87,6 @@ public class ProxyFilter extends HttpFiltersAdapter {
                 if (doRedirect == null) {
                     return null;
                 }
-
-
 
                 httpRequest.setUri("http://" + newHost + doRedirect);
                 httpRequest.headers().set("Host", newHost);

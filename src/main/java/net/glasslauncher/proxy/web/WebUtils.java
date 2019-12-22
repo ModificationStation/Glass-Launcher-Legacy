@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class WebUtils {
-    public static String getJsonFromURL(String url) throws IOException {
+    public static String getStringFromURL(String url) throws IOException {
         HttpURLConnection req = (HttpURLConnection) new URL(url).openConnection();
         BufferedReader res = new BufferedReader(new InputStreamReader(req.getInputStream()));
         StringBuilder resj = new StringBuilder();
@@ -24,7 +24,7 @@ public class WebUtils {
     }
 
     public static String getUUID(String username) throws IOException {
-        Profile profile = (new Gson()).fromJson(getJsonFromURL("https://api.mojang.com/users/profiles/minecraft/" + username + "?at=" + (new Date()).getTime() / 1000L), Profile.class);
+        Profile profile = (new Gson()).fromJson(getStringFromURL("https://api.mojang.com/users/profiles/minecraft/" + username + "?at=" + (new Date()).getTime() / 1000L), Profile.class);
         return profile.getId();
     }
 
