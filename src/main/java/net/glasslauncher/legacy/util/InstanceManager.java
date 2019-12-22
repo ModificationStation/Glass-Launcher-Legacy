@@ -4,14 +4,19 @@ import com.google.gson.Gson;
 import net.glasslauncher.jsontemplate.*;
 import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
+import net.glasslauncher.proxy.web.WebUtils;
 
 import javax.swing.*;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 public class InstanceManager {
 
@@ -45,6 +50,7 @@ public class InstanceManager {
     }
 
     private static void installModpackZip(String path, String filename) {
+        String instanceName = filename.replaceFirst("\\.jar$", "");
         TempZipFile instanceZipFile = new TempZipFile(path);
         try {
             boolean isMultiMC = false;
@@ -66,20 +72,20 @@ public class InstanceManager {
 
             if (isMultiMC) {
                 Main.getLogger().info("Provided instance is a MultiMC instance. Importing...");
-                if ((new File(Config.getGLASS_PATH() + "instances/" + filename)).exists()) {
-                    Main.getLogger().info("Instance \"" + filename + "\" already exists!");
+                if ((new File(Config.getGLASS_PATH() + "instances/" + instanceName)).exists()) {
+                    Main.getLogger().info("Instance \"" + instanceName + "\" already exists!");
                     return;
                 }
                 InputStream inputStream = mmcPackURL.openStream();
                 String jsonText = FileUtils.convertStreamToString(inputStream);
                 inputStream.close();
                 MultiMCPack multiMCPack = (new Gson()).fromJson(jsonText, MultiMCPack.class);
-                importMultiMC(new File(path), filename, mmcZipInstDir, multiMCPack);
+                importMultiMC(instanceZipFile, instanceName, mmcZipInstDir, multiMCPack);
 
             } else if (instanceZipFile.getFile("instance_config.json").exists()) {
                 InstanceConfig instanceConfig = new InstanceConfig(instanceZipFile.getFile("instance_config.json").getPath());
-                createBlankInstance(instanceConfig.getVersion(), filename);
-                instanceZipFile.copyContentsToDir("", Config.getGLASS_PATH() + "instances/" + filename);
+                createBlankInstance(instanceConfig.getVersion(), instanceName);
+                instanceZipFile.copyContentsToDir("", Config.getInstancePath(instanceName));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -88,10 +94,10 @@ public class InstanceManager {
         }
     }
 
-    public static void createBlankInstance(String version, String name) {
-        Main.getLogger().info("Creating instance \"" + name + "\" on version " + version);
+    public static void createBlankInstance(String version, String instance) {
+        Main.getLogger().info("Creating instance \"" + instance + "\" on version " + version);
         String versionsCachePath = Config.getCACHE_PATH() + "versions";
-        String instanceFolder = Config.getInstancePath(name);
+        String instanceFolder = Config.getInstancePath(instance);
         String minecraftFolder = instanceFolder + "/.minecraft";
         (new File(versionsCachePath)).mkdirs();
         (new File(minecraftFolder + "/bin/")).mkdirs();
@@ -102,7 +108,7 @@ public class InstanceManager {
                 try {
                     Files.copy(versionCacheJar.toPath(), new File(minecraftFolder + "/bin/minecraft.jar").toPath());
                 } catch (FileAlreadyExistsException e) {
-                    Main.getLogger().info("Instance \"" + name + "\" already exists!");
+                    Main.getLogger().info("Instance \"" + instance + "\" already exists!");
                     return;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -132,26 +138,22 @@ public class InstanceManager {
                     return;
                 }
             }
-            File lwjglCacheZip = new File(versionsCachePath + "/lwjgl.zip");
-            if (!lwjglCacheZip.exists()) {
-                FileUtils.downloadFile("https://files.pymcl.net/client/lwjgl/lwjgl." + Config.getOS() + ".zip", versionsCachePath, null, "lwjgl.zip");
-            }
-            FileUtils.extractZip(lwjglCacheZip.getPath(), minecraftFolder + "/bin");
-            return;
         }
-        if (version.equals("custom")) {
-            File lwjglCacheZip = new File(versionsCachePath + "/lwjgl.zip");
-            if (!lwjglCacheZip.exists()) {
-                FileUtils.downloadFile("https://files.pymcl.net/client/lwjgl/lwjgl." + Config.getOS() + ".zip", versionsCachePath, null, "lwjgl.zip");
-            }
-            FileUtils.extractZip(lwjglCacheZip.getPath(), minecraftFolder + "/bin");
-        } else {
+        else if (version.equals("custom")) {}
+        else {
             try {
                 org.apache.commons.io.FileUtils.deleteDirectory(new File(minecraftFolder));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+
+        addSounds(instance);
+        File lwjglCacheZip = new File(versionsCachePath + "/lwjgl.zip");
+        if (!lwjglCacheZip.exists()) {
+            FileUtils.downloadFile("https://files.pymcl.net/client/lwjgl/lwjgl." + Config.getOS() + ".zip", versionsCachePath, null, "lwjgl.zip");
+        }
+        FileUtils.extractZip(lwjglCacheZip.getPath(), minecraftFolder + "/bin");
     }
 
     public static void addMods(String instance, ListModel<Mod> mods) {
@@ -172,11 +174,10 @@ public class InstanceManager {
         }
     }
 
-    private static void importMultiMC(File file, String instance, String mmcZipInstDir, MultiMCPack multiMCPack) throws GenericInvalidVersionException{
-        TempZipFile mmcZip = new TempZipFile(file.getPath());
-        String instPath = Config.getGLASS_PATH() + "instances/" + instance;
-        InstanceConfig instanceConfig = new InstanceConfig(instPath + "/instance_config.json");
-        ModList modList = new ModList(instPath + "/mods/mods.json");
+    private static void importMultiMC(TempZipFile mmcZip, String instance, String mmcZipInstDir, MultiMCPack multiMCPack) throws GenericInvalidVersionException{
+        String instPath = Config.getInstancePath(instance);
+        InstanceConfig instanceConfig = new InstanceConfig(instPath + "instance_config.json");
+        ModList modList = new ModList(instPath + "mods/mods.json");
         boolean hasCustomJar = false;
 
         if (multiMCPack.getFormatVersion() != 1) {
@@ -206,7 +207,7 @@ public class InstanceManager {
 
         try {
             if (hasCustomJar) {
-                File originalJar = new File(instPath + "/.minecraft/bin/minecraft.jar");
+                File originalJar = new File(instPath + ".minecraft/bin/minecraft.jar");
                 originalJar.delete();
                 org.apache.commons.io.FileUtils.copyFile(mmcZip.getFile(mmcZipInstDir + "/libraries/customjar-1.jar"), originalJar);
                 instanceConfig.setVersion("custom");
@@ -216,7 +217,33 @@ public class InstanceManager {
         }
         instanceConfig.saveFile();
         modList.saveFile();
-        mmcZip.copyContentsToDir(mmcZipInstDir + "/.minecraft", instPath + "/.minecraft");
-        mmcZip.close(false);
+        mmcZip.copyContentsToDir(mmcZipInstDir + "/.minecraft", instPath + ".minecraft");
+    }
+
+    private static void addSounds(String instance) {
+        String baseURL = "https://mcresources.modification-station.net/MinecraftResources/";
+        String basePath = Config.getInstancePath(instance) + ".minecraft/resources/";
+        MinecraftResources minecraftResources;
+
+        try {
+            minecraftResources = (new Gson()).fromJson(WebUtils.getStringFromURL(baseURL + "json.php"), MinecraftResources.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+
+        try {
+            for (MinecraftResource minecraftResource : minecraftResources.getFiles()) {
+                File file = new File(basePath + minecraftResource.getFile());
+                File cacheFile = new File(Config.getGLASS_PATH() + "cache/resources/" + minecraftResource.getFile());
+                String md5 = minecraftResource.getMd5();
+                String url = baseURL + minecraftResource.getFile().replace(" ", "%20");
+
+                FileUtils.downloadFile(url, cacheFile.getParent(), md5);
+                org.apache.commons.io.FileUtils.copyFile(cacheFile, file);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
