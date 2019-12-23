@@ -29,9 +29,9 @@ public class Proxy extends Thread {
 
             this.serverBoot =
                     DefaultHttpProxyServer.bootstrap()
-                            .withPort(Config.getPROXY_PORT())
+                            .withPort(Config.PROXY_PORT)
                             .withManInTheMiddle(new CertificateSniffingMitmManager(new Authority(
-                                    new File(Config.getCACHE_PATH()),
+                                    new File(Config.CACHE_PATH),
                                     "glass-launcher-proxy-mitm",
                                     "thisisranlocallysothisdoesntmatter".toCharArray(),
                                     "Glass Launcher",

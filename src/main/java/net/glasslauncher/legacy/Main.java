@@ -23,9 +23,9 @@ public class Main {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
             LocalDateTime now = LocalDateTime.now();
             String time = dtf.format(now);
-            File logdir = new File(Config.getGLASS_PATH() + "/glass-logs/launcher");
+            File logdir = new File(Config.GLASS_PATH + "/glass-logs/launcher");
             logdir.mkdirs();
-            Handler file_handler = new FileHandler(Config.getGLASS_PATH()+ "/glass-logs/launcher/" + time + ".log");
+            Handler file_handler = new FileHandler(Config.GLASS_PATH+ "/glass-logs/launcher/" + time + ".log");
             SimpleFormatter format = new SimpleFormatter();
             logger.addHandler(file_handler);
             file_handler.setFormatter(format);
@@ -52,7 +52,7 @@ public class Main {
 
         for (Object lib : libs.toArray()) {
             try {
-                Classpath.addFile(Config.getGLASS_PATH() + "lib/" + lib);
+                Classpath.addFile(Config.GLASS_PATH + "lib/" + lib);
             } catch (Exception e) {
                 logger.info("Failed to load \"" + lib + "\".");
                 e.printStackTrace();
@@ -82,7 +82,7 @@ public class Main {
 
         for (String dep : Config.getGLASS_DEPS().keySet()) {
             try {
-                FileUtils.downloadFile(dep, Config.getGLASS_PATH() + "/lib/", Config.getGLASS_DEPS().get(dep));
+                FileUtils.downloadFile(dep, Config.GLASS_PATH + "/lib/", Config.getGLASS_DEPS().get(dep));
                 libs.add(dep.substring(dep.lastIndexOf('/') + 1));
             } catch (Exception e) {
                 getLogger().info("Failed to download dependency. Invalid formatting?");

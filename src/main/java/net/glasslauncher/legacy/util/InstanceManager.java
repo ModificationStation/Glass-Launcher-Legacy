@@ -10,13 +10,9 @@ import javax.swing.*;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 public class InstanceManager {
 
@@ -37,8 +33,8 @@ public class InstanceManager {
 
             String filename = path.substring(path.lastIndexOf('/') + 1);
             if (isURL) {
-                FileUtils.downloadFile(path, Config.getCACHE_PATH() + "instancezips");
-                installModpackZip(Config.getCACHE_PATH() + "instancezips", filename);
+                FileUtils.downloadFile(path, Config.CACHE_PATH + "instancezips");
+                installModpackZip(Config.CACHE_PATH + "instancezips", filename);
             } else {
                 if ((new File(path)).exists()) {
                     installModpackZip(path, filename);
@@ -72,7 +68,7 @@ public class InstanceManager {
 
             if (isMultiMC) {
                 Main.getLogger().info("Provided instance is a MultiMC instance. Importing...");
-                if ((new File(Config.getGLASS_PATH() + "instances/" + instanceName)).exists()) {
+                if ((new File(Config.GLASS_PATH + "instances/" + instanceName)).exists()) {
                     Main.getLogger().info("Instance \"" + instanceName + "\" already exists!");
                     return;
                 }
@@ -96,7 +92,7 @@ public class InstanceManager {
 
     public static void createBlankInstance(String version, String instance) {
         Main.getLogger().info("Creating instance \"" + instance + "\" on version " + version);
-        String versionsCachePath = Config.getCACHE_PATH() + "versions";
+        String versionsCachePath = Config.CACHE_PATH + "versions";
         String instanceFolder = Config.getInstancePath(instance);
         String minecraftFolder = instanceFolder + "/.minecraft";
         (new File(versionsCachePath)).mkdirs();
@@ -151,13 +147,13 @@ public class InstanceManager {
         addSounds(instance);
         File lwjglCacheZip = new File(versionsCachePath + "/lwjgl.zip");
         if (!lwjglCacheZip.exists()) {
-            FileUtils.downloadFile("https://files.pymcl.net/client/lwjgl/lwjgl." + Config.getOS() + ".zip", versionsCachePath, null, "lwjgl.zip");
+            FileUtils.downloadFile("https://files.pymcl.net/client/lwjgl/lwjgl." + Config.OS + ".zip", versionsCachePath, null, "lwjgl.zip");
         }
         FileUtils.extractZip(lwjglCacheZip.getPath(), minecraftFolder + "/bin");
     }
 
     public static void addMods(String instance, ListModel<Mod> mods) {
-        instance = Config.getGLASS_PATH() + "instances/" + instance;
+        instance = Config.GLASS_PATH + "instances/" + instance;
         try {
             TempZipFile jarFile = new TempZipFile(instance + "/.minecraft/bin/minecraft.jar");
             if (jarFile.fileExists("META-INF")) {
@@ -235,7 +231,7 @@ public class InstanceManager {
         try {
             for (MinecraftResource minecraftResource : minecraftResources.getFiles()) {
                 File file = new File(basePath + minecraftResource.getFile());
-                File cacheFile = new File(Config.getGLASS_PATH() + "cache/resources/" + minecraftResource.getFile());
+                File cacheFile = new File(Config.GLASS_PATH + "cache/resources/" + minecraftResource.getFile());
                 String md5 = minecraftResource.getMd5();
                 String url = baseURL + minecraftResource.getFile().replace(" ", "%20");
 

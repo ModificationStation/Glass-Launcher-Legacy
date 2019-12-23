@@ -51,7 +51,7 @@ public class OptionsWindow extends JDialog {
         add(this.panel);
 
         instName = instance;
-        instpath = Config.getGLASS_PATH() + "instances/" + instance + "/";
+        instpath = Config.GLASS_PATH + "instances/" + instance + "/";
         instanceConfig = (InstanceConfig) JsonConfig.loadConfig(instpath + "instance_config.json", InstanceConfig.class);
         if (instanceConfig == null) {
             instanceConfig = new InstanceConfig(instpath + "instance_config.json");

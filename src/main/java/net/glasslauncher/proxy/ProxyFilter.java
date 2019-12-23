@@ -6,9 +6,11 @@ import io.netty.handler.codec.http.HttpResponse;
 import net.glasslauncher.legacy.Config;
 import org.littleshoot.proxy.HttpFiltersAdapter;
 
+import java.util.List;
+
 public class ProxyFilter extends HttpFiltersAdapter {
-    private static String[] ignoredHosts = Config.getPROXY_IGNORED_HOSTS();
-    private static String newHost = "localhost:" + Config.getPROXY_WEB_PORT();
+    private static List<String> ignoredHosts = Config.PROXY_IGNORED_HOSTS;
+    private static String newHost = "localhost:" + Config.PROXY_WEB_PORT;
     private boolean doSoundFix;
     private boolean doSkinFix;
     private boolean doCapeFix;

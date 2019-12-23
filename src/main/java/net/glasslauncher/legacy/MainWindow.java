@@ -33,7 +33,7 @@ class MainWindow extends JFrame {
         // Setting the size, icon, location and layout of the launcher
         Insets insets = getInsets();
         Main.getLogger().info("Starting...");
-        setTitle("Glass Launcher " + Config.getVERSION());
+        setTitle("Glass Launcher " + Config.VERSION);
         setIconImage(Toolkit.getDefaultToolkit().createImage(MainWindow.class.getResource("assets/glass.png")));
         setLayout(new GridLayout(1, 1));
         setLocationRelativeTo(null);
@@ -202,7 +202,7 @@ class MainWindow extends JFrame {
     private void refreshInstanceList() {
         Main.getLogger().info("Refreshing instance list...");
         instsel.setModel(new DefaultComboBoxModel<>());
-        File file = new File(Config.getGLASS_PATH() + "instances");
+        File file = new File(Config.GLASS_PATH + "instances");
         String[] instances = file.list((current, name) -> new File(current, name).isDirectory());
         if (instances != null) {
             for (String instance : instances) {

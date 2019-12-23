@@ -15,12 +15,12 @@ public class TempZipFile {
     private String destDirBypass = "";
 
     public TempZipFile(String zipFilePath) {
-        if (Config.getOS().equals("windows")) {
+        if (Config.OS.equals("windows")) {
             destDirBypass = "\\\\?\\";
         }
         File zipFile = new File(zipFilePath);
         originalPath = zipFilePath;
-        tempPath = Config.getGLASS_PATH() + "temp/" + zipFile.getName().replaceFirst("\\.zip$", "");
+        tempPath = Config.GLASS_PATH + "temp/" + zipFile.getName().replaceFirst("\\.zip$", "");
         File tempFile = new File(destDirBypass + tempPath);
         if (tempFile.exists()) {
             try {

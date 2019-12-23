@@ -104,10 +104,10 @@ class InstanceManagerWindow extends JDialog {
     }
 
     private void updateInstanceList() {
-        (new File(Config.getGLASS_PATH() + "instances")).mkdirs();
+        (new File(Config.GLASS_PATH + "instances")).mkdirs();
         deletePanel.removeAll();
         deletePanel.repaint();
-        for (File instance : (Objects.requireNonNull(new File(Config.getGLASS_PATH() + "instances").listFiles()))) {
+        for (File instance : (Objects.requireNonNull(new File(Config.GLASS_PATH + "instances").listFiles()))) {
             if (instance.isDirectory()) {
                 JButton deleteButton = new JButton();
                 deleteButton.setText("Delete \"" + instance.getName() + "\".");
