@@ -5,6 +5,7 @@ import net.glasslauncher.legacy.util.InstanceManager;
 import org.apache.commons.io.FileUtils;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -48,25 +49,50 @@ class InstanceManagerWindow extends JDialog {
 
         // Local Modpack zip install.
         HintTextField installModpackDir = new HintTextField("Paste the path to your Modpack zip here!");
-        installModpackDir.setBounds(155, 5, 390, 22);
+        installModpackDir.setBounds(155, 5, 355, 22);
 
         JButton installModpackDirButton = new JButton();
         installModpackDirButton.setText("Install Local Modpack");
         installModpackDirButton.setBounds(5, 5, 150, 22);
         installModpackDirButton.addActionListener(event -> {
-            InstanceManager.installModpack(installModpackDir.getText());
+            ProgressWindow progressWindow = new ProgressWindow(this, "Installing Local Modpack...");
+            (new Thread(() -> {
+                InstanceManager.installModpack(installModpackDir.getText(), progressWindow);
+                progressWindow.dispose();
+            })).start();
+            if (progressWindow.isDisplayable()) {
+                progressWindow.setVisible(true);
+            }
         });
+
+        JButton instanceZipSelectButton = new JButton();
+        instanceZipSelectButton.setText("...");
+        instanceZipSelectButton.addActionListener(event -> {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileFilter(new FileNameExtensionFilter("Modpack Zip (*.zip)", "zip"));
+            fileChooser.showOpenDialog(this);
+            File file = fileChooser.getSelectedFile();
+            installModpackDir.setText(file.getAbsolutePath());
+        });
+        instanceZipSelectButton.setBounds(515, 5, 30, 22);
 
         // Remote Modpack zip install.
         HintTextField installModpackURL = new HintTextField("Paste the URL to your Modpack zip here!");
         installModpackURL.setBounds(155, 34, 390, 22);
-        installModpackDirButton.addActionListener(event -> {
-            InstanceManager.installModpack(installModpackURL.getText());
-        });
 
         JButton installModpackURLButton = new JButton();
         installModpackURLButton.setText("Install Modpack from URL");
         installModpackURLButton.setBounds(5, 34, 150, 22);
+        installModpackURLButton.addActionListener(event -> {
+            ProgressWindow progressWindow = new ProgressWindow(this, "Installing Remote Modpack...");
+            (new Thread(() -> {
+                InstanceManager.installModpack(installModpackURL.getText(), progressWindow);
+                progressWindow.dispose();
+            })).start();
+            if (progressWindow.isDisplayable()) {
+                progressWindow.setVisible(true);
+            }
+        });
 
         // Make blank instance
         HintTextField instanceName = new HintTextField("Instance name");
@@ -81,12 +107,20 @@ class InstanceManagerWindow extends JDialog {
         JButton instanceVersionButton = new JButton();
         instanceVersionButton.setText("Create Blank Instance");
         instanceVersionButton.addActionListener((e) -> {
-            InstanceManager.createBlankInstance((String) instanceVersion.getSelectedItem(), instanceName.getText());
+            ProgressWindow progressWindow = new ProgressWindow(this, "Creating New Instance...");
+            (new Thread(() -> {
+                InstanceManager.createBlankInstance((String) instanceVersion.getSelectedItem(), instanceName.getText(), progressWindow);
+                progressWindow.dispose();
+            })).start();
+            if (progressWindow.isDisplayable()) {
+                progressWindow.setVisible(true);
+            }
         });
         instanceVersionButton.setBounds(5, 63, 150, 22);
 
         createPanel.add(installModpackDir);
         createPanel.add(installModpackDirButton);
+        createPanel.add(instanceZipSelectButton);
         createPanel.add(installModpackURL);
         createPanel.add(installModpackURLButton);
         createPanel.add(instanceName);

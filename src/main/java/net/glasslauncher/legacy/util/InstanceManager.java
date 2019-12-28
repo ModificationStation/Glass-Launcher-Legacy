@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import net.glasslauncher.jsontemplate.*;
 import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
+import net.glasslauncher.legacy.ProgressWindow;
 import net.glasslauncher.proxy.web.WebUtils;
 
 import javax.swing.*;
@@ -12,6 +13,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
+import java.util.List;
 import java.util.Objects;
 
 public class InstanceManager {
@@ -20,7 +22,7 @@ public class InstanceManager {
      * Detects what kind of modpack zip has been provided and then calls the related install function for the type.
      * @param path Path to instance zip file.
      */
-    public static void installModpack(String path) {
+    public static void installModpack(String path, ProgressWindow progressWindow) {
         path = path.replace("\\", "/");
         Main.getLogger().info("Installing " + path);
         boolean isURL = true;
@@ -34,10 +36,10 @@ public class InstanceManager {
             String filename = path.substring(path.lastIndexOf('/') + 1);
             if (isURL) {
                 FileUtils.downloadFile(path, Config.CACHE_PATH + "instancezips");
-                installModpackZip(Config.CACHE_PATH + "instancezips", filename);
+                installModpackZip(Config.CACHE_PATH + "instancezips/" + filename, filename, progressWindow);
             } else {
                 if ((new File(path)).exists()) {
-                    installModpackZip(path, filename);
+                    installModpackZip(path, filename, progressWindow);
                 }
             }
         } catch (Exception e) {
@@ -45,10 +47,14 @@ public class InstanceManager {
         }
     }
 
-    private static void installModpackZip(String path, String filename) {
+    private static void installModpackZip(String path, String filename, ProgressWindow progressWindow) {
+        progressWindow.setProgress(0);
+        progressWindow.setProgressMax(2);
+        progressWindow.setProgressText("Initializing...");
         String instanceName = filename.replaceFirst("\\.jar$", "");
         TempZipFile instanceZipFile = new TempZipFile(path);
         try {
+            progressWindow.setProgressText("Checking modpack type...");
             boolean isMultiMC = false;
             URL mmcPackURL = null;
             String mmcZipInstDir = "";
@@ -66,21 +72,26 @@ public class InstanceManager {
                 }
             }
 
+            if ((new File(Config.GLASS_PATH + "instances/" + instanceName)).exists()) {
+                Main.getLogger().info("Instance \"" + instanceName + "\" already exists!");
+                return;
+            }
             if (isMultiMC) {
+                progressWindow.increaseProgress();
+                progressWindow.setProgressText("Installing MultiMC Modpack...");
                 Main.getLogger().info("Provided instance is a MultiMC instance. Importing...");
-                if ((new File(Config.GLASS_PATH + "instances/" + instanceName)).exists()) {
-                    Main.getLogger().info("Instance \"" + instanceName + "\" already exists!");
-                    return;
-                }
                 InputStream inputStream = mmcPackURL.openStream();
                 String jsonText = FileUtils.convertStreamToString(inputStream);
                 inputStream.close();
                 MultiMCPack multiMCPack = (new Gson()).fromJson(jsonText, MultiMCPack.class);
-                importMultiMC(instanceZipFile, instanceName, mmcZipInstDir, multiMCPack);
+                importMultiMC(instanceZipFile, instanceName, mmcZipInstDir, multiMCPack, progressWindow);
 
             } else if (instanceZipFile.getFile("instance_config.json").exists()) {
+                progressWindow.increaseProgress();
+                progressWindow.setProgressText("Installing Glass Launcher Modpack...");
+                Main.getLogger().info("Provided instance is a Glass Launcher instance. Importing...");
                 InstanceConfig instanceConfig = new InstanceConfig(instanceZipFile.getFile("instance_config.json").getPath());
-                createBlankInstance(instanceConfig.getVersion(), instanceName);
+                createBlankInstance(instanceConfig.getVersion(), instanceName, progressWindow);
                 instanceZipFile.copyContentsToDir("", Config.getInstancePath(instanceName));
             }
         } catch (Exception e) {
@@ -90,7 +101,11 @@ public class InstanceManager {
         }
     }
 
-    public static void createBlankInstance(String version, String instance) {
+    public static void createBlankInstance(String version, String instance, ProgressWindow progressWindow) {
+        progressWindow.setProgress(1);
+        progressWindow.setProgressMax(4);
+        progressWindow.setProgressText("Initializing...");
+        Main.getLogger().info("i");
         Main.getLogger().info("Creating instance \"" + instance + "\" on version " + version);
         String versionsCachePath = Config.CACHE_PATH + "versions";
         String instanceFolder = Config.getInstancePath(instance);
@@ -98,6 +113,8 @@ public class InstanceManager {
         (new File(versionsCachePath)).mkdirs();
         (new File(minecraftFolder + "/bin/")).mkdirs();
 
+        progressWindow.increaseProgress();
+        progressWindow.setProgressText("Getting minecraft.jar for " + version + "...");
         File versionCacheJar = new File(versionsCachePath + "/" + version + ".jar");
         if (Config.getMcVersions().getClient().containsKey(version)) {
             if (versionCacheJar.exists()) {
@@ -144,7 +161,11 @@ public class InstanceManager {
             }
         }
 
+        progressWindow.increaseProgress();
+        progressWindow.setProgressText("Adding sounds...");
         addSounds(instance);
+        progressWindow.increaseProgress();
+        progressWindow.setProgressText("Adding LWJGL and JInput...");
         File lwjglCacheZip = new File(versionsCachePath + "/lwjgl.zip");
         if (!lwjglCacheZip.exists()) {
             FileUtils.downloadFile("https://files.pymcl.net/client/lwjgl/lwjgl." + Config.OS + ".zip", versionsCachePath, null, "lwjgl.zip");
@@ -153,7 +174,7 @@ public class InstanceManager {
     }
 
     public static void addMods(String instance, ListModel<Mod> mods) {
-        instance = Config.GLASS_PATH + "instances/" + instance;
+        instance = Config.getInstancePath(instance);
         try {
             TempZipFile jarFile = new TempZipFile(instance + "/.minecraft/bin/minecraft.jar");
             if (jarFile.fileExists("META-INF")) {
@@ -170,7 +191,7 @@ public class InstanceManager {
         }
     }
 
-    private static void importMultiMC(TempZipFile mmcZip, String instance, String mmcZipInstDir, MultiMCPack multiMCPack) throws GenericInvalidVersionException{
+    private static void importMultiMC(TempZipFile mmcZip, String instance, String mmcZipInstDir, MultiMCPack multiMCPack, ProgressWindow progressWindow) throws GenericInvalidVersionException{
         String instPath = Config.getInstancePath(instance);
         InstanceConfig instanceConfig = new InstanceConfig(instPath + "instance_config.json");
         ModList modList = new ModList(instPath + "mods/mods.json");
@@ -179,6 +200,10 @@ public class InstanceManager {
         if (multiMCPack.getFormatVersion() != 1) {
             throw new GenericInvalidVersionException("MultiMC instance version is unsupported!");
         }
+
+        progressWindow.setProgress(0);
+        progressWindow.setProgressMax(3);
+        progressWindow.setProgressText("Generating mod list...");
         for (MultiMCComponent component : multiMCPack.getComponents()) {
             if (component.isImportant()) {
                 instanceConfig.setVersion(component.getCachedVersion());
@@ -191,7 +216,12 @@ public class InstanceManager {
                 modList.getJarMods().add(modList.getJarMods().size(), new Mod(component.getUid().replace("org.multimc.jarmod.", "") + ".jar", component.getCachedName(), 0, !component.isDisabled()));
             }
         }
-        createBlankInstance(instanceConfig.getVersion(), instance);
+
+        createBlankInstance(instanceConfig.getVersion(), instance, progressWindow);
+
+        progressWindow.setProgress(1);
+        progressWindow.setProgressMax(3);
+        progressWindow.setProgressText("Copying mods...");
 
         for (Mod mod : modList.getJarMods()) {
             try {
@@ -201,7 +231,15 @@ public class InstanceManager {
             }
         }
 
+        progressWindow.setProgressText("Applying mods...");
+        DefaultListModel<Mod> mods = new DefaultListModel<>();
+        for (Mod mod : modList.getJarMods()) {
+            mods.add(mods.getSize(), mod);
+        }
+        InstanceManager.addMods(instance, mods);
+
         try {
+            progressWindow.setProgressText("Copying custom minecraft.jar...");
             if (hasCustomJar) {
                 File originalJar = new File(instPath + ".minecraft/bin/minecraft.jar");
                 originalJar.delete();
@@ -211,6 +249,8 @@ public class InstanceManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        progressWindow.increaseProgress();
+        progressWindow.setProgressText("Saving config and copying instance files...");
         instanceConfig.saveFile();
         modList.saveFile();
         mmcZip.copyContentsToDir(mmcZipInstDir + "/.minecraft", instPath + ".minecraft");
