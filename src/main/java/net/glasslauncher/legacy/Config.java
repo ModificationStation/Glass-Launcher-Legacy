@@ -12,6 +12,7 @@ import net.glasslauncher.legacy.util.JsonConfig;
 
 import java.io.File;
 import java.io.InputStreamReader;
+import java.util.*;
 
 public class Config {
     public static void loadConfigFiles() {
@@ -41,16 +42,16 @@ public class Config {
     /**
      * The hosts
      */
-    public static ImmutableList<String> PROXY_IGNORED_HOSTS = ImmutableList.<String>builder()
-        .add("pymcl.net")
-        .add("localhost")
-        .add("127.0.0.1")
-        .add("mojang.com")
-        .add("icebergcraft.com")
-        .add("betacraft.ovh")
-        .add("retrocraft.net")
-        .add("textures.minecraft.net")
-        .build();
+    public static final List<String> PROXY_IGNORED_HOSTS = Collections.unmodifiableList(new ArrayList<String>() {{
+        add("pymcl.net");
+        add("localhost");
+        add("127.0.0.1");
+        add("mojang.com");
+        add("icebergcraft.com");
+        add("betacraft.ovh");
+        add("retrocraft.net");
+        add("textures.minecraft.net");
+    }});
 
     /**
      * The current OS of the user.
@@ -135,10 +136,10 @@ public class Config {
         return GLASS_PATH + "instances/" + instance + "/";
     }
 
-    @Getter private static final ImmutableMap<String, String> GLASS_DEPS = ImmutableMap.<String, String>builder()
-        .put("http://easyminelauncher.bonsaimind.org/EasyMineLauncher_v1.0.jar", "D7873F0A7A97AD78DB711BAF7D24B795")
-        .put("https://repo1.maven.org/maven2/com/google/code/gson/gson/2.8.6/gson-2.8.6.jar", "310f5841387183aca7900fead98d4858")
-        .put("https://repo1.maven.org/maven2/com/github/ganskef/littleproxy-mitm/1.1.0/littleproxy-mitm-1.1.0.jar", "B1FD7C2BFCD32BCF5873D298484DABBA")
-        .put("https://github.com/adamfisk/LittleProxy/releases/download/littleproxy-1.1.2/littleproxy-1.1.2-littleproxy-shade.jar", "05613C6D1BB1A8F826711BA54569311E")
-        .build();
+    @Getter private static final Map<String, String> GLASS_DEPS = Collections.unmodifiableMap(new HashMap<String, String>() {{
+        put("http://easyminelauncher.bonsaimind.org/EasyMineLauncher_v1.0.jar", "D7873F0A7A97AD78DB711BAF7D24B795");
+        put("https://repo1.maven.org/maven2/com/google/code/gson/gson/2.8.6/gson-2.8.6.jar", "310f5841387183aca7900fead98d4858");
+        put("https://repo1.maven.org/maven2/com/github/ganskef/littleproxy-mitm/1.1.0/littleproxy-mitm-1.1.0.jar", "B1FD7C2BFCD32BCF5873D298484DABBA");
+        put("https://github.com/adamfisk/LittleProxy/releases/download/littleproxy-1.1.2/littleproxy-1.1.2-littleproxy-shade.jar", "05613C6D1BB1A8F826711BA54569311E");
+        }});
 }
