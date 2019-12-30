@@ -60,13 +60,13 @@ public class Config {
     /**
      * The version of the launcher.
      */
-    public static final String VERSION = "v0.3";
+    public static final String VERSION = "v0.4";
 
     /**
      * The path of the launcher's files.
      * @see #getDataPath(String)
      */
-    public static final String GLASS_PATH = getDataPath(".PyMCL");
+    public static final String GLASS_PATH = getDataPath(".glass-launcher");
 
     /**
      * The path of PyMCL's files.
