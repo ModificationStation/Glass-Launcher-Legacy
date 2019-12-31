@@ -1,12 +1,17 @@
 package net.glasslauncher.legacy;
 
+import lombok.Setter;
+
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicProgressBarUI;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class ProgressWindow extends JDialog {
     private JPanel panel;
     private JProgressBar progressBar;
+    @Setter private Thread thread;
 
     public ProgressWindow(Window frame, String title) {
         super(frame);
@@ -15,6 +20,31 @@ public class ProgressWindow extends JDialog {
         setLayout(new GridLayout());
         setResizable(false);
         setTitle(title);
+
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent windowEvent) {
+                try {
+                    int isClosing = JOptionPane.showOptionDialog(
+                            getContentPane(),
+                            "Cancelling may corrupt any open files. Are you sure?",
+                            "Confirmation",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.WARNING_MESSAGE,
+                            null,
+                            null,
+                            JOptionPane.NO_OPTION
+                    );
+                    if (isClosing == JOptionPane.YES_OPTION) {
+                        if (thread != null) {
+                            thread.interrupt();
+                        }
+                        dispose();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         panel = new JPanel(null);
         panel.setPreferredSize(new Dimension(340, 72));

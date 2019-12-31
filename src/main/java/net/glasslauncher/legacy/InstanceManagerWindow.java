@@ -56,10 +56,12 @@ class InstanceManagerWindow extends JDialog {
         installModpackDirButton.setBounds(5, 5, 150, 22);
         installModpackDirButton.addActionListener(event -> {
             ProgressWindow progressWindow = new ProgressWindow(this, "Installing Local Modpack...");
-            (new Thread(() -> {
+            Thread thread = new Thread(() -> {
                 InstanceManager.installModpack(installModpackDir.getText(), progressWindow);
                 progressWindow.dispose();
-            })).start();
+            });
+            progressWindow.setThread(thread);
+            thread.start();
             if (progressWindow.isDisplayable()) {
                 progressWindow.setVisible(true);
             }
@@ -85,10 +87,12 @@ class InstanceManagerWindow extends JDialog {
         installModpackURLButton.setBounds(5, 34, 150, 22);
         installModpackURLButton.addActionListener(event -> {
             ProgressWindow progressWindow = new ProgressWindow(this, "Installing Remote Modpack...");
-            (new Thread(() -> {
+            Thread thread = new Thread(() -> {
                 InstanceManager.installModpack(installModpackURL.getText(), progressWindow);
                 progressWindow.dispose();
-            })).start();
+            });
+            progressWindow.setThread(thread);
+            thread.start();
             if (progressWindow.isDisplayable()) {
                 progressWindow.setVisible(true);
             }
@@ -108,10 +112,12 @@ class InstanceManagerWindow extends JDialog {
         instanceVersionButton.setText("Create Blank Instance");
         instanceVersionButton.addActionListener((e) -> {
             ProgressWindow progressWindow = new ProgressWindow(this, "Creating New Instance...");
-            (new Thread(() -> {
+            Thread thread = new Thread(() -> {
                 InstanceManager.createBlankInstance((String) instanceVersion.getSelectedItem(), instanceName.getText(), progressWindow);
                 progressWindow.dispose();
-            })).start();
+            });
+            progressWindow.setThread(thread);
+            thread.start();
             if (progressWindow.isDisplayable()) {
                 progressWindow.setVisible(true);
             }
