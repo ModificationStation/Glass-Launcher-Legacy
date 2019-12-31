@@ -4,6 +4,7 @@ import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -24,7 +25,7 @@ public class TempZipFile {
         File tempFile = new File(destDirBypass + tempPath);
         if (tempFile.exists()) {
             try {
-                org.apache.commons.io.FileUtils.deleteDirectory(tempFile);
+                FileUtils.delete(tempFile);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -39,7 +40,7 @@ public class TempZipFile {
         try {
             if (fileToDelete.exists()) {
                 if (fileToDelete.isDirectory()) {
-                    org.apache.commons.io.FileUtils.deleteDirectory(fileToDelete);
+                    FileUtils.delete(fileToDelete);
                 } else {
                     fileToDelete.delete();
                 }
@@ -71,7 +72,7 @@ public class TempZipFile {
             for (File file : Objects.requireNonNull(relativePath.listFiles())) {
                 try {
                     if (file.isFile()) {
-                        org.apache.commons.io.FileUtils.copyFileToDirectory(file, targetPath);
+                        Files.copy(file.toPath(), targetPath.toPath());
                     } else {
                         org.apache.commons.io.FileUtils.copyDirectoryToDirectory(file, targetPath);
                     }
@@ -123,7 +124,7 @@ public class TempZipFile {
         }
 
         try {
-            org.apache.commons.io.FileUtils.deleteDirectory(new File(destDirBypass + tempPath));
+            FileUtils.delete(new File(destDirBypass + tempPath));
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -6,7 +6,6 @@ import net.glasslauncher.jsontemplate.ModList;
 import net.glasslauncher.legacy.components.DragDropList;
 import net.glasslauncher.legacy.util.InstanceManager;
 import net.glasslauncher.legacy.util.JsonConfig;
-import org.apache.commons.io.FileUtils;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -251,7 +250,7 @@ public class OptionsWindow extends JDialog {
             File[] files = fileChooser.getSelectedFiles();
             try {
                 for (File file : files) {
-                    FileUtils.copyFile(file, new File(instpath + "mods/" + file.getName()));
+                    Files.copy(file.toPath(), new File(instpath + "mods/" + file.getName()).toPath());
                 }
             } catch (IOException e) {
                 e.printStackTrace();

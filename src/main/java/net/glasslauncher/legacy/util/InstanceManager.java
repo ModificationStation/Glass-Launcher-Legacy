@@ -125,7 +125,7 @@ public class InstanceManager {
                 } catch (Exception e) {
                     e.printStackTrace();
                     try {
-                        org.apache.commons.io.FileUtils.deleteDirectory(new File(minecraftFolder));
+                        FileUtils.delete(new File(minecraftFolder));
                     } catch (Exception ex) {
                         e.printStackTrace();
                         ex.printStackTrace();
@@ -142,7 +142,7 @@ public class InstanceManager {
                     Files.copy(versionCacheJar.toPath(), new File(minecraftFolder + "/bin/minecraft.jar").toPath());
                 } catch (Exception e) {
                     try {
-                        org.apache.commons.io.FileUtils.deleteDirectory(new File(minecraftFolder));
+                        FileUtils.delete(new File(minecraftFolder));
                     } catch (Exception ex) {
                         e.printStackTrace();
                         ex.printStackTrace();
@@ -154,7 +154,7 @@ public class InstanceManager {
         else if (version.equals("custom")) {}
         else {
             try {
-                org.apache.commons.io.FileUtils.deleteDirectory(new File(minecraftFolder));
+                FileUtils.delete(new File(minecraftFolder));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -242,7 +242,7 @@ public class InstanceManager {
             if (hasCustomJar) {
                 File originalJar = new File(instPath + ".minecraft/bin/minecraft.jar");
                 originalJar.delete();
-                org.apache.commons.io.FileUtils.copyFile(mmcZip.getFile(mmcZipInstDir + "/libraries/customjar-1.jar"), originalJar);
+                Files.copy(mmcZip.getFile(mmcZipInstDir + "/libraries/customjar-1.jar").toPath(), originalJar.toPath());
                 instanceConfig.setVersion("custom");
             }
         } catch (Exception e) {
@@ -275,7 +275,8 @@ public class InstanceManager {
                 String url = baseURL + minecraftResource.getFile().replace(" ", "%20");
 
                 FileUtils.downloadFile(url, cacheFile.getParent(), md5);
-                org.apache.commons.io.FileUtils.copyFile(cacheFile, file);
+                file.getParentFile().mkdirs();
+                Files.copy(cacheFile.toPath(), file.toPath());
             }
         } catch (Exception e) {
             e.printStackTrace();

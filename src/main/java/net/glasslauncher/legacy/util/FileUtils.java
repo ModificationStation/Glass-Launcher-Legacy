@@ -1,7 +1,6 @@
 package net.glasslauncher.legacy.util;
 
 import net.glasslauncher.legacy.Main;
-import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.net.URL;
@@ -11,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.util.Enumeration;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -175,17 +175,32 @@ public class FileUtils {
                 } else {
                     entryDestination.getParentFile().mkdirs();
                     InputStream in = zipFile.getInputStream(entry);
-                    entryDestination.createNewFile();
-                    OutputStream out = new FileOutputStream(entryDestination);
-                    IOUtils.copy(in, out);
-                    IOUtils.closeQuietly(in);
-                    out.close();
+                    Files.copy(in, entryDestination.toPath());
+                    in.close();
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
+    public static void delete(File file) {
+        if (file.isDirectory()) {
+            String[] files = Objects.requireNonNull(file.list());
+            if (files.length == 0) {
+                file.delete();
+            } else {
+                for (String temp : files) {
+                    File fileDelete = new File(file, temp);
+                    delete(fileDelete);
+                }
+                if (Objects.requireNonNull(file.list()).length == 0) {
+                    file.delete();
+                }
+            }
+
+        } else {
+            file.delete();
+        }
+    }
 }

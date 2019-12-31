@@ -1,8 +1,8 @@
 package net.glasslauncher.legacy;
 
 import net.glasslauncher.legacy.components.HintTextField;
+import net.glasslauncher.legacy.util.FileUtils;
 import net.glasslauncher.legacy.util.InstanceManager;
-import org.apache.commons.io.FileUtils;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -150,7 +150,7 @@ class InstanceManagerWindow extends JDialog {
                 deleteButton.setAlignmentX(Component.CENTER_ALIGNMENT);
                 deleteButton.addActionListener((e) -> {
                     try {
-                        FileUtils.deleteDirectory(instance);
+                        FileUtils.delete(instance);
                         updateInstanceList();
                     } catch (Exception ex) {
                         ex.printStackTrace();
