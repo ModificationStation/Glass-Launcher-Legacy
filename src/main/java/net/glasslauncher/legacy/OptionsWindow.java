@@ -51,6 +51,10 @@ public class OptionsWindow extends JDialog {
 
         instName = instance;
         instpath = Config.GLASS_PATH + "instances/" + instance + "/";
+        if (!(new File(instpath)).exists()) {
+            JOptionPane.showMessageDialog(this, "Selected instance does not exist, or one hasn't been selected.", "Warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         instanceConfig = (InstanceConfig) JsonConfig.loadConfig(instpath + "instance_config.json", InstanceConfig.class);
         if (instanceConfig == null) {
             instanceConfig = new InstanceConfig(instpath + "instance_config.json");
