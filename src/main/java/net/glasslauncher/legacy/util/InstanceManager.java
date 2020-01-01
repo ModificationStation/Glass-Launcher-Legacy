@@ -5,6 +5,7 @@ import net.glasslauncher.jsontemplate.*;
 import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
 import net.glasslauncher.legacy.ProgressWindow;
+import net.glasslauncher.legacy.VerifyAccountWindow;
 import net.glasslauncher.proxy.web.WebUtils;
 
 import javax.swing.*;
@@ -91,7 +92,9 @@ public class InstanceManager {
                 Main.getLogger().info("Provided instance is a Glass Launcher instance. Importing...");
                 InstanceConfig instanceConfig = new InstanceConfig(instanceZipFile.getFile("instance_config.json").getPath());
                 createBlankInstance(instanceConfig.getVersion(), instanceName, progressWindow);
-                instanceZipFile.copyContentsToDir("", Config.getInstancePath(instanceName));
+                if (new File(Config.getInstancePath(instanceName)).exists()) {
+                    instanceZipFile.copyContentsToDir("", Config.getInstancePath(instanceName));
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -104,7 +107,10 @@ public class InstanceManager {
         progressWindow.setProgress(1);
         progressWindow.setProgressMax(4);
         progressWindow.setProgressText("Initializing...");
-        Main.getLogger().info("i");
+        if (!(new VerifyAccountWindow(progressWindow)).isLoginValid()) {
+            JOptionPane.showMessageDialog(progressWindow, "Account not validated! Aborting.");
+            return;
+        }
         Main.getLogger().info("Creating instance \"" + instance + "\" on version " + version);
         String versionsCachePath = Config.CACHE_PATH + "versions";
         String instanceFolder = Config.getInstancePath(instance);
@@ -190,7 +196,7 @@ public class InstanceManager {
         }
     }
 
-    private static void importMultiMC(TempZipFile mmcZip, String instance, String mmcZipInstDir, MultiMCPack multiMCPack, ProgressWindow progressWindow) throws GenericInvalidVersionException{
+    private static void importMultiMC(TempZipFile mmcZip, String instance, String mmcZipInstDir, MultiMCPack multiMCPack, ProgressWindow progressWindow) throws GenericInvalidVersionException {
         String instPath = Config.getInstancePath(instance);
         InstanceConfig instanceConfig = new InstanceConfig(instPath + "instance_config.json");
         ModList modList = new ModList(instPath + "mods/mods.json");
@@ -217,6 +223,10 @@ public class InstanceManager {
         }
 
         createBlankInstance(instanceConfig.getVersion(), instance, progressWindow);
+        if (!(new File(instPath)).exists()) {
+            mmcZip.close(false);
+            return;
+        }
 
         progressWindow.setProgress(1);
         progressWindow.setProgressMax(3);

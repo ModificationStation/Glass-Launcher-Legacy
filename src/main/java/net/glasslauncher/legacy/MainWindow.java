@@ -154,6 +154,7 @@ class MainWindow extends JFrame {
         instancesButton.addActionListener(event -> {
             new InstanceManagerWindow(this);
             refreshInstanceList();
+            username.setText(Config.getLauncherConfig().getLastUsedName());
         });
 
         // Adding widgets and making the launcher visible
