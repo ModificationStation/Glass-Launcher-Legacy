@@ -6,15 +6,17 @@
 \+ Added authentication support to the proxy. You now no longer need to install a login fix!  
 \+ Added caching of versions, sounds and LWJGL.  
 \+ Added Lombok to make things easier.  
-\+ Added the ability to use external links in !net/glasslauncher/legacy/assets/mcversions.json.  
+\+ Added the ability to use external links in `!net/glasslauncher/legacy/assets/mcversions.json`.  
 \+ Added the ability to delete instances.  
 \+ Added automatic instance list refreshes to make things feel more fluent.
+\+ Added account verification when creating/installing instances.
 \- Removed certain debug logs.  
 \- Removed some unneeded classes.  
 \- Removed PyMCL instance support due to how the mod manager and new config works.  
 \* Swapped Json-IO with GSON. Config files are now more robust and should produce less errors (if any).  
 \* Config overhaul for the library swap.  
-\* Fixed some visual bugs.
+\* Fixed some visual bugs.  
+\* Changed install folder from `.PyMCL` to `.glass-launcher`.
 
 #### v0.3
 \+ Added input hints.  
