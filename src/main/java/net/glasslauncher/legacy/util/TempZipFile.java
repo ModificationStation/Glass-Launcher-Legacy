@@ -74,7 +74,7 @@ public class TempZipFile {
                     if (file.isFile()) {
                         Files.copy(file.toPath(), targetPath.toPath());
                     } else {
-                        org.apache.commons.io.FileUtils.copyDirectoryToDirectory(file, targetPath);
+                        FileUtils.copyFolder(file.toPath(), targetPath.toPath());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

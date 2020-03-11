@@ -1,19 +1,27 @@
 package net.glasslauncher.legacy.util;
 
 import net.glasslauncher.legacy.Main;
+import sun.net.www.protocol.file.FileURLConnection;
 
 import java.io.*;
+import java.net.JarURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.util.Enumeration;
 import java.util.Objects;
 import java.util.Scanner;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class FileUtils {
 
@@ -81,12 +89,11 @@ public class FileUtils {
         File path;
         File file;
         try {
-            path = new File(pathStr);
+            (new File(pathStr)).mkdirs();
             file = new File(pathStr + "/" + filename);
             if (md5 != null && file.exists() && getFileChecksum(MessageDigest.getInstance("MD5"), file).toLowerCase().equals(md5.toLowerCase())) {
                 return true;
             }
-            path.mkdirs();
         } catch (Exception e) {
             Main.getLogger().info("Failed to download file \"" + urlStr + "\": Invalid path.");
             e.printStackTrace();
@@ -184,6 +191,19 @@ public class FileUtils {
         }
     }
 
+    public static void copyFolder(Path src, Path dest) throws IOException {
+        Files.walk(src)
+                .forEach(source -> copy(source, dest.resolve(src.relativize(source))));
+    }
+
+    private static void copy(Path source, Path dest) {
+        try {
+            Files.copy(source, dest, REPLACE_EXISTING);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
     public static void delete(File file) {
         if (file.isDirectory()) {
             String[] files = Objects.requireNonNull(file.list());
@@ -203,4 +223,36 @@ public class FileUtils {
             file.delete();
         }
     }
+
+    public static void copyResourcesRecursively(URL originUrl, File destination) throws Exception {
+        URLConnection urlConnection = originUrl.openConnection();
+        if (urlConnection instanceof JarURLConnection) {
+            copyJarResourcesRecursively((JarURLConnection) urlConnection, destination);
+        } else if (urlConnection instanceof FileURLConnection) {
+            Files.copy(new File(originUrl.getPath()).toPath(), destination.toPath());
+        } else {
+            throw new Exception("URLConnection[" + urlConnection.getClass().getSimpleName() +
+                    "] is not a recognized/implemented connection type.");
+        }
+    }
+
+    public static void copyJarResourcesRecursively(JarURLConnection jarConnection, File destination) throws IOException {
+        JarFile jarFile = jarConnection.getJarFile();
+        Enumeration<JarEntry> entries = jarFile.entries();
+
+        while (entries.hasMoreElements()) {
+            JarEntry entry = entries.nextElement();
+            if (entry.getName().startsWith(jarConnection.getEntryName() + "/")) {
+                String fileName = entry.getName().substring(jarConnection.getEntryName().length());
+                if (!entry.isDirectory()) {
+                    try (InputStream entryInputStream = jarFile.getInputStream(entry)) {
+                        Files.copy(entryInputStream, Paths.get(destination.getAbsolutePath(), fileName));
+                    }
+                } else {
+                    (new File(destination, fileName)).mkdirs();
+                }
+            }
+        }
+    }
+
 }
