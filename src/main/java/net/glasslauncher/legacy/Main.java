@@ -50,14 +50,15 @@ public class Main {
         getDeps();
         Config.setEasyMineLauncherFile(libs.get(0));
 
-        for (Object lib : libs.toArray()) {
+        // TODO: fix bcp* libs breaking for no reason.
+        /*for (Object lib : libs.toArray()) {
             try {
                 Classpath.addFile(Config.GLASS_PATH + "lib/" + lib);
             } catch (Exception e) {
                 logger.info("Failed to load \"" + lib + "\".");
                 e.printStackTrace();
             }
-        }
+        }*/
 
         try {
             Config.loadConfigFiles();

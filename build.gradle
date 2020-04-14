@@ -1,4 +1,5 @@
 plugins {
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
     id 'java'
 }
 
@@ -12,7 +13,7 @@ allprojects{
 apply from: "dependencies.gradle"
 
 group 'glass-launcher'
-version '0.4'
+version '0.4.1'
 
 sourceCompatibility = 1.8
 
