@@ -1,4 +1,8 @@
-#### v0.4 (so far)
+### v0.4.1
+\* Disabled automatic dependency downloads in favour of FatJar because BouncyCastle libs are broken.  
+\* Fixed Minecraft being unable to launch.
+
+#### v0.4
 \+ Added some basic mod management.  
 \+ Added a basic progress window.  
 \+ Added MultiMC modpack support.  
