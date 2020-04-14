@@ -139,5 +139,9 @@ public class Config {
         put("https://repo1.maven.org/maven2/com/google/code/gson/gson/2.8.6/gson-2.8.6.jar", "310f5841387183aca7900fead98d4858");
         put("https://repo1.maven.org/maven2/com/github/ganskef/littleproxy-mitm/1.1.0/littleproxy-mitm-1.1.0.jar", "B1FD7C2BFCD32BCF5873D298484DABBA");
         put("https://github.com/adamfisk/LittleProxy/releases/download/littleproxy-1.1.2/littleproxy-1.1.2-littleproxy-shade.jar", "05613C6D1BB1A8F826711BA54569311E");
+        put("https://repo1.maven.org/maven2/org/bouncycastle/bcpkix-jdk15on/1.57/bcpkix-jdk15on-1.57.jar", "8dcdbde846f412f903eebddcc10df216");
+        put("https://repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.47/bcprov-jdk15on-1.47.jar", "7749dd7eca4403fb968ddc484263736a");
+        put("https://repo1.maven.org/maven2/commons-io/commons-io/2.6/commons-io-2.6.jar", "467c2a1f64319c99b5faf03fc78572af");
+        put("https://repo1.maven.org/maven2/com/atlassian/commonmark/commonmark/0.14.0/commonmark-0.14.0.jar", "c2a58cfdb4c7cfe8ce0e0a91e2ed2297");
         }});
 }

@@ -36,7 +36,11 @@ public class LaunchArgs {
         String instance = args[2];
         instpath = Config.GLASS_PATH + "instances/" + instance;
         try {
-            instjson = (new Gson()).fromJson(new FileReader(instpath + "/instance_config.json"), InstanceConfig.class);
+            if (!(new File(instpath, "instance_config.json")).exists()) {
+                instjson = new InstanceConfig(instpath + "/instance_config.json");
+            } else {
+                instjson = (new Gson()).fromJson(new FileReader(instpath + "/instance_config.json"), InstanceConfig.class);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return null;
