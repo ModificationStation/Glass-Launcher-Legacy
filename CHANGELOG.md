@@ -1,3 +1,14 @@
+### v0.4.2
+\+ Made the FileUtils class far more useful.
+\+ New jar constructing system. Should be WAY faster than the old system.
+\* Fixed maxRam not being saved in instance config.
+\* Fixed path being serialised to JSON in instance config.
+\* Fixed instance importing. Also fixed instance names having .zip at the end.
+\* Fixed applying mods.
+\* Fixed me not knowing how to use my own JsonConfig class.
+\- Removed all * imports.
+
+
 ### v0.4.1
 \* Disabled automatic dependency downloads in favour of FatJar because BouncyCastle libs are broken.  
 \* Fixed Minecraft being unable to launch.
