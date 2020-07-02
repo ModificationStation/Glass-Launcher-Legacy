@@ -3,8 +3,12 @@ package net.glasslauncher.legacy.components;
 import net.glasslauncher.legacy.Main;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+import java.awt.Color;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.geom.Point2D;
 import java.io.IOException;
 

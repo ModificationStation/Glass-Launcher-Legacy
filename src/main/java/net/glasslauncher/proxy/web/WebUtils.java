@@ -4,7 +4,11 @@ import com.google.gson.Gson;
 import net.glasslauncher.jsontemplate.Profile;
 import net.glasslauncher.legacy.Config;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;

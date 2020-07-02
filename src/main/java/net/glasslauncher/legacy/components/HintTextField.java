@@ -1,7 +1,7 @@
 package net.glasslauncher.legacy.components;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JTextField;
+import java.awt.Color;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 

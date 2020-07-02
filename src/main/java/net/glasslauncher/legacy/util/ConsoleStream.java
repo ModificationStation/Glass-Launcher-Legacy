@@ -4,7 +4,7 @@ This uses a buffer system because appending to a TextPane takes about 20ms.
 
 package net.glasslauncher.legacy.util;
 
-import javax.swing.*;
+import javax.swing.JTextArea;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Timer;

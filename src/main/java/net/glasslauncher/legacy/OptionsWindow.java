@@ -7,9 +7,22 @@ import net.glasslauncher.legacy.components.DragDropList;
 import net.glasslauncher.legacy.util.InstanceManager;
 import net.glasslauncher.legacy.util.JsonConfig;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+import javax.swing.ListModel;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.GridLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -75,7 +88,7 @@ public class OptionsWindow extends JDialog {
             new WindowAdapter() {
                 public void windowClosing(WindowEvent we) {
                     instanceConfig.setJavaArgs(javaargs.getText());
-                    instanceConfig.setMinRam(maxram.getText());
+                    instanceConfig.setMaxRam(maxram.getText());
                     instanceConfig.setMinRam(minram.getText());
                     instanceConfig.setProxySkin(skinproxy.isSelected());
                     instanceConfig.setProxyCape(capeproxy.isSelected());

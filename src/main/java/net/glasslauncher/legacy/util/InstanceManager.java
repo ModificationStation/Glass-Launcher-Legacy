@@ -1,19 +1,30 @@
 package net.glasslauncher.legacy.util;
 
 import com.google.gson.Gson;
-import net.glasslauncher.jsontemplate.*;
+import net.glasslauncher.jsontemplate.InstanceConfig;
+import net.glasslauncher.jsontemplate.MinecraftResource;
+import net.glasslauncher.jsontemplate.MinecraftResources;
+import net.glasslauncher.jsontemplate.Mod;
+import net.glasslauncher.jsontemplate.ModList;
+import net.glasslauncher.jsontemplate.MultiMCComponent;
+import net.glasslauncher.jsontemplate.MultiMCPack;
 import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
 import net.glasslauncher.legacy.ProgressWindow;
 import net.glasslauncher.legacy.VerifyAccountWindow;
 import net.glasslauncher.proxy.web.WebUtils;
 
-import javax.swing.*;
+import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
+import javax.swing.ListModel;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class InstanceManager {
@@ -51,7 +62,7 @@ public class InstanceManager {
         progressWindow.setProgress(0);
         progressWindow.setProgressMax(2);
         progressWindow.setProgressText("Initializing...");
-        String instanceName = filename.replaceFirst("\\.jar$", "");
+        String instanceName = filename.replaceFirst("\\.jar$", "").replaceFirst("\\.zip$", "");
         TempZipFile instanceZipFile = new TempZipFile(path);
         try {
             progressWindow.setProgressText("Checking modpack type...");
@@ -90,7 +101,7 @@ public class InstanceManager {
                 progressWindow.increaseProgress();
                 progressWindow.setProgressText("Installing Glass Launcher Modpack...");
                 Main.getLogger().info("Provided instance is a Glass Launcher instance. Importing...");
-                InstanceConfig instanceConfig = new InstanceConfig(instanceZipFile.getFile("instance_config.json").getPath());
+                InstanceConfig instanceConfig = (InstanceConfig) JsonConfig.loadConfig(instanceZipFile.getFile("instance_config.json").getAbsolutePath(), InstanceConfig.class);
                 createBlankInstance(instanceConfig.getVersion(), instanceName, progressWindow);
                 if (new File(Config.getInstancePath(instanceName)).exists()) {
                     instanceZipFile.copyContentsToDir("", Config.getInstancePath(instanceName));
@@ -181,16 +192,28 @@ public class InstanceManager {
     public static void addMods(String instance, ListModel<Mod> mods) {
         instance = Config.getInstancePath(instance);
         try {
-            TempZipFile jarFile = new TempZipFile(instance + "/.minecraft/bin/minecraft.jar");
-            if (jarFile.fileExists("META-INF")) {
-                jarFile.deleteFile("META-INF");
+            File moddedJar = new File(instance, "/.minecraft/bin/minecraft.jar");
+            File vanillaJar = new File(instance, "/.minecraft/bin/minecraft_vanilla.jar");
+            if (moddedJar.exists()) {
+                moddedJar.delete();
             }
-            for (int i = 0; i < mods.getSize(); i++) {
-                if (mods.getElementAt(i).isEnabled()) {
-                    jarFile.mergeZip(instance + "/mods/" + mods.getElementAt(i).getFileName());
-                }
+            ArrayList<File> zips = new ArrayList<>();
+            for (int i = mods.getSize(); i != 0; i--) {
+                Main.getLogger().info(instance + "mods/" + mods.getElementAt(i-1).getFileName());
+                zips.add(new File(instance + "mods/" + mods.getElementAt(i-1).getFileName()));
             }
-            jarFile.close();
+            zips.add(vanillaJar);
+            FileUtils.mergeZips(moddedJar, zips);
+            FileSystem jarFs = FileSystems.newFileSystem(moddedJar.toPath(), null);
+            try {
+                Files.delete(jarFs.getPath("META-INF/MOJANG_C.DSA"));
+                Files.delete(jarFs.getPath("META-INF/MOJANG_C.SF"));
+                Files.delete(jarFs.getPath("META-INF/MANIFEST.MF"));
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            jarFs.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -244,6 +267,20 @@ public class InstanceManager {
         DefaultListModel<Mod> mods = new DefaultListModel<>();
         for (Mod mod : modList.getJarMods()) {
             mods.add(mods.getSize(), mod);
+        }
+
+        File vanillaJar = new File(instPath + ".minecraft/bin/minecraft_vanilla.jar");
+        File moddedJar = new File(instPath + ".minecraft/bin/minecraft.jar");
+        try {
+            if (vanillaJar.exists()) {
+                moddedJar.delete();
+                Files.copy(vanillaJar.toPath(), moddedJar.toPath());
+            } else {
+                Files.copy(moddedJar.toPath(), vanillaJar.toPath());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
         }
         InstanceManager.addMods(instance, mods);
 

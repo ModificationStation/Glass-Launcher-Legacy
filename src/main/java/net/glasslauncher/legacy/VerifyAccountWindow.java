@@ -4,8 +4,15 @@ import lombok.Getter;
 import net.glasslauncher.legacy.components.HintTextField;
 import net.glasslauncher.legacy.mc.LaunchArgs;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.Window;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 

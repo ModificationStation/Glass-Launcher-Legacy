@@ -1,6 +1,8 @@
 package net.glasslauncher.legacy.components;
 
-import javax.swing.*;
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
+import javax.swing.TransferHandler;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 

@@ -2,8 +2,12 @@ package net.glasslauncher.legacy.components;
 
 import net.glasslauncher.jsontemplate.Mod;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.DefaultListModel;
+import javax.swing.DropMode;
+import javax.swing.JList;
+import java.awt.Color;
+import java.awt.Component;
 import java.util.ArrayList;
 
 public class DragDropList extends JList {

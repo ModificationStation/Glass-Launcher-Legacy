@@ -1,20 +1,19 @@
 package net.glasslauncher.jsontemplate;
 
-import com.google.gson.annotations.Expose;
 import lombok.Getter;
 import lombok.Setter;
 import net.glasslauncher.legacy.util.JsonConfig;
 
 @Getter @Setter
 public class InstanceConfig extends JsonConfig {
-    @Expose private boolean proxySound = false;
-    @Expose private boolean proxySkin = false;
-    @Expose private boolean proxyCape = false;
-    @Expose private boolean proxyLogin = false;
-    @Expose private String maxRam = "512m";
-    @Expose private String minRam = "64m";
-    @Expose private String javaArgs = "";
-    @Expose private String version = "none";
+    private boolean proxySound = false;
+    private boolean proxySkin = false;
+    private boolean proxyCape = false;
+    private boolean proxyLogin = false;
+    private String maxRam = "512m";
+    private String minRam = "64m";
+    private String javaArgs = "";
+    private String version = "none";
 
     /**
      * @param path Path to the JSON file.

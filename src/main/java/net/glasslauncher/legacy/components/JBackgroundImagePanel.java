@@ -1,8 +1,8 @@
 package net.glasslauncher.legacy.components;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 

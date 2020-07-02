@@ -3,16 +3,26 @@ package net.glasslauncher.legacy.util;
 import net.glasslauncher.legacy.Main;
 import sun.net.www.protocol.file.FileURLConnection;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.CopyOption;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.security.MessageDigest;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Objects;
 import java.util.Scanner;
@@ -20,7 +30,9 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
+import static java.nio.file.Files.createDirectories;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class FileUtils {
@@ -29,8 +41,7 @@ public class FileUtils {
         return readFile(path, false);
     }
 
-    public static String readFile(String path, boolean isJar)
-            throws IOException {
+    public static String readFile(String path, boolean isJar) throws IOException {
         byte[] encoded;
         if (isJar) {
             String resLocation = path.split("(!)(?!.*\1)")[1].replaceAll("\\\\", "/");
@@ -182,7 +193,7 @@ public class FileUtils {
                 } else {
                     entryDestination.getParentFile().mkdirs();
                     InputStream in = zipFile.getInputStream(entry);
-                    Files.copy(in, entryDestination.toPath());
+                    Files.copy(in, entryDestination.toPath(), REPLACE_EXISTING);
                     in.close();
                 }
             }
@@ -191,16 +202,66 @@ public class FileUtils {
         }
     }
 
-    public static void copyFolder(Path src, Path dest) throws IOException {
-        Files.walk(src)
-                .forEach(source -> copy(source, dest.resolve(src.relativize(source))));
+    /**
+     * Merges A number of ZIP files and puts them in the specified output file.
+     * @param destFile
+     * @param zipsToMerge
+     */
+    public static void mergeZips(File destFile, ArrayList<File> zipsToMerge) throws IOException {
+        if (!destFile.getParentFile().exists()) {
+            destFile.getParentFile().mkdirs();
+        }
+        ZipOutputStream destZip = new ZipOutputStream(new FileOutputStream(destFile));
+
+        ArrayList<String> copiedFiles = new ArrayList<>();
+
+        for (File zipToMerge : zipsToMerge) {
+            ZipFile zipFileToMerge = new ZipFile(zipToMerge);
+            Enumeration<? extends ZipEntry> entries = zipFileToMerge.entries();
+            while (entries.hasMoreElements()) {
+                ZipEntry entry = entries.nextElement();
+                if (!copiedFiles.contains(entry.getName()) && !entry.isDirectory()) {
+                    ZipEntry blankEntry = new ZipEntry(entry.getName());
+                    destZip.putNextEntry(blankEntry);
+                    InputStream is = zipFileToMerge.getInputStream(entry);
+                    byte[] buf = new byte[1024];
+                    int len = 0;
+                    while ((len = (is.read(buf))) > 0) {
+                        destZip.write(buf, 0, Math.min(len, buf.length));
+                        //destZip.write(buf);
+                    }
+                    copiedFiles.add(entry.getName());
+                }
+            }
+            zipFileToMerge.close();
+        }
+        destZip.close();
     }
 
-    private static void copy(Path source, Path dest) {
+    public static void copyRecursive(Path source, Path target, CopyOption... options) throws IOException {
+        Files.walkFileTree(source, new SimpleFileVisitor<Path>() {
+
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs)
+                    throws IOException {
+                createDirectories(target.resolve(source.relativize(dir)));
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
+                    throws IOException {
+                copy(file, target.resolve(source.relativize(file)), options);
+                return FileVisitResult.CONTINUE;
+            }
+        });
+    }
+
+    private static void copy(Path source, Path dest, CopyOption... options) throws IOException {
         try {
-            Files.copy(source, dest, REPLACE_EXISTING);
+            Files.copy(source, dest, options);
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage(), e);
+            throw new IOException(e.getMessage(), e);
         }
     }
 

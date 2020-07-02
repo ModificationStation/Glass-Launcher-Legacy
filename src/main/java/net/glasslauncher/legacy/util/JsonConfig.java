@@ -2,7 +2,6 @@ package net.glasslauncher.legacy.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.annotations.Expose;
 import lombok.Data;
 
 import java.io.FileNotFoundException;
@@ -13,7 +12,7 @@ import java.lang.reflect.Type;
 
 @Data
 public abstract class JsonConfig {
-    @Expose(serialize = false, deserialize = false) private String path;
+    private transient String path;
 
     /**
      * @param path Path to the JSON file.

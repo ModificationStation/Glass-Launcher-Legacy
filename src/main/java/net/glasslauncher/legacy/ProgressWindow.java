@@ -2,9 +2,15 @@ package net.glasslauncher.legacy;
 
 import lombok.Setter;
 
-import javax.swing.*;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.plaf.basic.BasicProgressBarUI;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.Window;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 

@@ -10,7 +10,11 @@ import net.glasslauncher.legacy.util.JsonConfig;
 
 import java.io.File;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Config {
     public static void loadConfigFiles() {
@@ -21,6 +25,8 @@ public class Config {
             launcherConfig = new LauncherConfig(Config.GLASS_PATH + "launcher_config.json");
         }
     }
+
+    public static String destDirBypass = "";
 
     @Getter private static MCVersions mcVersions;
     @Getter private static LauncherConfig launcherConfig;
@@ -67,13 +73,6 @@ public class Config {
      * @see #getDataPath(String)
      */
     public static final String GLASS_PATH = getDataPath(".glass-launcher");
-
-    /**
-     * The path of PyMCL's files.
-     * Used for importing.
-     * @see #getDataPath(String)
-     */
-    public static final String PYMCL_PATH = getDataPath(".PyMCL");
 
     /**
      * The path of the launcher's cache files.
@@ -144,4 +143,10 @@ public class Config {
         put("https://repo1.maven.org/maven2/org/bouncycastle/bcpkix-jdk15on/1.65/bcpkix-jdk15on-1.65.jar", "3364a7fa22395551658c1da1a88945d4");
         put("https://repo1.maven.org/maven2/com/atlassian/commonmark/commonmark/0.14.0/commonmark-0.14.0.jar", "c2a58cfdb4c7cfe8ce0e0a91e2ed2297");*/
         }});
+
+    static {
+        if (Config.OS.equals("windows")) {
+            destDirBypass = "\\\\?\\";
+        }
+    }
 }

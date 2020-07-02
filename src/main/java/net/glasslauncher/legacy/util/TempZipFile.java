@@ -4,24 +4,21 @@ import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
 
 import java.io.File;
-import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+
+import static net.glasslauncher.legacy.Config.destDirBypass;
 
 public class TempZipFile {
     private final String originalPath;
     private final String tempPath;
-    private String destDirBypass = "";
 
     public TempZipFile(String zipFilePath) {
-        if (Config.OS.equals("windows")) {
-            destDirBypass = "\\\\?\\";
-        }
         File zipFile = new File(zipFilePath);
         originalPath = zipFilePath;
-        tempPath = Config.GLASS_PATH + "temp/" + zipFile.getName().replaceFirst("\\.zip$", "");
+        tempPath = Config.GLASS_PATH + "temp/" + zipFile.getName();
         File tempFile = new File(destDirBypass + tempPath);
         if (tempFile.exists()) {
             try {
@@ -68,18 +65,11 @@ public class TempZipFile {
     public void copyContentsToDir(String relative, String target) {
         File targetPath = new File(target);
         File relativePath = new File(tempPath + "/" + relative);
-        if (targetPath.exists() && targetPath.isDirectory()) {
-            for (File file : Objects.requireNonNull(relativePath.listFiles())) {
-                try {
-                    if (file.isFile()) {
-                        Files.copy(file.toPath(), targetPath.toPath());
-                    } else {
-                        FileUtils.copyFolder(file.toPath(), targetPath.toPath());
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+        try {
+            FileUtils.copyRecursive(relativePath.toPath(), targetPath.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
