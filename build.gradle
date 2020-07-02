@@ -13,7 +13,7 @@ allprojects{
 apply from: "dependencies.gradle"
 
 group 'glass-launcher'
-version '0.4.1'
+version '0.4.2'
 
 sourceCompatibility = 1.8
 
@@ -23,10 +23,6 @@ repositories {
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
-}
-
-tasks.withType(Jar) {
-    destinationDir = file("$rootDir/out")
 }
 
 jar {
