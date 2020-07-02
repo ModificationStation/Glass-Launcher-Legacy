@@ -18,7 +18,3 @@ Glass Launcher will automatically download any dependencies it needs into `%appd
 You can just double click the jar file to launch the launcher normally.  
 Launch with `-proxy` to launch just the proxy. Optional `-doskin`, `-dosound`, `-docape` args can be used.  
 Use `-help` for detailed help about all launch args.
-
-## Issues
-
-- No instance creation of any kind.
