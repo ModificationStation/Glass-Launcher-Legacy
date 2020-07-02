@@ -8,10 +8,10 @@ A much more lightweight approach to what PyMCL was trying to do.
 
 ## Compiling
 
-Use `gradlew jar` to build.  
-Output is in `/out`.
+Use `gradlew shadowJar` to build.  
+Output is in `/build/libs`.
 
-Glass Launcher will automatically download any dependencies it needs into `%appdata%/.PyMCL/lib` if on windows, `/Library/Application Support/.PyMCL` on osx or `~/.PyMCL` on other OSes.
+Glass Launcher will automatically download any dependencies it needs into `%appdata%/.glass-launcher/lib` if on windows, `/Library/Application Support/.glass-launcher` on osx or `~/.glass-launcher` on other OSes.
 
 ## Usage
 
