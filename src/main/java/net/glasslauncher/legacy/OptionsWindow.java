@@ -240,20 +240,37 @@ public class OptionsWindow extends JDialog {
         JButton applyModsButton = new JButton();
         applyModsButton.setText("Apply Current Mod Configuration");
         applyModsButton.addActionListener(event -> {
-            File vanillaJar = new File(instpath + ".minecraft/bin/minecraft_vanilla.jar");
-            File moddedJar = new File(instpath + ".minecraft/bin/minecraft.jar");
-            try {
-                if (vanillaJar.exists()) {
-                    moddedJar.delete();
-                    Files.copy(vanillaJar.toPath(), moddedJar.toPath());
-                } else {
-                    Files.copy(moddedJar.toPath(), vanillaJar.toPath());
+            ProgressWindow progressWindow = new ProgressWindow(this, "Applying Mods");
+            Thread thread = new Thread(() -> {
+                progressWindow.setProgressMax(2);
+                progressWindow.setProgress(0);
+                progressWindow.setProgressText("Setting up");
+                File vanillaJar = new File(instpath + ".minecraft/bin/minecraft_vanilla.jar");
+                File moddedJar = new File(instpath + ".minecraft/bin/minecraft.jar");
+                try {
+                    if (vanillaJar.exists()) {
+                        moddedJar.delete();
+                        Files.copy(vanillaJar.toPath(), moddedJar.toPath());
+                    } else {
+                        Files.copy(moddedJar.toPath(), vanillaJar.toPath());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return;
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                return;
+                progressWindow.setProgress(1);
+                progressWindow.setProgressText("Applying Mods");
+                InstanceManager.addMods(instName, modDragDropList.model);
+                progressWindow.setProgress(2);
+                progressWindow.setProgressText("Done");
+                progressWindow.dispose();
+                JOptionPane.showMessageDialog(this, "Mods Applied!", "Info", JOptionPane.INFORMATION_MESSAGE);
+            });
+            progressWindow.setThread(thread);
+            thread.start();
+            if (progressWindow.isDisplayable()) {
+                progressWindow.setVisible(true);
             }
-            InstanceManager.addMods(instName, modDragDropList.model);
         });
         applyModsButton.setBounds(20, 262, 200, 22);
 
