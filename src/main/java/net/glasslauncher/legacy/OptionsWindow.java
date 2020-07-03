@@ -10,7 +10,6 @@ import net.glasslauncher.legacy.util.JsonConfig;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -18,9 +17,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FileDialog;
 import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.event.WindowAdapter;
@@ -277,18 +276,20 @@ public class OptionsWindow extends JDialog {
         JButton addModsButton = new JButton();
         addModsButton.setText("Add Mods");
         addModsButton.addActionListener(event -> {
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setFileFilter(new FileNameExtensionFilter("Mod Zip (*.zip;*.jar)", "zip", "jar"));
-            fileChooser.setMultiSelectionEnabled(true);
-            fileChooser.showOpenDialog(this);
-            File[] files = fileChooser.getSelectedFiles();
+            FileDialog fileChooser = new FileDialog(this, "Select Mod");
+            fileChooser.setFilenameFilter((e, str) -> {
+                return str.endsWith(".jar") || str.endsWith(".zip");
+            });
+            fileChooser.setMultipleMode(true);
+            fileChooser.setVisible(true);
+            File[] files = fileChooser.getFiles();
             try {
                 for (File file : files) {
                     Files.copy(file.toPath(), new File(instpath + "mods/" + file.getName()).toPath());
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-            }
+            } catch (NullPointerException ignored) {}
             refreshModList();
         });
         addModsButton.setBounds(20, 294, 200, 22);

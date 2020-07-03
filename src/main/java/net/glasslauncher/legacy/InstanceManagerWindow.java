@@ -8,13 +8,12 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FileDialog;
 import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.event.WindowAdapter;
@@ -80,11 +79,15 @@ class InstanceManagerWindow extends JDialog {
         JButton instanceZipSelectButton = new JButton();
         instanceZipSelectButton.setText("...");
         instanceZipSelectButton.addActionListener(event -> {
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setFileFilter(new FileNameExtensionFilter("Modpack Zip (*.zip)", "zip"));
-            fileChooser.showOpenDialog(this);
-            File file = fileChooser.getSelectedFile();
-            installModpackDir.setText(file.getAbsolutePath());
+            FileDialog fileChooser = new FileDialog(this, "Select Modpack");
+            fileChooser.setFilenameFilter((e, str) -> {
+                return str.endsWith(".zip");
+            });
+            fileChooser.setVisible(true);
+            try {
+                String file = fileChooser.getFiles()[0].getAbsolutePath();
+                installModpackDir.setText(file);
+            } catch (NullPointerException ignored) {}
         });
         instanceZipSelectButton.setBounds(515, 5, 30, 22);
 
