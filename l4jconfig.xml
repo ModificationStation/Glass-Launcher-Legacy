@@ -1,43 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
-  <headerType>console</headerType>
-  <jar>out\Glass Launcher.jar</jar>
-  <outfile>out\Glass Launcher.exe</outfile>
+  <headerType>gui</headerType>
+  <jar>build\libs\glass-launcher-legacy-0.4.2-all.jar</jar>
+  <outfile>Glass Launcher.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir></chdir>
   <priority>normal</priority>
   <downloadUrl>https://www.java.com/en/download/manual.jsp</downloadUrl>
   <supportUrl></supportUrl>
-  <stayAlive>true</stayAlive>
+  <stayAlive>false</stayAlive>
   <restartOnCrash>false</restartOnCrash>
   <manifest></manifest>
   <icon>glass.ico</icon>
   <classPath>
-    <mainClass>net.glass.glassl.Main</mainClass>
-    <cp>net.pymcl.calmilamsy</cp>
+    <mainClass>net.glasslauncher.legacy.Main</mainClass>
   </classPath>
   <jre>
     <path></path>
     <bundledJre64Bit>false</bundledJre64Bit>
     <bundledJreAsFallback>false</bundledJreAsFallback>
-    <minVersion>1.6.0</minVersion>
+    <minVersion>1.8.0</minVersion>
     <maxVersion></maxVersion>
     <jdkPreference>preferJre</jdkPreference>
-    <runtimeBits>32</runtimeBits>
-    <initialHeapSize>1024</initialHeapSize>
-    <maxHeapSize>1024</maxHeapSize>
+    <runtimeBits>64/32</runtimeBits>
+    <initialHeapSize>128</initialHeapSize>
+    <maxHeapSize>128</maxHeapSize>
   </jre>
   <versionInfo>
     <fileVersion>1.0.0.0</fileVersion>
     <txtFileVersion>1.0.0.0</txtFileVersion>
     <fileDescription>Glass Launcher</fileDescription>
-    <copyright>2019 calmilamsy</copyright>
+    <copyright>CC-0</copyright>
     <productVersion>1.0.0.0</productVersion>
     <txtProductVersion>1.0.0.0</txtProductVersion>
     <productName>Glass Launcher</productName>
-    <companyName>pymcl.net</companyName>
+    <companyName>glass-launcher.net</companyName>
     <internalName>glasslauncher</internalName>
     <originalFilename>Glass Launcher.exe</originalFilename>
     <trademarks></trademarks>
