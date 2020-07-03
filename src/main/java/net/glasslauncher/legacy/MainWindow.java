@@ -37,6 +37,9 @@ class MainWindow extends JFrame {
     private int orgWidth = 854;
     private int orgHeight = 480;
 
+    protected JPasswordField password;
+    protected HintTextField username;
+
     private final Panel mainPanel = new Panel();
 
     private JComboBox<String> instsel;
@@ -92,14 +95,17 @@ class MainWindow extends JFrame {
         Logo logo = new Logo();
 
         // Username field
-        HintTextField username = new HintTextField("Username or Email");
+        username = new HintTextField("Username or Email");
         if (Config.getLauncherConfig().getLastUsedName() != null) {
             username.setText(Config.getLauncherConfig().getLastUsedName());
         }
         username.setBounds(0, 14, 166, 22);
+        username.addActionListener((e) -> {
+            login();
+        });
 
         // Password field
-        JPasswordField password = new JPasswordField();
+        password = new JPasswordField();
         password.setEchoChar((char) 0);
         password.setForeground(Color.gray);
         password.setText("Password");
@@ -121,6 +127,9 @@ class MainWindow extends JFrame {
                     password.setEchoChar((char) 0);
                 }
             }
+        });
+        password.addActionListener((e) -> {
+            login();
         });
 
         password.setBounds(0, 40, 166, 22);
@@ -145,21 +154,7 @@ class MainWindow extends JFrame {
         login.setBounds(168, 40, 70, 22);
         login.setOpaque(false);
         login.addActionListener(event -> {
-            Main.getLogger().info((String) instsel.getSelectedItem());
-            String pass = "";
-            if (password.getForeground() != Color.gray) {
-                pass = String.valueOf(password.getPassword());
-            }
-            String[] launchargs = {username.getText(), pass, (String) instsel.getSelectedItem()};
-            launchargs = (new LaunchArgs()).getArgs(launchargs);
-            if (launchargs != null) {
-                Config.getLauncherConfig().setLastUsedName(username.getText());
-                Config.getLauncherConfig().saveFile();
-                Wrapper mc = new Wrapper(launchargs);
-                mc.startMC();
-            } else {
-                password.setText("");
-            }
+            login();
         });
 
         // Instance manager button
@@ -226,6 +221,24 @@ class MainWindow extends JFrame {
             for (String instance : instances) {
                 instsel.addItem(instance);
             }
+        }
+    }
+
+    private void login() {
+        Main.getLogger().info("Starting instance: " + instsel.getSelectedItem());
+        String pass = "";
+        if (password.getForeground() != Color.gray) {
+            pass = String.valueOf(password.getPassword());
+        }
+        String[] launchargs = {username.getText(), pass, (String) instsel.getSelectedItem()};
+        launchargs = (new LaunchArgs()).getArgs(launchargs);
+        if (launchargs != null) {
+            Config.getLauncherConfig().setLastUsedName(username.getText());
+            Config.getLauncherConfig().saveFile();
+            Wrapper mc = new Wrapper(launchargs);
+            mc.startMC();
+        } else {
+            password.setText("");
         }
     }
 }

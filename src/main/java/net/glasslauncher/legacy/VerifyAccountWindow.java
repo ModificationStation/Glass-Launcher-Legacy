@@ -19,6 +19,9 @@ import java.awt.event.FocusListener;
 public class VerifyAccountWindow extends JDialog {
     @Getter boolean loginValid = false;
 
+    protected JPasswordField password;
+    protected HintTextField username;
+
     public VerifyAccountWindow(Window frame) {
         super(frame);
         setModal(true);
@@ -32,14 +35,17 @@ public class VerifyAccountWindow extends JDialog {
         panel.setPreferredSize(new Dimension(186, 100));
 
         // Username field
-        HintTextField username = new HintTextField("Username or Email");
+        username = new HintTextField("Username or Email");
         if (Config.getLauncherConfig().getLastUsedName() != null) {
             username.setText(Config.getLauncherConfig().getLastUsedName());
         }
         username.setBounds(10, 14, 166, 22);
+        username.addActionListener((e) -> {
+            login();
+        });
 
         // Password field
-        JPasswordField password = new JPasswordField();
+        password = new JPasswordField();
         password.setEchoChar((char) 0);
         password.setForeground(Color.gray);
         password.setText("Password");
@@ -62,6 +68,9 @@ public class VerifyAccountWindow extends JDialog {
                 }
             }
         });
+        password.addActionListener((e) -> {
+            login();
+        });
 
         password.setBounds(10, 40, 166, 22);
 
@@ -71,19 +80,7 @@ public class VerifyAccountWindow extends JDialog {
         login.setBounds(58, 64, 70, 22);
         login.setOpaque(false);
         login.addActionListener(event -> {
-            String pass = "";
-            if (password.getForeground() != Color.gray) {
-                pass = String.valueOf(password.getPassword());
-            }
-            if (!pass.isEmpty() && (new LaunchArgs()).login(username.getText(), pass) != null) {
-                Config.getLauncherConfig().setLastUsedName(username.getText());
-                Config.getLauncherConfig().saveFile();
-                loginValid = true;
-                dispose();
-            } else {
-                JOptionPane.showMessageDialog(this, "Invalid username or password.");
-                password.setText("");
-            }
+            login();
         });
 
         panel.add(username);
@@ -95,5 +92,21 @@ public class VerifyAccountWindow extends JDialog {
         setLocationRelativeTo(frame);
 
         setVisible(true);
+    }
+
+    private void login() {
+        String pass = "";
+        if (password.getForeground() != Color.gray) {
+            pass = String.valueOf(password.getPassword());
+        }
+        if (!pass.isEmpty() && (new LaunchArgs()).login(username.getText(), pass) != null) {
+            Config.getLauncherConfig().setLastUsedName(username.getText());
+            Config.getLauncherConfig().saveFile();
+            loginValid = true;
+            dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Invalid username or password.");
+            password.setText("");
+        }
     }
 }
