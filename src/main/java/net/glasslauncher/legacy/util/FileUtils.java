@@ -97,7 +97,6 @@ public class FileUtils {
             e.printStackTrace();
             return false;
         }
-        File path;
         File file;
         try {
             (new File(pathStr)).mkdirs();

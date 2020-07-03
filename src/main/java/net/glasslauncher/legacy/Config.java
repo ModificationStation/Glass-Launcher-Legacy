@@ -55,6 +55,7 @@ public class Config {
         add("betacraft.ovh");
         add("retrocraft.net");
         add("textures.minecraft.net");
+        add("glass-launcher.net");
     }});
 
     /**
