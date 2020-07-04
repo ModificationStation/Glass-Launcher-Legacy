@@ -3,12 +3,12 @@ package net.glasslauncher.legacy;
 import net.glasslauncher.legacy.components.DirtPanel;
 import net.glasslauncher.legacy.components.HintTextField;
 import net.glasslauncher.legacy.components.Logo;
+import net.glasslauncher.legacy.components.ScalingButton;
 import net.glasslauncher.legacy.mc.LaunchArgs;
 import net.glasslauncher.legacy.mc.Wrapper;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -140,7 +140,7 @@ class MainWindow extends JFrame {
         instsel.setBounds(0, 66, 166, 22);
 
         // Options button
-        JButton options = new JButton();
+        ScalingButton options = new ScalingButton();
         options.setText("Options");
         options.setBounds(168, 14, 70, 22);
         options.setOpaque(false);
@@ -149,7 +149,7 @@ class MainWindow extends JFrame {
         });
 
         // Login button
-        JButton login = new JButton();
+        ScalingButton login = new ScalingButton();
         login.setText("Login");
         login.setBounds(168, 40, 70, 22);
         login.setOpaque(false);
@@ -158,7 +158,7 @@ class MainWindow extends JFrame {
         });
 
         // Instance manager button
-        JButton instancesButton = new JButton();
+        ScalingButton instancesButton = new ScalingButton();
         instancesButton.setText("Instances");
         instancesButton.setBounds(168, 66, 70, 22);
         instancesButton.setOpaque(false);

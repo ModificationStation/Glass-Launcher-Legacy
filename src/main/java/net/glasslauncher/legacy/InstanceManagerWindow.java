@@ -1,17 +1,18 @@
 package net.glasslauncher.legacy;
 
 import net.glasslauncher.legacy.components.HintTextField;
+import net.glasslauncher.legacy.components.ScalingButton;
 import net.glasslauncher.legacy.util.FileUtils;
 import net.glasslauncher.legacy.util.InstanceManager;
 
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.Frame;
@@ -19,6 +20,7 @@ import java.awt.GridLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.Objects;
 
 class InstanceManagerWindow extends JDialog {
@@ -60,7 +62,7 @@ class InstanceManagerWindow extends JDialog {
         HintTextField installModpackDir = new HintTextField("Paste the path to your Modpack zip here!");
         installModpackDir.setBounds(155, 5, 355, 22);
 
-        JButton installModpackDirButton = new JButton();
+        ScalingButton installModpackDirButton = new ScalingButton();
         installModpackDirButton.setText("Install Local Modpack");
         installModpackDirButton.setBounds(5, 5, 150, 22);
         installModpackDirButton.addActionListener(event -> {
@@ -76,7 +78,7 @@ class InstanceManagerWindow extends JDialog {
             }
         });
 
-        JButton instanceZipSelectButton = new JButton();
+        ScalingButton instanceZipSelectButton = new ScalingButton();
         instanceZipSelectButton.setText("...");
         instanceZipSelectButton.addActionListener(event -> {
             FileDialog fileChooser = new FileDialog(this, "Select Modpack");
@@ -87,7 +89,7 @@ class InstanceManagerWindow extends JDialog {
             try {
                 String file = fileChooser.getFiles()[0].getAbsolutePath();
                 installModpackDir.setText(file);
-            } catch (NullPointerException ignored) {}
+            } catch (NullPointerException | ArrayIndexOutOfBoundsException ignored) {}
         });
         instanceZipSelectButton.setBounds(515, 5, 30, 22);
 
@@ -95,7 +97,7 @@ class InstanceManagerWindow extends JDialog {
         HintTextField installModpackURL = new HintTextField("Paste the URL to your Modpack zip here!");
         installModpackURL.setBounds(155, 34, 390, 22);
 
-        JButton installModpackURLButton = new JButton();
+        ScalingButton installModpackURLButton = new ScalingButton();
         installModpackURLButton.setText("Install Modpack from URL");
         installModpackURLButton.setBounds(5, 34, 150, 22);
         installModpackURLButton.addActionListener(event -> {
@@ -121,7 +123,7 @@ class InstanceManagerWindow extends JDialog {
         }
         instanceVersion.setBounds(351, 63, 194, 22);
 
-        JButton instanceVersionButton = new JButton();
+        ScalingButton instanceVersionButton = new ScalingButton();
         instanceVersionButton.setText("Create Blank Instance");
         instanceVersionButton.addActionListener((e) -> {
             ProgressWindow progressWindow = new ProgressWindow(this, "Creating New Instance...");
@@ -137,6 +139,18 @@ class InstanceManagerWindow extends JDialog {
         });
         instanceVersionButton.setBounds(5, 63, 150, 22);
 
+        ScalingButton instanceFolderButton = new ScalingButton();
+        instanceFolderButton.setText("Open Instances Folder");
+        instanceFolderButton.addActionListener((e) -> {
+            Main.getLogger().info("Opening instances folder...");
+            try {
+                Desktop.getDesktop().open(new File(Config.GLASS_PATH + "instances"));
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+        instanceFolderButton.setBounds(5, 257, 150, 22);
+
         createPanel.add(installModpackDir);
         createPanel.add(installModpackDirButton);
         createPanel.add(instanceZipSelectButton);
@@ -145,6 +159,7 @@ class InstanceManagerWindow extends JDialog {
         createPanel.add(instanceName);
         createPanel.add(instanceVersion);
         createPanel.add(instanceVersionButton);
+        createPanel.add(instanceFolderButton);
         return createPanel;
     }
 
@@ -162,7 +177,7 @@ class InstanceManagerWindow extends JDialog {
         deletePanel.repaint();
         for (File instance : (Objects.requireNonNull(new File(Config.GLASS_PATH + "instances").listFiles()))) {
             if (instance.isDirectory()) {
-                JButton deleteButton = new JButton();
+                ScalingButton deleteButton = new ScalingButton();
                 deleteButton.setText("Delete \"" + instance.getName() + "\".");
                 deleteButton.setMinimumSize(new Dimension(540, 22));
                 deleteButton.setMaximumSize(new Dimension(540, 22));

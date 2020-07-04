@@ -4,10 +4,10 @@ import net.glasslauncher.jsontemplate.InstanceConfig;
 import net.glasslauncher.jsontemplate.Mod;
 import net.glasslauncher.jsontemplate.ModList;
 import net.glasslauncher.legacy.components.DragDropList;
+import net.glasslauncher.legacy.components.ScalingButton;
 import net.glasslauncher.legacy.util.InstanceManager;
 import net.glasslauncher.legacy.util.JsonConfig;
 
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -221,7 +221,7 @@ public class OptionsWindow extends JDialog {
         modListScroll.setBounds(20, 20, 200, 200);
         modListScroll.setViewportView(modDragDropList);
 
-        JButton toggleModsButton = new JButton();
+        ScalingButton toggleModsButton = new ScalingButton();
         toggleModsButton.setText("Toggle Selected Mods");
         toggleModsButton.addActionListener(event -> {
             for (Object modObj : modDragDropList.getSelectedValuesList()) {
@@ -236,7 +236,7 @@ public class OptionsWindow extends JDialog {
         });
         toggleModsButton.setBounds(20, 230, 200, 22);
 
-        JButton applyModsButton = new JButton();
+        ScalingButton applyModsButton = new ScalingButton();
         applyModsButton.setText("Apply Current Mod Configuration");
         applyModsButton.addActionListener(event -> {
             ProgressWindow progressWindow = new ProgressWindow(this, "Applying Mods");
@@ -273,7 +273,7 @@ public class OptionsWindow extends JDialog {
         });
         applyModsButton.setBounds(20, 262, 200, 22);
 
-        JButton addModsButton = new JButton();
+        ScalingButton addModsButton = new ScalingButton();
         addModsButton.setText("Add Mods");
         addModsButton.addActionListener(event -> {
             FileDialog fileChooser = new FileDialog(this, "Select Mod");
@@ -294,7 +294,7 @@ public class OptionsWindow extends JDialog {
         });
         addModsButton.setBounds(20, 294, 200, 22);
 
-        JButton removeModsButton = new JButton();
+        ScalingButton removeModsButton = new ScalingButton();
         removeModsButton.setText("Remove Selected Mods");
         removeModsButton.setForeground(new Color(81, 0, 0));
         removeModsButton.addActionListener(event -> {
