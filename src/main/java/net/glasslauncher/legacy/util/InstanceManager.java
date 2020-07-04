@@ -106,6 +106,13 @@ public class InstanceManager {
                 if (new File(Config.getInstancePath(instanceName)).exists()) {
                     instanceZipFile.copyContentsToDir("", Config.getInstancePath(instanceName));
                 }
+                progressWindow.setProgressText("Installing mods...");
+                ModList modList = (ModList) JsonConfig.loadConfig(Config.getInstancePath(instanceName) + "mods/mods.json", ModList.class);
+                DefaultListModel<Mod> mods = new DefaultListModel<>();
+                for (Mod mod : modList.getJarMods()) {
+                    mods.add(mods.getSize(), mod);
+                }
+                addMods(instanceName, mods);
             }
         } catch (Exception e) {
             e.printStackTrace();
