@@ -4,6 +4,7 @@ import io.netty.handler.codec.http.HttpObject;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
 import net.glasslauncher.legacy.Config;
+import net.glasslauncher.legacy.Main;
 import org.littleshoot.proxy.HttpFiltersAdapter;
 
 import java.util.List;
@@ -55,7 +56,7 @@ public class ProxyFilter extends HttpFiltersAdapter {
                 if (host.contains("amazonaws.com")) {
                     if (doSoundFix && (path.contains("MinecraftResources") || path.contains("/resources/"))) {
                         httpRequest.setUri("http://mcresources.modification-station.net" + path);
-                        httpRequest.headers().set("Host", "resourceproxy.pymcl.net");
+                        httpRequest.headers().set("Host", "mcresources.modification-station.net");
                         return null;
                     }
 
