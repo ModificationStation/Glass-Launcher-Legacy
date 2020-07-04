@@ -1,13 +1,23 @@
-### v0.4.2
-\+ Made the FileUtils class far more useful.
-\+ New jar constructing system. Should be WAY faster than the old system.
-\* Fixed maxRam not being saved in instance config.
-\* Fixed path being serialised to JSON in instance config.
-\* Fixed instance importing. Also fixed instance names having .zip at the end.
-\* Fixed applying mods.
-\* Fixed me not knowing how to use my own JsonConfig class.
-\- Removed all * imports.
+### v0.4.3
+\+ Added an "Open Instances Folder" button to the instance manager.  
+\+ Added the ability to press enter to log in.  
+\+ Added an exe version of glass-launcher to releases. This will only be available in "stable" releases.  
+\+ Added a progress window when applying mods from the options window.  
+\* Made it so file select dialogs are native. This should make file selecting a little easier.  
+\* Potentially fixed text in buttons being cut off.  
+\* Fixed 404 errors in the resource proxy.  
+\* Progress windows now log their text to console.  
+\* Fixed mods not installing when installing glass-launcher modpacks.
 
+### v0.4.2
+\+ Made the FileUtils class far more useful.  
+\+ New jar constructing system. Should be WAY faster than the old system.  
+\* Fixed maxRam not being saved in instance config.  
+\* Fixed path being serialised to JSON in instance config.  
+\* Fixed instance importing. Also fixed instance names having .zip at the end.  
+\* Fixed applying mods.  
+\* Fixed me not knowing how to use my own JsonConfig class.  
+\- Removed all * imports.
 
 ### v0.4.1
 \* Disabled automatic dependency downloads in favour of FatJar because BouncyCastle libs are broken.  
