@@ -194,7 +194,10 @@ public class InstanceManager {
         try {
             File moddedJar = new File(instance, "/.minecraft/bin/minecraft.jar");
             File vanillaJar = new File(instance, "/.minecraft/bin/minecraft_vanilla.jar");
-            if (moddedJar.exists()) {
+            if (moddedJar.exists() && !vanillaJar.exists()) {
+                Files.move(moddedJar.toPath(), vanillaJar.toPath());
+            }
+            else if (moddedJar.exists()) {
                 moddedJar.delete();
             }
             ArrayList<File> zips = new ArrayList<>();
