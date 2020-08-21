@@ -1,10 +1,10 @@
-package net.glasslauncher.jsontemplate;
+package net.glasslauncher.legacy.jsontemplate;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.Setter;
-import net.glasslauncher.legacy.util.JsonConfig;
+import net.glasslauncher.common.JsonConfig;
 
 import java.util.ArrayList;
 import java.util.List;

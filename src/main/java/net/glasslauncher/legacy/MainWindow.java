@@ -1,6 +1,8 @@
 package net.glasslauncher.legacy;
 
+import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.legacy.components.DirtPanel;
+import net.glasslauncher.legacy.components.HintPasswordField;
 import net.glasslauncher.legacy.components.HintTextField;
 import net.glasslauncher.legacy.components.Logo;
 import net.glasslauncher.legacy.components.ScalingButton;
@@ -105,34 +107,22 @@ class MainWindow extends JFrame {
         });
 
         // Password field
-        password = new JPasswordField();
-        password.setEchoChar((char) 0);
-        password.setForeground(Color.gray);
-        password.setText("Password");
-
-        password.addFocusListener(new FocusListener() {
-            public void focusGained(FocusEvent e) {
-                if (password.getForeground() == Color.gray) {
-                    password.setText("");
-                    password.setForeground(Color.black);
-                    password.setEchoChar('•');
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if ((String.valueOf(password.getPassword()).isEmpty())) {
-                    password.setText("Password");
-                    password.setForeground(Color.gray);
-                    password.setEchoChar((char) 0);
-                }
-            }
-        });
+        password = new HintPasswordField("Password");
+        password.setBounds(0, 40, 166, 22);
         password.addActionListener((e) -> {
             login();
         });
 
-        password.setBounds(0, 40, 166, 22);
+        // Auto selection of username or password.
+        addWindowListener(new WindowAdapter() {
+            public void windowOpened(WindowEvent e){
+                if (username.getText().isEmpty()) {
+                    username.grabFocus();
+                } else {
+                    password.grabFocus();
+                }
+            }
+        });
 
         // Instance selector
         instsel = new JComboBox<>();
@@ -166,7 +156,6 @@ class MainWindow extends JFrame {
         instancesButton.addActionListener(event -> {
             new InstanceManagerWindow(this);
             refreshInstanceList();
-            username.setText(Config.getLauncherConfig().getLastUsedName());
         });
 
         // Adding widgets and making the launcher visible
@@ -190,9 +179,7 @@ class MainWindow extends JFrame {
     private JScrollPane makeBlog() {
         String page = new Scanner(MainWindow.class.getResourceAsStream("assets/blog.html"), "UTF-8").useDelimiter("\\A").next();
         page = page.replaceAll("\\$\\{root}\\$", MainWindow.class.getResource("assets/").toString());
-        JTextPane blog = new JTextPane(
-
-        );
+        JTextPane blog = new JTextPane();
         blog.setContentType("text/html");
         blog.setText(page);
         blog.setBorder(BorderFactory.createEmptyBorder());
@@ -212,15 +199,24 @@ class MainWindow extends JFrame {
         return blogcontainer;
     }
 
-    private void refreshInstanceList() {
+    public void refreshInstanceList() {
         Main.getLogger().info("Refreshing instance list...");
         instsel.setModel(new DefaultComboBoxModel<>());
-        File file = new File(Config.GLASS_PATH + "instances");
+        File file = new File(CommonConfig.GLASS_PATH + "instances");
         String[] instances = file.list((current, name) -> new File(current, name).isDirectory());
+        String lastUsedInstance = Config.getLauncherConfig().getLastUsedInstance();
+        System.out.println(lastUsedInstance);
+        boolean exists = false;
         if (instances != null) {
             for (String instance : instances) {
+                if (instance.equals(lastUsedInstance)) {
+                    exists = true;
+                }
                 instsel.addItem(instance);
             }
+        }
+        if (lastUsedInstance != null && !lastUsedInstance.isEmpty() && exists) {
+            instsel.setSelectedItem(lastUsedInstance);
         }
     }
 
@@ -234,6 +230,12 @@ class MainWindow extends JFrame {
         launchargs = (new LaunchArgs()).getArgs(launchargs);
         if (launchargs != null) {
             Config.getLauncherConfig().setLastUsedName(username.getText());
+            try {
+                Config.getLauncherConfig().setLastUsedInstance((String) instsel.getSelectedItem());
+            } catch (Exception e) {
+                Main.getLogger().info("This should be impossible!");
+                e.printStackTrace();
+            }
             Config.getLauncherConfig().saveFile();
             Wrapper mc = new Wrapper(launchargs);
             mc.startMC();

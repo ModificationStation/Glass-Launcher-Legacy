@@ -1,12 +1,13 @@
 package net.glasslauncher.legacy;
 
-import net.glasslauncher.jsontemplate.InstanceConfig;
-import net.glasslauncher.jsontemplate.Mod;
-import net.glasslauncher.jsontemplate.ModList;
+import net.glasslauncher.common.CommonConfig;
+import net.glasslauncher.common.JsonConfig;
+import net.glasslauncher.legacy.jsontemplate.InstanceConfig;
+import net.glasslauncher.legacy.jsontemplate.Mod;
+import net.glasslauncher.legacy.jsontemplate.ModList;
 import net.glasslauncher.legacy.components.DragDropList;
 import net.glasslauncher.legacy.components.ScalingButton;
 import net.glasslauncher.legacy.util.InstanceManager;
-import net.glasslauncher.legacy.util.JsonConfig;
 
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
@@ -62,7 +63,7 @@ public class OptionsWindow extends JDialog {
         add(this.panel);
 
         instName = instance;
-        instpath = Config.GLASS_PATH + "instances/" + instance + "/";
+        instpath = CommonConfig.GLASS_PATH + "instances/" + instance + "/";
         if (!(new File(instpath)).exists()) {
             JOptionPane.showMessageDialog(this, "Selected instance does not exist, or one hasn't been selected.", "Warning", JOptionPane.WARNING_MESSAGE);
             return;

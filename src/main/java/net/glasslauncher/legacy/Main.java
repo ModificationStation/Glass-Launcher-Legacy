@@ -1,44 +1,18 @@
 package net.glasslauncher.legacy;
 
 import lombok.Getter;
-import net.glasslauncher.legacy.util.FileUtils;
+import net.glasslauncher.common.CommonConfig;
+import net.glasslauncher.common.FileUtils;
+import net.glasslauncher.repo.api.mod.RepoReader;
 
 import javax.swing.UIManager;
-import java.io.File;
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.logging.FileHandler;
-import java.util.logging.Handler;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 public class Main {
-    @Getter private static Logger logger = Logger.getLogger("launcher");
+    @Getter private static Logger logger = CommonConfig.makeLogger("GlassLauncher", "glass-launcher");
     private static ArrayList<String> libs = new ArrayList<>();
-    private static MainWindow mainwin = null;
-
-    private static void makeLogger() {
-        try {
-            System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tT] [GlassL] [%4$s] %5$s %n");
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
-            LocalDateTime now = LocalDateTime.now();
-            String time = dtf.format(now);
-            File logdir = new File(Config.GLASS_PATH + "/glass-logs/launcher");
-            logdir.mkdirs();
-            Handler file_handler = new FileHandler(Config.GLASS_PATH+ "/glass-logs/launcher/" + time + ".log");
-            SimpleFormatter format = new SimpleFormatter();
-            logger.addHandler(file_handler);
-            file_handler.setFormatter(format);
-            logger.setLevel(Level.ALL);
-            file_handler.setLevel(Level.ALL);
-            logger.info("Logging to " + logdir.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    public static MainWindow mainwin;
 
     public static void main(String[] args) {
         try {
@@ -48,7 +22,6 @@ public class Main {
         }
 
         ConsoleWindow console = new ConsoleWindow();
-        makeLogger();
 
         getDeps();
         Config.setEasyMineLauncherFile(libs.get(0));
@@ -75,6 +48,11 @@ public class Main {
                 return;
             }
         }
+        try {
+            Main.logger.info(RepoReader.getMods()[0].getName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         mainwin = new MainWindow(console);
     }
 
@@ -86,7 +64,7 @@ public class Main {
 
         for (String dep : Config.getGLASS_DEPS().keySet()) {
             try {
-                FileUtils.downloadFile(dep, Config.GLASS_PATH + "/lib/", Config.getGLASS_DEPS().get(dep));
+                FileUtils.downloadFile(dep, CommonConfig.GLASS_PATH + "/lib/", Config.getGLASS_DEPS().get(dep));
                 libs.add(dep.substring(dep.lastIndexOf('/') + 1));
             } catch (Exception e) {
                 getLogger().info("Failed to download dependency. Invalid formatting?");

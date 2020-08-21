@@ -1,6 +1,6 @@
 package net.glasslauncher.legacy.components;
 
-import net.glasslauncher.jsontemplate.Mod;
+import net.glasslauncher.legacy.jsontemplate.Mod;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;

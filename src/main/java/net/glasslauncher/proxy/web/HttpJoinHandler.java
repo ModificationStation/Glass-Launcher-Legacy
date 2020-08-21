@@ -3,8 +3,8 @@ package net.glasslauncher.proxy.web;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import net.glasslauncher.jsontemplate.Profile;
-import net.glasslauncher.jsontemplate.ServerJoin;
+import net.glasslauncher.legacy.jsontemplate.Profile;
+import net.glasslauncher.legacy.jsontemplate.ServerJoin;
 import net.glasslauncher.legacy.Main;
 
 import java.io.IOException;

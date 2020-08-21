@@ -1,4 +1,4 @@
-package net.glasslauncher.jsontemplate;
+package net.glasslauncher.legacy.jsontemplate;
 
 import lombok.Getter;
 

@@ -5,12 +5,33 @@ plugins {
 
 allprojects{
     repositories {
+        mavenLocal()
         jcenter()
         maven { url "https://jitpack.io" }
+        maven { url "https://maven.glass-launcher.net/repo"}
     }
 }
 
-apply from: "dependencies.gradle"
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    compileOnly 'org.projectlombok:lombok:1.18.10'
+    annotationProcessor 'org.projectlombok:lombok:1.18.10'
+
+    // https://github.com/adamfisk/LittleProxy/releases/download
+    testCompile group: 'org.littleshoot', name: 'littleproxy', version: '1.1.2'
+    // https://repo1.maven.org/maven2/com/github/ganskef/littleproxy-mitm
+    compile group: 'com.github.ganskef', name: 'littleproxy-mitm', version: '1.1.0'
+    // https://repo1.maven.org/maven2/com/google/code/gson/gson
+    implementation 'com.google.code.gson:gson:2.8.6'
+    // https://mvnrepository.com/artifact/commons-validator/commons-validator
+    compile group: 'commons-validator', name: 'commons-validator', version: '1.6'
+
+
+    compile group: "net.glasslauncher.repo", name: "glass-site-java-api", version: "0.2"
+    compile group: "net.glasslauncher", name: "commons", version: "1.0"
+
+}
 
 group 'glass-launcher'
 version '0.4.3'
@@ -23,6 +44,13 @@ repositories {
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
+}
+
+task listrepos {
+    doLast {
+        println "Repositories:"
+        project.repositories.each { println "Name: " + it.name + "; url: " + it.url }
+    }
 }
 
 jar {

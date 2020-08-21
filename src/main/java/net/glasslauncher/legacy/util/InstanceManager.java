@@ -1,13 +1,17 @@
 package net.glasslauncher.legacy.util;
 
 import com.google.gson.Gson;
-import net.glasslauncher.jsontemplate.InstanceConfig;
-import net.glasslauncher.jsontemplate.MinecraftResource;
-import net.glasslauncher.jsontemplate.MinecraftResources;
-import net.glasslauncher.jsontemplate.Mod;
-import net.glasslauncher.jsontemplate.ModList;
-import net.glasslauncher.jsontemplate.MultiMCComponent;
-import net.glasslauncher.jsontemplate.MultiMCPack;
+import net.glasslauncher.common.CommonConfig;
+import net.glasslauncher.common.FileUtils;
+import net.glasslauncher.common.GenericInvalidVersionException;
+import net.glasslauncher.common.JsonConfig;
+import net.glasslauncher.legacy.jsontemplate.InstanceConfig;
+import net.glasslauncher.legacy.jsontemplate.MinecraftResource;
+import net.glasslauncher.legacy.jsontemplate.MinecraftResources;
+import net.glasslauncher.legacy.jsontemplate.Mod;
+import net.glasslauncher.legacy.jsontemplate.ModList;
+import net.glasslauncher.legacy.jsontemplate.MultiMCComponent;
+import net.glasslauncher.legacy.jsontemplate.MultiMCPack;
 import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
 import net.glasslauncher.legacy.ProgressWindow;
@@ -83,7 +87,7 @@ public class InstanceManager {
                 }
             }
 
-            if ((new File(Config.GLASS_PATH + "instances/" + instanceName)).exists()) {
+            if ((new File(CommonConfig.GLASS_PATH + "instances/" + instanceName)).exists()) {
                 Main.getLogger().info("Instance \"" + instanceName + "\" already exists!");
                 return;
             }
@@ -327,7 +331,7 @@ public class InstanceManager {
         try {
             for (MinecraftResource minecraftResource : minecraftResources.getFiles()) {
                 File file = new File(basePath + minecraftResource.getFile());
-                File cacheFile = new File(Config.GLASS_PATH + "cache/resources/" + minecraftResource.getFile());
+                File cacheFile = new File(CommonConfig.GLASS_PATH + "cache/resources/" + minecraftResource.getFile());
                 String md5 = minecraftResource.getMd5();
                 String url = baseURL + minecraftResource.getFile().replace(" ", "%20");
 

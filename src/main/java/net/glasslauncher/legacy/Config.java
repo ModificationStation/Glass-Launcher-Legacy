@@ -1,12 +1,12 @@
 package net.glasslauncher.legacy;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import lombok.Getter;
 import lombok.Setter;
-import net.glasslauncher.jsontemplate.LauncherConfig;
-import net.glasslauncher.jsontemplate.MCVersions;
-import net.glasslauncher.legacy.util.JsonConfig;
+import net.glasslauncher.common.CommonConfig;
+import net.glasslauncher.common.JsonConfig;
+import net.glasslauncher.legacy.jsontemplate.LauncherConfig;
+import net.glasslauncher.legacy.jsontemplate.MCVersions;
 
 import java.io.File;
 import java.io.InputStreamReader;
@@ -18,11 +18,12 @@ import java.util.Map;
 
 public class Config {
     public static void loadConfigFiles() {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        Gson gson = new Gson();
         mcVersions = gson.fromJson(new InputStreamReader(Main.class.getResourceAsStream("assets/mcversions.json")), MCVersions.class);
-        launcherConfig = (LauncherConfig) JsonConfig.loadConfig(Config.GLASS_PATH + "launcher_config.json", LauncherConfig.class);
+        launcherConfig = (LauncherConfig) JsonConfig.loadConfig(CommonConfig.GLASS_PATH + "launcher_config.json", LauncherConfig.class);
+        System.out.println(gson.toJson(launcherConfig));
         if (launcherConfig == null) {
-            launcherConfig = new LauncherConfig(Config.GLASS_PATH + "launcher_config.json");
+            launcherConfig = new LauncherConfig(CommonConfig.GLASS_PATH + "launcher_config.json");
         }
     }
 
@@ -70,15 +71,9 @@ public class Config {
     public static final String VERSION = "v0.4";
 
     /**
-     * The path of the launcher's files.
-     * @see #getDataPath(String)
-     */
-    public static final String GLASS_PATH = getDataPath(".glass-launcher");
-
-    /**
      * The path of the launcher's cache files.
      */
-    public static final String CACHE_PATH = GLASS_PATH + "cache/";
+    public static final String CACHE_PATH = CommonConfig.GLASS_PATH + "cache/";
 
     /**
      * The path of the Java binary running the launcher.
@@ -116,7 +111,6 @@ public class Config {
         } else if (OS.equals("osx")) {
             return System.getProperty("user.home") + "/Library/Application Support/" + name + "/";
         } else {
-
             return System.getProperty("user.home") + "/" + name + "/";
         }
     }
@@ -131,7 +125,7 @@ public class Config {
         if (instance == null || instance.isEmpty()) {
             throw new IllegalArgumentException("Instance cannot be empty or null!");
         }
-        return GLASS_PATH + "instances/" + instance + "/";
+        return CommonConfig.GLASS_PATH + "instances/" + instance + "/";
     }
 
     @Getter private static final Map<String, String> GLASS_DEPS = Collections.unmodifiableMap(new HashMap<String, String>() {{

@@ -4,10 +4,10 @@ import com.google.gson.Gson;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import net.glasslauncher.jsontemplate.Profile;
-import net.glasslauncher.jsontemplate.ProfileProperties;
-import net.glasslauncher.jsontemplate.TextureURLs;
-import net.glasslauncher.jsontemplate.Textures;
+import net.glasslauncher.legacy.jsontemplate.Profile;
+import net.glasslauncher.legacy.jsontemplate.ProfileProperties;
+import net.glasslauncher.legacy.jsontemplate.TextureURLs;
+import net.glasslauncher.legacy.jsontemplate.Textures;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

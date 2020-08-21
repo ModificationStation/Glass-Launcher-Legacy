@@ -1,12 +1,13 @@
 package net.glasslauncher.legacy.mc;
 
 import com.google.gson.Gson;
-import net.glasslauncher.jsontemplate.InstanceConfig;
-import net.glasslauncher.jsontemplate.LoginCreds;
-import net.glasslauncher.jsontemplate.LoginResponse;
-import net.glasslauncher.jsontemplate.LoginResponseAgent;
+import net.glasslauncher.common.CommonConfig;
+import net.glasslauncher.legacy.jsontemplate.InstanceConfig;
 import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
+import net.glasslauncher.legacy.jsontemplate.LoginCreds;
+import net.glasslauncher.legacy.jsontemplate.LoginResponse;
+import net.glasslauncher.legacy.jsontemplate.LoginResponseAgent;
 
 import javax.swing.JOptionPane;
 import javax.xml.ws.http.HTTPException;
@@ -39,7 +40,7 @@ public class LaunchArgs {
             return null;
         }
         String instance = args[2];
-        instpath = Config.GLASS_PATH + "instances/" + instance;
+        instpath = CommonConfig.GLASS_PATH + "instances/" + instance;
         try {
             if (!(new File(instpath, "instance_config.json")).exists()) {
                 instjson = new InstanceConfig(instpath + "/instance_config.json");

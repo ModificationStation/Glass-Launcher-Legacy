@@ -1,5 +1,7 @@
 package net.glasslauncher.legacy.util;
 
+import net.glasslauncher.common.CommonConfig;
+import net.glasslauncher.common.FileUtils;
 import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
 
@@ -18,7 +20,7 @@ public class TempZipFile {
     public TempZipFile(String zipFilePath) {
         File zipFile = new File(zipFilePath);
         originalPath = zipFilePath;
-        tempPath = Config.GLASS_PATH + "temp/" + zipFile.getName();
+        tempPath = CommonConfig.GLASS_PATH + "temp/" + zipFile.getName();
         File tempFile = new File(destDirBypass + tempPath);
         if (tempFile.exists()) {
             try {

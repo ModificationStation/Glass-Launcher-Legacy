@@ -1,8 +1,8 @@
 package net.glasslauncher.legacy;
 
+import net.glasslauncher.common.ConsoleStream;
+import net.glasslauncher.common.Pastee;
 import net.glasslauncher.legacy.components.ScalingButton;
-import net.glasslauncher.legacy.util.ConsoleStream;
-import net.glasslauncher.legacy.util.Pastee;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;

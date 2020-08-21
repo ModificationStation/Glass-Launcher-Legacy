@@ -1,8 +1,8 @@
-package net.glasslauncher.jsontemplate;
+package net.glasslauncher.legacy.jsontemplate;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.glasslauncher.legacy.util.JsonConfig;
+import net.glasslauncher.common.JsonConfig;
 
 @Getter @Setter
 public class InstanceConfig extends JsonConfig {

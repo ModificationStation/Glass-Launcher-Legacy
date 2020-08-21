@@ -1,6 +1,7 @@
 package net.glasslauncher.legacy;
 
 import lombok.Getter;
+import net.glasslauncher.legacy.components.HintPasswordField;
 import net.glasslauncher.legacy.components.HintTextField;
 import net.glasslauncher.legacy.components.ScalingButton;
 import net.glasslauncher.legacy.mc.LaunchArgs;
@@ -45,34 +46,11 @@ public class VerifyAccountWindow extends JDialog {
         });
 
         // Password field
-        password = new JPasswordField();
-        password.setEchoChar((char) 0);
-        password.setForeground(Color.gray);
-        password.setText("Password");
-
-        password.addFocusListener(new FocusListener() {
-            public void focusGained(FocusEvent e) {
-                if (password.getForeground() == Color.gray) {
-                    password.setText("");
-                    password.setForeground(Color.black);
-                    password.setEchoChar('•');
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if ((String.valueOf(password.getPassword()).isEmpty())) {
-                    password.setText("Password");
-                    password.setForeground(Color.gray);
-                    password.setEchoChar((char) 0);
-                }
-            }
-        });
+        password = new HintPasswordField("Password");
+        password.setBounds(10, 40, 166, 22);
         password.addActionListener((e) -> {
             login();
         });
-
-        password.setBounds(10, 40, 166, 22);
 
         // Login button
         ScalingButton login = new ScalingButton();

@@ -1,4 +1,4 @@
-package net.glasslauncher.jsontemplate;
+package net.glasslauncher.legacy.jsontemplate;
 
 public class LoginCredsAgent {
     private String name = "Minecraft";

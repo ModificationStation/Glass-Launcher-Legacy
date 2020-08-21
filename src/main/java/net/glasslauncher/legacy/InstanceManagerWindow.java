@@ -1,8 +1,9 @@
 package net.glasslauncher.legacy;
 
+import net.glasslauncher.common.CommonConfig;
+import net.glasslauncher.common.FileUtils;
 import net.glasslauncher.legacy.components.HintTextField;
 import net.glasslauncher.legacy.components.ScalingButton;
-import net.glasslauncher.legacy.util.FileUtils;
 import net.glasslauncher.legacy.util.InstanceManager;
 
 import javax.swing.BoxLayout;
@@ -144,7 +145,7 @@ class InstanceManagerWindow extends JDialog {
         instanceFolderButton.addActionListener((e) -> {
             Main.getLogger().info("Opening instances folder...");
             try {
-                Desktop.getDesktop().open(new File(Config.GLASS_PATH + "instances"));
+                Desktop.getDesktop().open(new File(CommonConfig.GLASS_PATH + "instances"));
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -172,10 +173,10 @@ class InstanceManagerWindow extends JDialog {
     }
 
     private void updateInstanceList() {
-        (new File(Config.GLASS_PATH + "instances")).mkdirs();
+        (new File(CommonConfig.GLASS_PATH + "instances")).mkdirs();
         deletePanel.removeAll();
         deletePanel.repaint();
-        for (File instance : (Objects.requireNonNull(new File(Config.GLASS_PATH + "instances").listFiles()))) {
+        for (File instance : (Objects.requireNonNull(new File(CommonConfig.GLASS_PATH + "instances").listFiles()))) {
             if (instance.isDirectory()) {
                 ScalingButton deleteButton = new ScalingButton();
                 deleteButton.setText("Delete \"" + instance.getName() + "\".");
