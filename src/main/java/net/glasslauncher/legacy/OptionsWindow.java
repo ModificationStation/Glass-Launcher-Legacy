@@ -2,21 +2,22 @@ package net.glasslauncher.legacy;
 
 import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.common.JsonConfig;
+import net.glasslauncher.legacy.components.JPanelBackgroundImage;
+import net.glasslauncher.legacy.components.JLabelFancy;
+import net.glasslauncher.legacy.components.JTextFieldFancy;
 import net.glasslauncher.legacy.jsontemplate.InstanceConfig;
 import net.glasslauncher.legacy.jsontemplate.Mod;
 import net.glasslauncher.legacy.jsontemplate.ModList;
 import net.glasslauncher.legacy.components.DragDropList;
-import net.glasslauncher.legacy.components.ScalingButton;
+import net.glasslauncher.legacy.components.FancyScalingButton;
 import net.glasslauncher.legacy.util.InstanceManager;
 
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
 import javax.swing.ListModel;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -40,9 +41,9 @@ public class OptionsWindow extends JDialog {
     private String instpath;
     private String instName;
 
-    private JTextField javaargs;
-    private JTextField minram;
-    private JTextField maxram;
+    private JTextFieldFancy javaargs;
+    private JTextFieldFancy minram;
+    private JTextFieldFancy maxram;
     private JCheckBox skinproxy;
     private JCheckBox capeproxy;
     private JCheckBox soundproxy;
@@ -82,7 +83,8 @@ public class OptionsWindow extends JDialog {
         tabpane.setPreferredSize(new Dimension(837, 448 - tabpane.getInsets().top - tabpane.getInsets().bottom));
 
         tabpane.addTab("Settings", makeInstSettings());
-        tabpane.addTab("Mods", makeMods());
+        tabpane.addTab("Installed Mods", makeMods());
+        //tabpane.addTab("Mod Repo", makeModRepo());
 
         addWindowListener(
             new WindowAdapter() {
@@ -132,42 +134,42 @@ public class OptionsWindow extends JDialog {
      * @return The panel object containing all created components.
      */
     private JPanel makeInstSettings() {
-        JPanel instsettings = new JPanel();
+        JPanel instsettings = new JPanelBackgroundImage(Main.class.getResource("assets/blogbackground.png"));
         instsettings.setOpaque(false);
         instsettings.setLayout(null);
 
-        JLabel javaargslabel = new JLabel("Java Arguments:");
+        JLabelFancy javaargslabel = new JLabelFancy("Java Arguments:");
         javaargslabel.setBounds(20, 22, 100, 20);
         instsettings.add(javaargslabel);
 
-        javaargs = new JTextField();
+        javaargs = new JTextFieldFancy("Java Arguments");
         javaargs.setBounds(150, 20, 400, 24);
         javaargs.setText(instanceConfig.getJavaArgs());
         instsettings.add(javaargs);
 
-        JLabel ramalloclabel = new JLabel("RAM Allocation:");
+        JLabelFancy ramalloclabel = new JLabelFancy("RAM Allocation:");
         ramalloclabel.setBounds(20, 50, 100, 20);
         instsettings.add(ramalloclabel);
 
-        JLabel maxramlabel = new JLabel("Maximum:");
+        JLabelFancy maxramlabel = new JLabelFancy("Maximum:");
         maxramlabel.setBounds(150, 50, 65, 20);
         instsettings.add(maxramlabel);
 
-        maxram = new JTextField();
+        maxram = new JTextFieldFancy("Maximum RAM");
         maxram.setBounds(245, 48, 100, 24);
         maxram.setText(instanceConfig.getMaxRam());
         instsettings.add(maxram);
 
-        JLabel minramlabel = new JLabel("Minimum:");
+        JLabelFancy minramlabel = new JLabelFancy("Minimum:");
         minramlabel.setBounds(360, 50, 65, 20);
         instsettings.add(minramlabel);
 
-        minram = new JTextField();
+        minram = new JTextFieldFancy("Minimum RAM");
         minram.setBounds(450, 48, 100, 24);
         minram.setText(instanceConfig.getMinRam());
         instsettings.add(minram);
 
-        JLabel skinproxylabel = new JLabel("Enable Skin Proxy:");
+        JLabelFancy skinproxylabel = new JLabelFancy("Enable Skin Proxy:");
         skinproxylabel.setBounds(20, 96, 120, 20);
         instsettings.add(skinproxylabel);
 
@@ -177,7 +179,7 @@ public class OptionsWindow extends JDialog {
         skinproxy.setSelected(instanceConfig.isProxySkin());
         instsettings.add(skinproxy);
 
-        JLabel capeproxylabel = new JLabel("Enable Cape Proxy:");
+        JLabelFancy capeproxylabel = new JLabelFancy("Enable Cape Proxy:");
         capeproxylabel.setBounds(20, 124, 120, 20);
         instsettings.add(capeproxylabel);
 
@@ -187,7 +189,7 @@ public class OptionsWindow extends JDialog {
         capeproxy.setSelected(instanceConfig.isProxyCape());
         instsettings.add(capeproxy);
 
-        JLabel soundproxylabel = new JLabel("Enable Sound Proxy:");
+        JLabelFancy soundproxylabel = new JLabelFancy("Enable Sound Proxy:");
         soundproxylabel.setBounds(20, 152, 120, 20);
         instsettings.add(soundproxylabel);
 
@@ -197,7 +199,7 @@ public class OptionsWindow extends JDialog {
         soundproxy.setSelected(instanceConfig.isProxySound());
         instsettings.add(soundproxy);
 
-        JLabel loginproxylabel = new JLabel("Enable Login Proxy:");
+        JLabelFancy loginproxylabel = new JLabelFancy("Enable Login Proxy:");
         loginproxylabel.setBounds(20, 180, 120, 20);
         instsettings.add(loginproxylabel);
 
@@ -211,7 +213,7 @@ public class OptionsWindow extends JDialog {
     }
 
     private JPanel makeMods() {
-        JPanel modsPanel = new JPanel();
+        JPanel modsPanel = new JPanelBackgroundImage(Main.class.getResource("assets/blogbackground.png"));
         modsPanel.setOpaque(false);
         modsPanel.setLayout(null);
 
@@ -222,7 +224,7 @@ public class OptionsWindow extends JDialog {
         modListScroll.setBounds(20, 20, 200, 200);
         modListScroll.setViewportView(modDragDropList);
 
-        ScalingButton toggleModsButton = new ScalingButton();
+        FancyScalingButton toggleModsButton = new FancyScalingButton();
         toggleModsButton.setText("Toggle Selected Mods");
         toggleModsButton.addActionListener(event -> {
             for (Object modObj : modDragDropList.getSelectedValuesList()) {
@@ -237,7 +239,7 @@ public class OptionsWindow extends JDialog {
         });
         toggleModsButton.setBounds(20, 230, 200, 22);
 
-        ScalingButton applyModsButton = new ScalingButton();
+        FancyScalingButton applyModsButton = new FancyScalingButton();
         applyModsButton.setText("Apply Current Mod Configuration");
         applyModsButton.addActionListener(event -> {
             ProgressWindow progressWindow = new ProgressWindow(this, "Applying Mods");
@@ -274,7 +276,7 @@ public class OptionsWindow extends JDialog {
         });
         applyModsButton.setBounds(20, 262, 200, 22);
 
-        ScalingButton addModsButton = new ScalingButton();
+        FancyScalingButton addModsButton = new FancyScalingButton();
         addModsButton.setText("Add Mods");
         addModsButton.addActionListener(event -> {
             FileDialog fileChooser = new FileDialog(this, "Select Mod");
@@ -295,9 +297,9 @@ public class OptionsWindow extends JDialog {
         });
         addModsButton.setBounds(20, 294, 200, 22);
 
-        ScalingButton removeModsButton = new ScalingButton();
+        FancyScalingButton removeModsButton = new FancyScalingButton();
         removeModsButton.setText("Remove Selected Mods");
-        removeModsButton.setForeground(new Color(81, 0, 0));
+        removeModsButton.setForeground(new Color(185, 0, 0));
         removeModsButton.addActionListener(event -> {
             for (Object modObj : modDragDropList.getSelectedValuesList()) {
                 Mod mod = (Mod) modObj;
