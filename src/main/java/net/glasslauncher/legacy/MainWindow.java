@@ -205,7 +205,6 @@ class MainWindow extends JFrame {
         File file = new File(CommonConfig.GLASS_PATH + "instances");
         String[] instances = file.list((current, name) -> new File(current, name).isDirectory());
         String lastUsedInstance = Config.getLauncherConfig().getLastUsedInstance();
-        System.out.println(lastUsedInstance);
         boolean exists = false;
         if (instances != null) {
             for (String instance : instances) {
@@ -230,12 +229,7 @@ class MainWindow extends JFrame {
         launchargs = (new LaunchArgs()).getArgs(launchargs);
         if (launchargs != null) {
             Config.getLauncherConfig().setLastUsedName(username.getText());
-            try {
-                Config.getLauncherConfig().setLastUsedInstance((String) instsel.getSelectedItem());
-            } catch (Exception e) {
-                Main.getLogger().info("This should be impossible!");
-                e.printStackTrace();
-            }
+            Config.getLauncherConfig().setLastUsedInstance((String) instsel.getSelectedItem());
             Config.getLauncherConfig().saveFile();
             Wrapper mc = new Wrapper(launchargs);
             mc.startMC();

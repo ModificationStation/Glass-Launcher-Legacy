@@ -21,7 +21,6 @@ public class Config {
         Gson gson = new Gson();
         mcVersions = gson.fromJson(new InputStreamReader(Main.class.getResourceAsStream("assets/mcversions.json")), MCVersions.class);
         launcherConfig = (LauncherConfig) JsonConfig.loadConfig(CommonConfig.GLASS_PATH + "launcher_config.json", LauncherConfig.class);
-        System.out.println(gson.toJson(launcherConfig));
         if (launcherConfig == null) {
             launcherConfig = new LauncherConfig(CommonConfig.GLASS_PATH + "launcher_config.json");
         }
@@ -68,7 +67,7 @@ public class Config {
     /**
      * The version of the launcher.
      */
-    public static final String VERSION = "v0.4";
+    public static final String VERSION = "v0.4.4";
 
     /**
      * The path of the launcher's cache files.
