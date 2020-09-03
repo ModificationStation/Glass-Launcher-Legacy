@@ -1,3 +1,6 @@
+#### v0.4.5
+\* Fixed the resource proxy not working on old alpha versions.
+
 #### v0.4.4
 \+ The last instance launched is now remembered between restarts.  
 \+ The launcher now uses glass-commons for logging and most file related functions.  

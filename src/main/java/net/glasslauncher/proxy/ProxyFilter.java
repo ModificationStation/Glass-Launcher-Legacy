@@ -53,8 +53,12 @@ public class ProxyFilter extends HttpFiltersAdapter {
 
                 String doRedirect = null;
 
-                if (host.contains("amazonaws.com")) {
-                    if (doSoundFix && (path.contains("MinecraftResources") || path.contains("/resources/"))) {
+                if (host.contains("amazonaws.com") || host.contains("minecraft.net")) {
+                    if (doSoundFix && (path.contains("MinecraftResources") || path.contains("resources"))) {
+                        if (path.equals("/resources/")) {
+                            path = "/MinecraftResources/indexalpha.php";
+                        }
+                        path = path.replaceFirst("/resources/", "/MinecraftResources/");
                         httpRequest.setUri("http://mcresources.modification-station.net" + path);
                         httpRequest.headers().set("Host", "mcresources.modification-station.net");
                         return null;
@@ -70,11 +74,11 @@ public class ProxyFilter extends HttpFiltersAdapter {
                 }
 
                 if (host.contains("minecraft.net")) {
-                    if (doSkinFix && path.contains("skin")) {
+                    if (doSkinFix && path.contains("/skin/")) {
                         doRedirect = "/skins/" + path.split("/")[2];
                     }
 
-                    if (doCapeFix && path.contains("cloak")) {
+                    if (doCapeFix && path.contains("/cloak/")) {
                         doRedirect = "/capes/" + path.split("/")[2];
                     }
 
