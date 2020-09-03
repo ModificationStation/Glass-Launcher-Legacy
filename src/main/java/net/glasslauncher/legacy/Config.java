@@ -44,6 +44,11 @@ public class Config {
     public static final int PROXY_WEB_PORT = 25561;
 
     /**
+     * The address which the built-in proxy and webserver runs on.
+     */
+    public static final String PROXY_ADDRESS = "127.0.0.1";
+
+    /**
      * The hosts
      */
     public static final List<String> PROXY_IGNORED_HOSTS = Collections.unmodifiableList(new ArrayList<String>() {{
