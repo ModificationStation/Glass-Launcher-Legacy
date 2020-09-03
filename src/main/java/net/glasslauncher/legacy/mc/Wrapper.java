@@ -1,5 +1,6 @@
 package net.glasslauncher.legacy.mc;
 
+import net.fabricmc.loader.launch.knot.KnotClient;
 import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.common.JsonConfig;
 import net.glasslauncher.legacy.Config;
@@ -53,14 +54,14 @@ public class Wrapper {
         args.add("-Xms" + instJson.getMinRam());
         args.add("-jar");
         args.add(CommonConfig.GLASS_PATH + "lib/" + Config.getEasyMineLauncherFile());
-        args.add("--lwjgl-dir=" + instPath + "/bin");
-        args.add("--jar=" + instPath + "/bin/minecraft.jar");
-        args.add("--native-dir=" + instPath + "/bin/natives");
-        args.add("--parent-dir=" + instPath);
-        args.add("--height=520");
-        args.add("--width=870");
+        args.add("-cp=" + instPath + "/bin" + );
+        //args.add("--jar=" + instPath + "/bin/minecraft.jar");
+        //args.add("--native-dir=" + instPath + "/bin/natives");
+        //args.add("--gameDir=" + instPath);
+        //args.add("--height=520");
+        //args.add("--width=870");
         args.add("--username=" + launchArgs[0]);
-        args.add("--session-id=" + launchArgs[1]);
+        args.add("--sessionId=" + launchArgs[1]);
         args.add("--title=Minecraft " + launchArgs[2]);
     }
 

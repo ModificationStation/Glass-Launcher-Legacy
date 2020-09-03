@@ -22,19 +22,6 @@ public class Main {
 
         ConsoleWindow console = new ConsoleWindow();
 
-        getDeps();
-        Config.setEasyMineLauncherFile(libs.get(0));
-
-        // TODO: fix bcp* libs breaking for no reason.
-        /*for (Object lib : libs.toArray()) {
-            try {
-                Classpath.addFile(Config.GLASS_PATH + "lib/" + lib);
-            } catch (Exception e) {
-                logger.info("Failed to load \"" + lib + "\".");
-                e.printStackTrace();
-            }
-        }*/
-
         try {
             Config.loadConfigFiles();
         } catch (Exception e) {
@@ -53,23 +40,6 @@ public class Main {
             e.printStackTrace();
         }*/
         mainwin = new MainWindow(console);
-    }
-
-    /**
-     * Downloads all dependencies listed in Config.Deps.cactusDeps.
-     */
-    private static void getDeps() {
-        getLogger().info("Checking dependencies...");
-
-        for (String dep : Config.getGLASS_DEPS().keySet()) {
-            try {
-                FileUtils.downloadFile(dep, CommonConfig.GLASS_PATH + "/lib/", Config.getGLASS_DEPS().get(dep));
-                libs.add(dep.substring(dep.lastIndexOf('/') + 1));
-            } catch (Exception e) {
-                getLogger().info("Failed to download dependency. Invalid formatting?");
-                e.printStackTrace();
-            }
-        }
     }
 
     /**
