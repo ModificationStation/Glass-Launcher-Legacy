@@ -2,8 +2,8 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>build\libs\glass-launcher-legacy-0.4.3-all.jar</jar>
-  <outfile>Glass Launcher 0.4.3.exe</outfile>
+  <jar>build\libs\glass-launcher-legacy-0.4.4-all.jar</jar>
+  <outfile>build\libs\glass-launcher-legacy-0.4.4.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir></chdir>

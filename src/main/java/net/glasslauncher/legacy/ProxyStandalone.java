@@ -2,6 +2,8 @@ package net.glasslauncher.legacy;
 
 import net.glasslauncher.proxy.Proxy;
 
+import java.io.File;
+
 public class ProxyStandalone {
     /**
      * Main function of the standalone proxy
@@ -28,6 +30,11 @@ public class ProxyStandalone {
             doSound = true;
             doSkin = true;
             doCape = true;
+        }
+        try {
+            new File(Config.CACHE_PATH).mkdirs();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         Proxy proxy = new Proxy(new boolean[]{doSound, doSkin, doCape, doLogin});
         proxy.start();
