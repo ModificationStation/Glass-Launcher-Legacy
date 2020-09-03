@@ -2,9 +2,9 @@ package net.glasslauncher.legacy.mc;
 
 import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.common.JsonConfig;
-import net.glasslauncher.legacy.jsontemplate.InstanceConfig;
 import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
+import net.glasslauncher.legacy.jsontemplate.InstanceConfig;
 import net.glasslauncher.proxy.Proxy;
 
 import java.io.File;

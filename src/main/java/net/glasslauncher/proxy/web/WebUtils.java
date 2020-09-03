@@ -1,8 +1,8 @@
 package net.glasslauncher.proxy.web;
 
 import com.google.gson.Gson;
-import net.glasslauncher.legacy.jsontemplate.Profile;
 import net.glasslauncher.legacy.Config;
+import net.glasslauncher.legacy.jsontemplate.Profile;
 
 import java.io.BufferedReader;
 import java.io.File;

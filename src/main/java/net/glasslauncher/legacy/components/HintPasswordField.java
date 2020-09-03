@@ -5,7 +5,6 @@ import javax.swing.JPasswordField;
 import java.awt.Color;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.util.Arrays;
 
 public class HintPasswordField extends JPasswordField {
     private final Color defaultColor;

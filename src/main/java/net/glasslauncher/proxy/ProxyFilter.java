@@ -4,7 +4,6 @@ import io.netty.handler.codec.http.HttpObject;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
 import net.glasslauncher.legacy.Config;
-import net.glasslauncher.legacy.Main;
 import org.littleshoot.proxy.HttpFiltersAdapter;
 
 import java.util.List;

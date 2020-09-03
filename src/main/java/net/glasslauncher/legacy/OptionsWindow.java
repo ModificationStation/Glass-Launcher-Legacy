@@ -2,14 +2,14 @@ package net.glasslauncher.legacy;
 
 import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.common.JsonConfig;
-import net.glasslauncher.legacy.components.JPanelBackgroundImage;
+import net.glasslauncher.legacy.components.DragDropList;
+import net.glasslauncher.legacy.components.FancyScalingButton;
 import net.glasslauncher.legacy.components.JLabelFancy;
+import net.glasslauncher.legacy.components.JPanelBackgroundImage;
 import net.glasslauncher.legacy.components.JTextFieldFancy;
 import net.glasslauncher.legacy.jsontemplate.InstanceConfig;
 import net.glasslauncher.legacy.jsontemplate.Mod;
 import net.glasslauncher.legacy.jsontemplate.ModList;
-import net.glasslauncher.legacy.components.DragDropList;
-import net.glasslauncher.legacy.components.FancyScalingButton;
 import net.glasslauncher.legacy.util.InstanceManager;
 
 import javax.swing.JCheckBox;
@@ -219,7 +219,7 @@ public class OptionsWindow extends JDialog {
 
         jarMods = new ArrayList<>();
         JScrollPane modListScroll = new JScrollPane();
-        modDragDropList = new DragDropList(jarMods);
+        modDragDropList = new DragDropList(jarMods, instpath);
         refreshModList();
         modListScroll.setBounds(20, 20, 200, 200);
         modListScroll.setViewportView(modDragDropList);

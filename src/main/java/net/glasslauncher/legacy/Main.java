@@ -3,7 +3,6 @@ package net.glasslauncher.legacy;
 import lombok.Getter;
 import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.common.FileUtils;
-import net.glasslauncher.repo.api.mod.RepoReader;
 
 import javax.swing.UIManager;
 import java.util.ArrayList;

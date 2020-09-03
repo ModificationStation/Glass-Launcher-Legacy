@@ -2,7 +2,6 @@ package net.glasslauncher.legacy.util;
 
 import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.common.FileUtils;
-import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
 
 import java.io.File;

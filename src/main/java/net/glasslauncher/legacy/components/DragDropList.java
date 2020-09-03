@@ -13,15 +13,16 @@ import java.util.ArrayList;
 public class DragDropList extends JList {
     public DefaultListModel<Mod> model;
 
-    public DragDropList(ArrayList<Mod> list) {
+    public DragDropList(ArrayList<Mod> list, String instpath) {
         super(new DefaultListModel<Mod>());
+        //noinspection unchecked
         model = (DefaultListModel<Mod>) getModel();
         for (Mod element : list) {
             model.addElement(element);
         }
         setDragEnabled(true);
         setDropMode(DropMode.INSERT);
-        setTransferHandler(new DragDropHandler(this));
+        setTransferHandler(new DragDropHandler(this, instpath));
         new DragListener(this);
 
         this.setCellRenderer(new DefaultListCellRenderer() {

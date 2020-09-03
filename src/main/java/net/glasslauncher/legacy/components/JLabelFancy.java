@@ -1,6 +1,5 @@
 package net.glasslauncher.legacy.components;
 
-import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.border.EmptyBorder;
 import java.awt.AlphaComposite;
