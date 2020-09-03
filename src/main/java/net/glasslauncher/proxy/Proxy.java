@@ -15,6 +15,7 @@ import org.littleshoot.proxy.mitm.Authority;
 import org.littleshoot.proxy.mitm.CertificateSniffingMitmManager;
 
 import java.io.File;
+import java.net.InetSocketAddress;
 
 public class Proxy extends Thread {
     private HttpProxyServerBootstrap serverBoot;
@@ -29,7 +30,7 @@ public class Proxy extends Thread {
 
             this.serverBoot =
                     DefaultHttpProxyServer.bootstrap()
-                            .withPort(Config.PROXY_PORT)
+                            .withAddress(new InetSocketAddress(Config.PROXY_ADDRESS, Config.PROXY_PORT))
                             .withManInTheMiddle(new CertificateSniffingMitmManager(new Authority(
                                     new File(Config.CACHE_PATH),
                                     "glass-launcher-proxy-mitm",
