@@ -48,11 +48,11 @@ public class Main {
                 return;
             }
         }
-        try {
+        /*try {
             Main.logger.info(RepoReader.getMods()[0].getName());
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
         mainwin = new MainWindow(console);
     }
 

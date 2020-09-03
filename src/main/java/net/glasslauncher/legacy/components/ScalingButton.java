@@ -10,5 +10,6 @@ public class ScalingButton extends JButton {
      */
     public ScalingButton() {
         setMargin(new Insets(0, 0, 0, 0));
+        setOpaque(false);
     }
 }
