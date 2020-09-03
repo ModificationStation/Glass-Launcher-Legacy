@@ -67,7 +67,7 @@ public class Config {
     /**
      * The version of the launcher.
      */
-    public static final String VERSION = "v0.4.4";
+    public static final String VERSION = "v0.4.5";
 
     /**
      * The path of the launcher's cache files.
