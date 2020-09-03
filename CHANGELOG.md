@@ -1,5 +1,5 @@
 #### v0.4.4
-\+ The last instance last launched is now remembered between restarts.  
+\+ The last instance launched is now remembered between restarts.  
 \+ The launcher now uses glass-commons for logging and most file related functions.  
 \* Fixed a crash relating to the cache folder not being made when the proxy is started in standalone mode.  
 
