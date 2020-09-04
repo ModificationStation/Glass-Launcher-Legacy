@@ -188,6 +188,11 @@ public class InstanceManager {
             }
         }
 
+        progressWindow.setProgressText("Creating instance config...");
+        InstanceConfig instanceConfig = new InstanceConfig(instanceFolder + "instance_config.json");
+        instanceConfig.setVersion(version);
+        instanceConfig.saveFile();
+
         progressWindow.increaseProgress();
         progressWindow.setProgressText("Adding sounds...");
         addSounds(instance);

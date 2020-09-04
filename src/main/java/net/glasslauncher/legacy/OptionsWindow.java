@@ -13,6 +13,7 @@ import net.glasslauncher.legacy.jsontemplate.ModList;
 import net.glasslauncher.legacy.util.InstanceManager;
 
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -48,6 +49,7 @@ public class OptionsWindow extends JDialog {
     private JCheckBox capeproxy;
     private JCheckBox soundproxy;
     private JCheckBox loginproxy;
+    private JComboBox<String> instanceVersion;
 
     /**
      * Sets up options window for given instance.
@@ -96,6 +98,7 @@ public class OptionsWindow extends JDialog {
                     instanceConfig.setProxyCape(capeproxy.isSelected());
                     instanceConfig.setProxySound(soundproxy.isSelected());
                     instanceConfig.setProxyLogin(loginproxy.isSelected());
+                    instanceConfig.setVersion((String) instanceVersion.getSelectedItem());
 
                     modList.setJarMods(new ArrayList<>());
                     ListModel listModel = modDragDropList.model;
@@ -208,6 +211,19 @@ public class OptionsWindow extends JDialog {
         loginproxy.setBounds(150, 181, 20, 20);
         loginproxy.setSelected(instanceConfig.isProxyLogin());
         instsettings.add(loginproxy);
+
+        JLabelFancy instanceVersionLabel = new JLabelFancy("Minecraft Version:");
+        instanceVersionLabel.setBounds(20, 372, 120, 20);
+        instsettings.add(instanceVersionLabel);
+
+        instanceVersion = new JComboBox<>();
+        for (String version : Config.getMcVersions().getClient().keySet()) {
+            instanceVersion.addItem(version);
+        }
+        instanceVersion.addItem("none");
+        instanceVersion.setSelectedItem(instanceConfig.getVersion());
+        instanceVersion.setBounds(150, 370, 194, 22);
+        instsettings.add(instanceVersion);
 
         return instsettings;
     }
