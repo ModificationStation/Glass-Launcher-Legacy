@@ -246,5 +246,10 @@
         "rd-132211": {
             "url": "393e8d4b4d708587e2accd7c5221db65365e1075"
         }
+    },
+    "mappings": {
+        "b1.7.3": {
+            "url": "https://gist.githubusercontent.com/Chocohead/b7ea04058776495a93ed2d13f34d697a/raw/Beta%201.7.3%20Merge.tiny"
+        }
     }
 }

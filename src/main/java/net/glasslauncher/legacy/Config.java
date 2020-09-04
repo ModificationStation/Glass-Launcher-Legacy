@@ -12,9 +12,7 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Config {
     public static void loadConfigFiles() {
@@ -117,6 +115,25 @@ public class Config {
         } else {
             return System.getProperty("user.home") + "/" + name + "/";
         }
+    }
+
+    /**
+     * Returns all input files as a chain of absolute paths for use in -cp arguments.
+     * @param instance The name of the instance
+     * @param relPaths
+     * @return
+     */
+    public static String getAbsolutePathForCP(String instance, String[] relPaths) {
+        String instPath = getInstancePath(instance);
+        StringBuilder paths = new StringBuilder();
+
+        for (int i = 0; i < (relPaths.length-1); i++) {
+            paths.append(instPath).append(relPaths[i]).append(";");
+        }
+
+        paths.append(instPath).append(relPaths[relPaths.length-1]);
+
+        return paths.toString();
     }
 
     /**

@@ -2,14 +2,17 @@ package net.glasslauncher.legacy.mc;
 
 import net.fabricmc.loader.launch.knot.KnotClient;
 import net.glasslauncher.common.CommonConfig;
+import net.glasslauncher.common.FileUtils;
 import net.glasslauncher.common.JsonConfig;
 import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
 import net.glasslauncher.legacy.jsontemplate.InstanceConfig;
+import net.glasslauncher.legacy.jsontemplate.MCVersion;
 import net.glasslauncher.proxy.Proxy;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Wrapper {
@@ -29,6 +32,20 @@ public class Wrapper {
         String instPath = CommonConfig.GLASS_PATH + "instances/" + instance + "/.minecraft";
 
         this.getConfig();
+        Map<String, MCVersion> mappings = Config.getMcVersions().getMappings();
+
+        if (mappings.containsKey(instJson.getVersion())) {
+            Main.getLogger().info("Downloading intermediary mappings for " + instJson.getVersion());
+            FileUtils.downloadFile(mappings.get(instJson.getVersion()).getUrl(), Config.CACHE_PATH + "intermediary_mappings/", null, instJson.getVersion() + ".jar");
+        }
+        else {
+            Main.getLogger().info("No intermediary mappings found for " + instJson.getVersion());
+        }
+
+        String extraCP = "";
+        if (new File(Config.CACHE_PATH + "intermediary_mappings/" + instJson.getVersion() + ".jar").exists()) {
+            extraCP = Config.CACHE_PATH + "intermediary_mappings/" + instJson.getVersion() + ".jar";
+        }
 
         this.args = new ArrayList<>();
         args.add(Config.JAVA_BIN);
@@ -52,16 +69,20 @@ public class Wrapper {
         }
         args.add("-Xmx" + instJson.getMaxRam());
         args.add("-Xms" + instJson.getMinRam());
-        args.add("-jar");
-        args.add(CommonConfig.GLASS_PATH + "lib/" + Config.getEasyMineLauncherFile());
-        args.add("-cp=" + instPath + "/bin" + );
-        //args.add("--jar=" + instPath + "/bin/minecraft.jar");
-        //args.add("--native-dir=" + instPath + "/bin/natives");
-        //args.add("--gameDir=" + instPath);
-        //args.add("--height=520");
-        //args.add("--width=870");
+        args.add("-Djava.library.path=" + instPath + "/bin/natives");
+        args.add("-Dfabric.gameJarPath=" + instPath + "/bin/minecraft.jar");
+        args.add("-cp");
+        args.add(System.getProperty("java.class.path") + ";" + Config.getAbsolutePathForCP(instance, new String[] {
+                ".minecraft/bin/minecraft.jar",
+                ".minecraft/bin/lwjgl.jar",
+                ".minecraft/bin/lwjgl_util.jar",
+                ".minecraft/bin/jinput.jar",
+                extraCP
+        }));
+        args.add(KnotClient.class.getCanonicalName());
+        args.add("--gameDir=" + instPath + ".minecraft");
         args.add("--username=" + launchArgs[0]);
-        args.add("--sessionId=" + launchArgs[1]);
+        args.add("--session=" + launchArgs[1]);
         args.add("--title=Minecraft " + launchArgs[2]);
     }
 
@@ -87,12 +108,14 @@ public class Wrapper {
         // Launched as a separate process because Minecraft directly calls exit when quit is pressed.
 
         ProcessBuilder mcInit = new ProcessBuilder(args);
+        mcInit.directory(new File(Config.getInstancePath(instance) + "/.minecraft"));
 
         Map<String, String> mcEnv = mcInit.environment();
         String newAppData = CommonConfig.GLASS_PATH + "instances/" + instance;
         mcEnv.put("appdata", newAppData);
         mcEnv.put("home", newAppData);
         mcEnv.put("user.home", newAppData);
+        mcEnv.put("fabric.gameJarPath", Config.getInstancePath(instance) + ".minecraft/bin/minecraft.jar");
 
         Process mc;
         try {
