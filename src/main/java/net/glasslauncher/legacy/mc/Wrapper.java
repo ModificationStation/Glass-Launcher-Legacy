@@ -11,9 +11,12 @@ import net.glasslauncher.legacy.jsontemplate.MCVersion;
 import net.glasslauncher.proxy.Proxy;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public class Wrapper {
     private final String instance;
@@ -36,7 +39,32 @@ public class Wrapper {
 
         if (mappings.containsKey(instJson.getVersion())) {
             Main.getLogger().info("Downloading intermediary mappings for " + instJson.getVersion());
-            FileUtils.downloadFile(mappings.get(instJson.getVersion()).getUrl(), Config.CACHE_PATH + "intermediary_mappings/", null, instJson.getVersion() + ".jar");
+            FileUtils.downloadFile(mappings.get(instJson.getVersion()).getUrl(), Config.CACHE_PATH + "intermediary_mappings/", null, instJson.getVersion() + ".tiny");
+
+            try {
+                // input file
+                FileInputStream in = new FileInputStream(Config.CACHE_PATH + "intermediary_mappings/" + instJson.getVersion() + ".tiny");
+
+                // out put file
+                ZipOutputStream out = new ZipOutputStream(new FileOutputStream(Config.CACHE_PATH + "intermediary_mappings/" + instJson.getVersion() + ".jar"));
+
+                // name the file inside the zip  file
+                out.putNextEntry(new ZipEntry("mappings/mappings.tiny"));
+
+                // buffer size
+                byte[] b = new byte[1024];
+                int count;
+
+                while ((count = in.read(b)) > 0) {
+                    out.write(b, 0, count);
+                }
+                out.close();
+                in.close();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
         else {
             Main.getLogger().info("No intermediary mappings found for " + instJson.getVersion());
@@ -44,6 +72,7 @@ public class Wrapper {
 
         String extraCP = "";
         if (new File(Config.CACHE_PATH + "intermediary_mappings/" + instJson.getVersion() + ".jar").exists()) {
+            Main.getLogger().info("Adding intermediary mappings for " + instJson.getVersion() + " to classpath.");
             extraCP = Config.CACHE_PATH + "intermediary_mappings/" + instJson.getVersion() + ".jar";
         }
 
