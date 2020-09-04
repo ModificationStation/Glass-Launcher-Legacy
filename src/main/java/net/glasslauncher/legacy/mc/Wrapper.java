@@ -42,16 +42,10 @@ public class Wrapper {
             FileUtils.downloadFile(mappings.get(instJson.getVersion()).getUrl(), Config.CACHE_PATH + "intermediary_mappings/", null, instJson.getVersion() + ".tiny");
 
             try {
-                // input file
                 FileInputStream in = new FileInputStream(Config.CACHE_PATH + "intermediary_mappings/" + instJson.getVersion() + ".tiny");
-
-                // out put file
                 ZipOutputStream out = new ZipOutputStream(new FileOutputStream(Config.CACHE_PATH + "intermediary_mappings/" + instJson.getVersion() + ".jar"));
-
-                // name the file inside the zip  file
                 out.putNextEntry(new ZipEntry("mappings/mappings.tiny"));
 
-                // buffer size
                 byte[] b = new byte[1024];
                 int count;
 
