@@ -67,7 +67,7 @@ public class Wrapper {
         String extraCP = "";
         if (new File(Config.CACHE_PATH + "intermediary_mappings/" + instJson.getVersion() + ".jar").exists()) {
             Main.getLogger().info("Adding intermediary mappings for " + instJson.getVersion() + " to classpath.");
-            extraCP = Config.CACHE_PATH + "intermediary_mappings/" + instJson.getVersion() + ".jar";
+            extraCP = ";" + Config.CACHE_PATH + "intermediary_mappings/" + instJson.getVersion() + ".jar";
         }
 
         this.args = new ArrayList<>();
@@ -100,8 +100,7 @@ public class Wrapper {
                 ".minecraft/bin/lwjgl.jar",
                 ".minecraft/bin/lwjgl_util.jar",
                 ".minecraft/bin/jinput.jar",
-                extraCP
-        }));
+        }) + extraCP);
         args.add(KnotClient.class.getCanonicalName());
         args.add("--gameDir=" + instPath + ".minecraft");
         args.add("--username=" + launchArgs[0]);
