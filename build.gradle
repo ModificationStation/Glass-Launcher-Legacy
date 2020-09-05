@@ -20,9 +20,11 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.10'
 
     // https://github.com/adamfisk/LittleProxy/releases/download
-    testCompile group: 'org.littleshoot', name: 'littleproxy', version: '1.1.2'
+    compile group: 'com.github.shs96c', name: 'littleproxy', version: '1fcc11f'
     // https://repo1.maven.org/maven2/com/github/ganskef/littleproxy-mitm
-    compile group: 'com.github.ganskef', name: 'littleproxy-mitm', version: '1.1.0'
+    compile (group: 'com.github.ganskef', name: 'littleproxy-mitm', version: '1.1.0' ) {
+        exclude group: "org.littleshoot", module: "littleproxy"
+    }
     // https://repo1.maven.org/maven2/com/google/code/gson/gson
     implementation 'com.google.code.gson:gson:2.8.6'
     // https://mvnrepository.com/artifact/commons-validator/commons-validator
