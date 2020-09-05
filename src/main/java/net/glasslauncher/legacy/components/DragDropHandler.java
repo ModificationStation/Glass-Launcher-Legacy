@@ -40,7 +40,10 @@ class DragDropHandler extends TransferHandler {
         int dropIndex = dl.getIndex();
 
         try {
-            if (Arrays.stream(transferable.getTransferDataFlavors()).anyMatch(DataFlavor::isFlavorJavaFileListType)) {
+            if (Integer.parseInt((String) transferable.getTransferData(DataFlavor.stringFlavor)) <0) {
+                return false;
+            }
+            else if (Arrays.stream(transferable.getTransferDataFlavors()).anyMatch(DataFlavor::isFlavorJavaFileListType)) {
                 @SuppressWarnings("unchecked") List<File> files = (List<File>) transferable.getTransferData(DataFlavor.javaFileListFlavor);
                 for (File file : files) {
                     String modName = file.getName();
