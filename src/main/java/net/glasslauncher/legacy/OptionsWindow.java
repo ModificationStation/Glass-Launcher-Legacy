@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.ListModel;
+import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FileDialog;
@@ -62,7 +63,7 @@ public class OptionsWindow extends JDialog {
         setLayout(new GridLayout());
         setResizable(false);
         setTitle("Instance Options");
-        this.panel = new JPanel();
+        this.panel = new JPanelBackgroundImage(Main.class.getResource("assets/blogbackground.png"));
         add(this.panel);
 
         instName = instance;
@@ -83,6 +84,7 @@ public class OptionsWindow extends JDialog {
         JTabbedPane tabpane = new JTabbedPane();
         tabpane.setOpaque(false);
         tabpane.setPreferredSize(new Dimension(837, 448 - tabpane.getInsets().top - tabpane.getInsets().bottom));
+        tabpane.setBorder(new EmptyBorder(0, -2, -2, -2));
 
         tabpane.addTab("Settings", makeInstSettings());
         tabpane.addTab("Installed Mods", makeMods());
@@ -137,7 +139,7 @@ public class OptionsWindow extends JDialog {
      * @return The panel object containing all created components.
      */
     private JPanel makeInstSettings() {
-        JPanel instsettings = new JPanelBackgroundImage(Main.class.getResource("assets/blogbackground.png"));
+        JPanel instsettings = new JPanel();
         instsettings.setOpaque(false);
         instsettings.setLayout(null);
 
@@ -229,7 +231,7 @@ public class OptionsWindow extends JDialog {
     }
 
     private JPanel makeMods() {
-        JPanel modsPanel = new JPanelBackgroundImage(Main.class.getResource("assets/blogbackground.png"));
+        JPanel modsPanel = new JPanel();
         modsPanel.setOpaque(false);
         modsPanel.setLayout(null);
 

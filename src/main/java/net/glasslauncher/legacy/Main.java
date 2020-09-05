@@ -5,6 +5,9 @@ import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.common.FileUtils;
 
 import javax.swing.UIManager;
+import javax.swing.plaf.ColorUIResource;
+import java.awt.Color;
+import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
@@ -16,6 +19,11 @@ public class Main {
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            UIManager.put("TabbedPane.contentOpaque", false);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -3,6 +3,7 @@ package net.glasslauncher.legacy;
 import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.common.FileUtils;
 import net.glasslauncher.legacy.components.HintTextField;
+import net.glasslauncher.legacy.components.JPanelBackgroundImage;
 import net.glasslauncher.legacy.components.ScalingButton;
 import net.glasslauncher.legacy.util.InstanceManager;
 
@@ -12,6 +13,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.border.EmptyBorder;
 import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Dimension;
@@ -26,12 +28,16 @@ import java.util.Objects;
 
 class InstanceManagerWindow extends JDialog {
     private JPanel deletePanel = new JPanel();
+    private JPanel panel;
 
     InstanceManagerWindow(Frame frame) {
         super(frame);
         setModal(true);
         setLayout(new GridLayout());
         setResizable(false);
+        panel = new JPanelBackgroundImage(Main.class.getResource("assets/blogbackground.png"));
+        panel.setLayout(new GridLayout());
+        add(panel);
         setTitle("Instance Manager");
         addWindowListener(new WindowAdapter() {
                               public void windowClosing(WindowEvent we) {
@@ -45,10 +51,11 @@ class InstanceManagerWindow extends JDialog {
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         tabbedPane.setBounds(0, 0, 580, 340);
+        tabbedPane.setBorder(new EmptyBorder(0, -2, -2, -2));
         tabbedPane.addTab("Create", makeCreateTab());
         tabbedPane.addTab("Delete Instance", makeDeleteTab());
 
-        add(tabbedPane);
+        panel.add(tabbedPane);
 
         setLocationRelativeTo(null);
         setVisible(true);
@@ -56,6 +63,7 @@ class InstanceManagerWindow extends JDialog {
 
     private JPanel makeCreateTab() {
         JPanel createPanel = new JPanel();
+        createPanel.setOpaque(false);
         createPanel.setBounds(0, 0, 580, 340);
         createPanel.setLayout(null);
 
@@ -166,10 +174,15 @@ class InstanceManagerWindow extends JDialog {
 
     private JScrollPane makeDeleteTab() {
         deletePanel.setLayout(new BoxLayout(deletePanel, BoxLayout.Y_AXIS));
+        deletePanel.setOpaque(false);
+        JScrollPane deletePanelPane = new JScrollPane(deletePanel);
+        deletePanelPane.setBorder(new EmptyBorder(0, 0, 0, 0));
+        deletePanelPane.setOpaque(false);
+        deletePanelPane.getViewport().setOpaque(false);
 
         updateInstanceList();
 
-        return new JScrollPane(deletePanel);
+        return deletePanelPane;
     }
 
     private void updateInstanceList() {
