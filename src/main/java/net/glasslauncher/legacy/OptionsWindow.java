@@ -7,14 +7,19 @@ import net.glasslauncher.legacy.components.FancyScalingButton;
 import net.glasslauncher.legacy.components.JLabelFancy;
 import net.glasslauncher.legacy.components.JPanelBackgroundImage;
 import net.glasslauncher.legacy.components.JTextFieldFancy;
+import net.glasslauncher.legacy.components.ModDetailsPanel;
+import net.glasslauncher.legacy.components.ModRepoList;
 import net.glasslauncher.legacy.jsontemplate.InstanceConfig;
 import net.glasslauncher.legacy.jsontemplate.Mod;
 import net.glasslauncher.legacy.jsontemplate.ModList;
 import net.glasslauncher.legacy.util.InstanceManager;
+import net.glasslauncher.repo.api.mod.RepoReader;
+import net.glasslauncher.repo.api.mod.jsonobj.ModPreview;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -32,13 +37,16 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class OptionsWindow extends JDialog {
     private JPanel panel;
     private InstanceConfig instanceConfig;
     private ModList modList;
     private ArrayList<Mod> jarMods;
-    DragDropList modDragDropList;
+    private DragDropList modDragDropList;
+    private ModRepoList modRepoList;
 
     private String instpath;
     private String instName;
@@ -88,7 +96,7 @@ public class OptionsWindow extends JDialog {
 
         tabpane.addTab("Settings", makeInstSettings());
         tabpane.addTab("Installed Mods", makeMods());
-        //tabpane.addTab("Mod Repo", makeModRepo());
+        tabpane.addTab("Mod Repo", makeModRepo());
 
         addWindowListener(
             new WindowAdapter() {
@@ -334,6 +342,35 @@ public class OptionsWindow extends JDialog {
         modsPanel.add(removeModsButton);
 
         return modsPanel;
+    }
+
+    private JPanel makeModRepo() {
+        JPanel modRepoPanel = new JPanel();
+        modRepoPanel.setOpaque(false);
+        modRepoPanel.setLayout(null);
+        ModDetailsPanel modDetailsPanel = new ModDetailsPanel();
+        modRepoList = new ModRepoList(modDetailsPanel);
+        modRepoPanel.add(modDetailsPanel);
+
+        // Async cause otherwise options freezes when opening for 1-5 seconds.
+        new Thread(() -> {
+            refreshRepo();
+        }).start();
+
+        JScrollPane modListScroll = new JScrollPane();
+        modListScroll.setBounds(20, 20, 200, 380);
+        modListScroll.setViewportView(modRepoList);
+        modRepoPanel.add(modListScroll);
+
+        return modRepoPanel;
+    }
+
+    private void refreshRepo() {
+        try {
+            modRepoList.refresh(Arrays.asList(RepoReader.getMods()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void refreshModList() {
