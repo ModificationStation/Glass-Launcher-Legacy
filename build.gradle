@@ -52,7 +52,7 @@ dependencies {
     // Fabric Loader dependencies end
 
     compile "com.github.minecraft-cursed-legacy:cursed-fabric-loader:453b245"
-    compile group: "net.glasslauncher.repo", name: "glass-site-java-api", version: "0.2"
+    compile group: "net.glasslauncher.repo", name: "glass-site-java-api", version: "0.4"
     compile group: "net.glasslauncher", name: "commons", version: "1.0"
 
 }
