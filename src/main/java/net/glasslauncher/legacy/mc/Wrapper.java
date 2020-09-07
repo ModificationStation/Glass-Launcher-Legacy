@@ -85,8 +85,9 @@ public class Wrapper {
             proxy.start();
         }
         String javaArgs = instJson.getJavaArgs();
+        // TODO: Make user args better to use
         if (!javaArgs.isEmpty()) {
-            for (String arg : javaArgs.split("- ")) {
+            for (String arg : javaArgs.split(" -")) {
                 args.add("-" + arg);
             }
         }
@@ -102,10 +103,13 @@ public class Wrapper {
                 ".minecraft/bin/jinput.jar",
         }) + extraCP);
         args.add(KnotClient.class.getCanonicalName());
-        args.add("--gameDir=" + instPath + ".minecraft");
-        args.add("--username=" + launchArgs[0]);
-        args.add("--session=" + launchArgs[1]);
-        args.add("--title=Minecraft " + launchArgs[2]);
+        args.add("--gameDir");
+        args.add(instPath + ".minecraft");
+        args.add("--username");
+        args.add(launchArgs[0]);
+        args.add("--session");
+        args.add(launchArgs[1]);
+        //args.add("--title=Minecraft " + launchArgs[2]);
     }
 
     private void getConfig() {
