@@ -104,7 +104,7 @@ public class Wrapper {
         }) + extraCP);
         args.add(KnotClient.class.getCanonicalName());
         args.add("--gameDir");
-        args.add(instPath + ".minecraft");
+        args.add(instPath);
         args.add("--username");
         args.add(launchArgs[0]);
         args.add("--session");
