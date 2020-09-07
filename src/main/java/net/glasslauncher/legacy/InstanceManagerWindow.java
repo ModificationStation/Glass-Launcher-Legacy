@@ -2,12 +2,15 @@ package net.glasslauncher.legacy;
 
 import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.common.FileUtils;
+import net.glasslauncher.legacy.components.FancyScalingButton;
 import net.glasslauncher.legacy.components.HintTextField;
 import net.glasslauncher.legacy.components.JPanelBackgroundImage;
+import net.glasslauncher.legacy.components.JTextFieldFancy;
 import net.glasslauncher.legacy.components.ScalingButton;
 import net.glasslauncher.legacy.util.InstanceManager;
 
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -68,10 +71,10 @@ class InstanceManagerWindow extends JDialog {
         createPanel.setLayout(null);
 
         // Local Modpack zip install.
-        HintTextField installModpackDir = new HintTextField("Paste the path to your Modpack zip here!");
+        HintTextField installModpackDir = new JTextFieldFancy("Paste the path to your Modpack zip here!");
         installModpackDir.setBounds(155, 5, 355, 22);
 
-        ScalingButton installModpackDirButton = new ScalingButton();
+        JButton installModpackDirButton = new FancyScalingButton();
         installModpackDirButton.setText("Install Local Modpack");
         installModpackDirButton.setBounds(5, 5, 150, 22);
         installModpackDirButton.addActionListener(event -> {
@@ -87,7 +90,7 @@ class InstanceManagerWindow extends JDialog {
             }
         });
 
-        ScalingButton instanceZipSelectButton = new ScalingButton();
+        JButton instanceZipSelectButton = new FancyScalingButton();
         instanceZipSelectButton.setText("...");
         instanceZipSelectButton.addActionListener(event -> {
             FileDialog fileChooser = new FileDialog(this, "Select Modpack");
@@ -103,10 +106,10 @@ class InstanceManagerWindow extends JDialog {
         instanceZipSelectButton.setBounds(515, 5, 30, 22);
 
         // Remote Modpack zip install.
-        HintTextField installModpackURL = new HintTextField("Paste the URL to your Modpack zip here!");
+        HintTextField installModpackURL = new JTextFieldFancy("Paste the URL to your Modpack zip here!");
         installModpackURL.setBounds(155, 34, 390, 22);
 
-        ScalingButton installModpackURLButton = new ScalingButton();
+        JButton installModpackURLButton = new FancyScalingButton();
         installModpackURLButton.setText("Install Modpack from URL");
         installModpackURLButton.setBounds(5, 34, 150, 22);
         installModpackURLButton.addActionListener(event -> {
@@ -123,7 +126,7 @@ class InstanceManagerWindow extends JDialog {
         });
 
         // Make blank instance
-        HintTextField instanceName = new HintTextField("Instance name");
+        HintTextField instanceName = new JTextFieldFancy("Instance name");
         instanceName.setBounds(155, 63, 194, 22);
 
         JComboBox<String> instanceVersion = new JComboBox<>();
@@ -132,7 +135,7 @@ class InstanceManagerWindow extends JDialog {
         }
         instanceVersion.setBounds(351, 63, 194, 22);
 
-        ScalingButton instanceVersionButton = new ScalingButton();
+        JButton instanceVersionButton = new FancyScalingButton();
         instanceVersionButton.setText("Create Blank Instance");
         instanceVersionButton.addActionListener((e) -> {
             ProgressWindow progressWindow = new ProgressWindow(this, "Creating New Instance...");
@@ -148,7 +151,7 @@ class InstanceManagerWindow extends JDialog {
         });
         instanceVersionButton.setBounds(5, 63, 150, 22);
 
-        ScalingButton instanceFolderButton = new ScalingButton();
+        JButton instanceFolderButton = new FancyScalingButton();
         instanceFolderButton.setText("Open Instances Folder");
         instanceFolderButton.addActionListener((e) -> {
             Main.getLogger().info("Opening instances folder...");
@@ -191,7 +194,7 @@ class InstanceManagerWindow extends JDialog {
         deletePanel.repaint();
         for (File instance : (Objects.requireNonNull(new File(CommonConfig.GLASS_PATH + "instances").listFiles()))) {
             if (instance.isDirectory()) {
-                ScalingButton deleteButton = new ScalingButton();
+                JButton deleteButton = new FancyScalingButton();
                 deleteButton.setText("Delete \"" + instance.getName() + "\".");
                 deleteButton.setMinimumSize(new Dimension(540, 22));
                 deleteButton.setMaximumSize(new Dimension(540, 22));
