@@ -6,7 +6,6 @@ import net.glasslauncher.legacy.components.FancyScalingButton;
 import net.glasslauncher.legacy.components.HintTextField;
 import net.glasslauncher.legacy.components.JPanelBackgroundImage;
 import net.glasslauncher.legacy.components.JTextFieldFancy;
-import net.glasslauncher.legacy.components.ScalingButton;
 import net.glasslauncher.legacy.util.InstanceManager;
 
 import javax.swing.BoxLayout;

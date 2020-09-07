@@ -2,12 +2,8 @@ package net.glasslauncher.legacy;
 
 import lombok.Getter;
 import net.glasslauncher.common.CommonConfig;
-import net.glasslauncher.common.FileUtils;
 
 import javax.swing.UIManager;
-import javax.swing.plaf.ColorUIResource;
-import java.awt.Color;
-import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
