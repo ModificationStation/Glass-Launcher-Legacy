@@ -3,6 +3,7 @@ package net.glasslauncher.legacy.components;
 import net.glasslauncher.repo.api.mod.jsonobj.Author;
 import net.glasslauncher.repo.api.mod.jsonobj.Mod;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -10,13 +11,18 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ModDetailsPanel extends JPanel {
 
+    private ArrayList<JButton> buttonArrayList = new ArrayList<>();
+
     private JTextArea description = new JTextAreaFancy("Empty");
     private JTextArea name = new JTextAreaFancy("Select a mod to see its details!");
     private JTextArea authors = new JTextAreaFancy("None");
+
+    private Mod mod = null;
 
     public ModDetailsPanel() {
         setBounds(230, 20, 600, 400);
@@ -50,7 +56,6 @@ public class ModDetailsPanel extends JPanel {
     }
 
     public void setMod(Mod mod) {
-        //RepoReader.getMod(mod);
         name.setText(mod.getName());
         description.setText(mod.getShortDescription());
         Author[] authorsArr = mod.getAuthors();
@@ -60,5 +65,19 @@ public class ModDetailsPanel extends JPanel {
         }
         authorNames.append(authorsArr[authorsArr.length-1]);
         authors.setText(authorNames.toString());
+
+        this.mod = mod;
+
+        checkModAvailability();
+    }
+
+    public void checkModAvailability() {
+        for (JButton button : buttonArrayList) {
+            button.setEnabled(mod.getLatestVersion().isHasClient());
+        }
+    }
+
+    public void addButtonToHook(JButton button) {
+        buttonArrayList.add(button);
     }
 }
