@@ -39,7 +39,6 @@ public class JWebView extends JFXPanel {
 
         PlatformImpl.startup(() -> {
             stage = new Stage();
-            stage.initStyle(StageStyle.TRANSPARENT);
             stage.setWidth(getWidth());
             stage.setHeight(getHeight());
             stage.setResizable(false);
@@ -49,7 +48,7 @@ public class JWebView extends JFXPanel {
             stage.setScene(scene);
 
             browser = new WebView();
-            browser.setMaxSize(getWidth()-20, getHeight()-20);
+            browser.setMaxSize(getWidth()-12, getHeight()-12);
             webEngine = browser.getEngine();
             webEngine.getLoadWorker().stateProperty().addListener(new LinkRedirector(browser));
             webEngine.loadContent("<style>" + css + "</style><body>" + text + "</body>");
