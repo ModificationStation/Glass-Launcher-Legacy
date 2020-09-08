@@ -37,8 +37,8 @@ class MainWindow extends JFrame {
     private int orgWidth = 854;
     private int orgHeight = 480;
 
-    protected JPasswordField password;
-    protected HintTextField username;
+    private JPasswordField password;
+    private HintTextField username;
 
     private final Panel mainPanel = new Panel();
 
