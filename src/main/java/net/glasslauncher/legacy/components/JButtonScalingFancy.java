@@ -22,7 +22,12 @@ public class JButtonScalingFancy extends JButtonScaling {
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
         g2d.setColor(new Color(8, 5, 6, 255));
         g2d.drawRoundRect(0, 0, width-1, height-1, 4, 4);
-        g2d.setColor(new Color(18, 13, 9, 255));
+        if (isEnabled()) {
+            g2d.setColor(new Color(18, 13, 9, 255));
+        }
+        else {
+            g2d.setColor(new Color(18, 18, 18, 255));
+        }
         g2d.fillRoundRect(0, 0, width-1, height-1, 4, 4);
         super.paintComponent(g);
     }

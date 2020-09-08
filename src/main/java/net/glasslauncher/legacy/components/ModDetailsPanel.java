@@ -2,6 +2,9 @@ package net.glasslauncher.legacy.components;
 
 import net.glasslauncher.repo.api.mod.jsonobj.Author;
 import net.glasslauncher.repo.api.mod.jsonobj.Mod;
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -18,9 +21,12 @@ public abstract class ModDetailsPanel extends JPanel {
 
     ArrayList<Component> componentArrayList = new ArrayList<>();
 
-    private JTextArea description = new JTextAreaFancy("Empty");
+    private JWebView description = new JWebView("Empty");
     private JTextArea name = new JTextAreaFancy("Select a mod to see its details!");
     private JTextArea authors = new JTextAreaFancy("None");
+
+    private static HtmlRenderer renderer = HtmlRenderer.builder().build();
+    private static Parser parser = Parser.builder().build();
 
     Mod repoMod = null;
     net.glasslauncher.legacy.jsontemplate.Mod localMod = null;
@@ -38,10 +44,6 @@ public abstract class ModDetailsPanel extends JPanel {
         authors.setForeground(new Color(128, 128, 128));
         authors.setBorder(new EmptyBorder(4, 4, 4, 4));
 
-        description.setLineWrap(true);
-        description.setWrapStyleWord(true);
-        description.setEditable(false);
-        description.setFont(UIManager.getFont("Label.font"));
         description.setBorder(new EmptyBorder(6, 6, 6, 6));
 
         JScrollPane descriptionScroll = new JScrollPane();
@@ -58,7 +60,9 @@ public abstract class ModDetailsPanel extends JPanel {
 
     public void setRepoMod(Mod repoMod) {
         name.setText(repoMod.getName());
-        description.setText(repoMod.getShortDescription());
+        Node document = parser.parse(repoMod.getDescription());
+
+        description.setText(renderer.render(document));
         Author[] authorsArr = repoMod.getAuthors();
         StringBuilder authorNames = new StringBuilder();
         for (Author author : Arrays.copyOfRange(authorsArr, 0, authorsArr.length - 1)) {
