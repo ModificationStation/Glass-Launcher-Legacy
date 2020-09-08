@@ -10,25 +10,23 @@ import javafx.scene.Scene;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import javax.swing.border.EmptyBorder;
 
 import net.glasslauncher.legacy.util.LinkRedirector;
+import org.commonmark.ext.autolink.AutolinkExtension;
+
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.util.regex.Pattern;
 
 public class JWebView extends JFXPanel {
 
     private Stage stage;
     private WebView browser;
     private WebEngine webEngine;
-
-    private Pattern pattern = Pattern.compile("((?<!src=\")(https?|ftp)://[^\\s/$.?#]*\\.[^\\s]*(?!\"))");
 
     private String css = "body{ color: #dadada; padding: 20px; word-break: break-all; word-break: break-word; font-family: -apple-system,BlinkMacSystemFont,\"Segoe UI\",Roboto,\"Helvetica Neue\",Arial,\"Noto Sans\",sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\",\"Segoe UI Symbol\",\"Noto Color Emoji\"; } a:link, a:visited, a:active, a:hover, a:focus { color: deepskyblue; }";
 
@@ -62,7 +60,7 @@ public class JWebView extends JFXPanel {
 
     public void setText(String text) {
         PlatformImpl.runLater(() -> {
-            webEngine.loadContent(pattern.matcher("<style>" + css + "</style><body>" + text + "</body>").replaceAll("<a href=\"$1\">$1</a>"));
+            webEngine.loadContent("<style>" + css + "</style><body>" + text + "</body>");
         });
     }
 

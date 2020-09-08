@@ -356,7 +356,9 @@ public class OptionsWindow extends JDialog {
         }).start();
 
         JScrollPane modListScroll = new JScrollPane();
+        modListScroll.getViewport().setBackground(new Color(52, 52, 52));
         modListScroll.setBounds(20, 20, 200, 380);
+        modListScroll.setBorder(new EmptyBorder(0, 0, 0, 0));
         modListScroll.setViewportView(modRepoList);
         modRepoPanel.add(modListScroll);
 

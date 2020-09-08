@@ -2,6 +2,8 @@ package net.glasslauncher.legacy.components;
 
 import net.glasslauncher.repo.api.mod.jsonobj.Author;
 import net.glasslauncher.repo.api.mod.jsonobj.Mod;
+import org.commonmark.Extension;
+import org.commonmark.ext.autolink.AutolinkExtension;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
@@ -25,8 +27,9 @@ public abstract class ModDetailsPanel extends JPanel {
     private JTextArea name = new JTextAreaFancy("Select a mod to see its details!");
     private JTextArea authors = new JTextAreaFancy("None");
 
-    private static HtmlRenderer renderer = HtmlRenderer.builder().build();
-    private static Parser parser = Parser.builder().build();
+    private static ArrayList<Extension> extensions = new ArrayList<Extension>(){{add(AutolinkExtension.create());}};
+    private static HtmlRenderer renderer = HtmlRenderer.builder().extensions(extensions).build();
+    private static Parser parser = Parser.builder().extensions(extensions).build();
 
     Mod repoMod = null;
     net.glasslauncher.legacy.jsontemplate.Mod localMod = null;
