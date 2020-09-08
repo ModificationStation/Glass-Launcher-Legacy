@@ -46,7 +46,6 @@ class MainWindow extends JFrame {
 
     /**
      * Sets up the main window object.
-     * @// TODO: 20/09/2019 To be split into a proper class with multiple functions.
      * @param console The console for the launcher. Used to close the console.
      */
     MainWindow(Frame console) {
