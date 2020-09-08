@@ -1,11 +1,11 @@
 package net.glasslauncher.legacy;
 
 import net.glasslauncher.common.CommonConfig;
-import net.glasslauncher.legacy.components.DirtPanel;
+import net.glasslauncher.legacy.components.JPanelDirt;
 import net.glasslauncher.legacy.components.HintPasswordField;
 import net.glasslauncher.legacy.components.HintTextField;
-import net.glasslauncher.legacy.components.Logo;
-import net.glasslauncher.legacy.components.ScalingButton;
+import net.glasslauncher.legacy.components.MinecraftLogo;
+import net.glasslauncher.legacy.components.JButtonScaling;
 import net.glasslauncher.legacy.mc.LaunchArgs;
 import net.glasslauncher.legacy.mc.Wrapper;
 
@@ -83,7 +83,7 @@ class MainWindow extends JFrame {
         JScrollPane blogcontainer = makeBlog();
 
         // Login form
-        DirtPanel loginform = new DirtPanel();
+        JPanelDirt loginform = new JPanelDirt();
         loginform.setLayout(new BorderLayout());
 
         JPanel loginpanel = new JPanel();
@@ -92,7 +92,7 @@ class MainWindow extends JFrame {
         loginpanel.setPreferredSize(new Dimension(255, 100));
 
         // Logo
-        Logo logo = new Logo();
+        MinecraftLogo logo = new MinecraftLogo();
 
         // Username field
         username = new HintTextField("Username or Email");
@@ -128,7 +128,7 @@ class MainWindow extends JFrame {
         instsel.setBounds(0, 66, 166, 22);
 
         // Options button
-        ScalingButton options = new ScalingButton();
+        JButtonScaling options = new JButtonScaling();
         options.setText("Options");
         options.setBounds(168, 14, 70, 22);
         options.setOpaque(false);
@@ -137,7 +137,7 @@ class MainWindow extends JFrame {
         });
 
         // Login button
-        ScalingButton login = new ScalingButton();
+        JButtonScaling login = new JButtonScaling();
         login.setText("Login");
         login.setBounds(168, 40, 70, 22);
         login.setOpaque(false);
@@ -146,7 +146,7 @@ class MainWindow extends JFrame {
         });
 
         // Instance manager button
-        ScalingButton instancesButton = new ScalingButton();
+        JButtonScaling instancesButton = new JButtonScaling();
         instancesButton.setText("Instances");
         instancesButton.setBounds(168, 66, 70, 22);
         instancesButton.setOpaque(false);

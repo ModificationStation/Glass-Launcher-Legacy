@@ -6,9 +6,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
-public class FancyScalingButton extends ScalingButton {
+public class JButtonScalingFancy extends JButtonScaling {
 
-    public FancyScalingButton() {
+    public JButtonScalingFancy() {
         setContentAreaFilled(false);
         setForeground(new Color(218, 218, 218));
     }

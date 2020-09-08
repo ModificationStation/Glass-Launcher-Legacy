@@ -3,7 +3,7 @@ package net.glasslauncher.legacy;
 import lombok.Getter;
 import net.glasslauncher.legacy.components.HintPasswordField;
 import net.glasslauncher.legacy.components.HintTextField;
-import net.glasslauncher.legacy.components.ScalingButton;
+import net.glasslauncher.legacy.components.JButtonScaling;
 import net.glasslauncher.legacy.mc.LaunchArgs;
 
 import javax.swing.JDialog;
@@ -51,7 +51,7 @@ public class VerifyAccountWindow extends JDialog {
         });
 
         // Login button
-        ScalingButton login = new ScalingButton();
+        JButtonScaling login = new JButtonScaling();
         login.setText("Login");
         login.setBounds(58, 64, 70, 22);
         login.setOpaque(false);

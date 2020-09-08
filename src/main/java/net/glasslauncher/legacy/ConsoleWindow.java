@@ -2,7 +2,7 @@ package net.glasslauncher.legacy;
 
 import net.glasslauncher.common.ConsoleStream;
 import net.glasslauncher.common.Pastee;
-import net.glasslauncher.legacy.components.ScalingButton;
+import net.glasslauncher.legacy.components.JButtonScaling;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -58,7 +58,7 @@ public class ConsoleWindow extends JFrame {
 
         JScrollPane textContainer = new JScrollPane(textArea);
 
-        ScalingButton uploadButton = new ScalingButton();
+        JButtonScaling uploadButton = new JButtonScaling();
         uploadButton.setText("Upload log to paste.ee");
         uploadButton.setOpaque(false);
         uploadButton.addActionListener(event -> {

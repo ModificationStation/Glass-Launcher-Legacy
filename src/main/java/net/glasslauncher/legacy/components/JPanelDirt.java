@@ -12,11 +12,11 @@ import java.awt.Image;
 import java.awt.geom.Point2D;
 import java.io.IOException;
 
-public class DirtPanel extends JPanel {
+public class JPanelDirt extends JPanel {
     private Image bgImage;
     private Image img;
 
-    public DirtPanel() {
+    public JPanelDirt() {
         setOpaque(true);
 
         try {

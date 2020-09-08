@@ -3,7 +3,7 @@ package net.glasslauncher.legacy;
 import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.common.JsonConfig;
 import net.glasslauncher.legacy.components.DragDropList;
-import net.glasslauncher.legacy.components.FancyScalingButton;
+import net.glasslauncher.legacy.components.JButtonScalingFancy;
 import net.glasslauncher.legacy.components.JLabelFancy;
 import net.glasslauncher.legacy.components.JPanelBackgroundImage;
 import net.glasslauncher.legacy.components.JTextFieldFancy;
@@ -248,7 +248,7 @@ public class OptionsWindow extends JDialog {
         modListScroll.setBounds(20, 20, 200, 200);
         modListScroll.setViewportView(modDragDropList);
 
-        FancyScalingButton toggleModsButton = new FancyScalingButton();
+        JButtonScalingFancy toggleModsButton = new JButtonScalingFancy();
         toggleModsButton.setText("Toggle Selected Mods");
         toggleModsButton.addActionListener(event -> {
             for (Object modObj : modDragDropList.getSelectedValuesList()) {
@@ -263,7 +263,7 @@ public class OptionsWindow extends JDialog {
         });
         toggleModsButton.setBounds(20, 230, 200, 22);
 
-        FancyScalingButton applyModsButton = new FancyScalingButton();
+        JButtonScalingFancy applyModsButton = new JButtonScalingFancy();
         applyModsButton.setText("Apply Current Mod Configuration");
         applyModsButton.addActionListener(event -> {
             ProgressWindow progressWindow = new ProgressWindow(this, "Applying Mods");
@@ -300,7 +300,7 @@ public class OptionsWindow extends JDialog {
         });
         applyModsButton.setBounds(20, 262, 200, 22);
 
-        FancyScalingButton addModsButton = new FancyScalingButton();
+        JButtonScalingFancy addModsButton = new JButtonScalingFancy();
         addModsButton.setText("Add Mods");
         addModsButton.addActionListener(event -> {
             FileDialog fileChooser = new FileDialog(this, "Select Mod");
@@ -321,7 +321,7 @@ public class OptionsWindow extends JDialog {
         });
         addModsButton.setBounds(20, 294, 200, 22);
 
-        FancyScalingButton removeModsButton = new FancyScalingButton();
+        JButtonScalingFancy removeModsButton = new JButtonScalingFancy();
         removeModsButton.setText("Remove Selected Mods");
         removeModsButton.setForeground(new Color(185, 0, 0));
         removeModsButton.addActionListener(event -> {

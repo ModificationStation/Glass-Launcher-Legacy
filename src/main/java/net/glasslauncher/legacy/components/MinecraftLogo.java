@@ -10,10 +10,10 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-public class Logo extends JPanel {
+public class MinecraftLogo extends JPanel {
     private Image bgimage;
 
-    public Logo() {
+    public MinecraftLogo() {
         setOpaque(true);
         try {
             BufferedImage logoimg = ImageIO.read(Main.class.getResource("assets/logo.png"));
