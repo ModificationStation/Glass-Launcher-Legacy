@@ -3,7 +3,6 @@ package net.glasslauncher.legacy.components;
 import net.glasslauncher.repo.api.mod.jsonobj.Author;
 import net.glasslauncher.repo.api.mod.jsonobj.Mod;
 
-import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -15,15 +14,16 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class ModDetailsPanel extends JPanel {
+public abstract class ModDetailsPanel extends JPanel {
 
-    private ArrayList<Component> componentArrayList = new ArrayList<>();
+    ArrayList<Component> componentArrayList = new ArrayList<>();
 
     private JTextArea description = new JTextAreaFancy("Empty");
     private JTextArea name = new JTextAreaFancy("Select a mod to see its details!");
     private JTextArea authors = new JTextAreaFancy("None");
 
-    private Mod mod = null;
+    Mod repoMod = null;
+    net.glasslauncher.legacy.jsontemplate.Mod localMod = null;
 
     public ModDetailsPanel() {
         setBounds(230, 20, 600, 400);
@@ -56,10 +56,10 @@ public class ModDetailsPanel extends JPanel {
         add(descriptionScroll);
     }
 
-    public void setMod(Mod mod) {
-        name.setText(mod.getName());
-        description.setText(mod.getShortDescription());
-        Author[] authorsArr = mod.getAuthors();
+    public void setRepoMod(Mod repoMod) {
+        name.setText(repoMod.getName());
+        description.setText(repoMod.getShortDescription());
+        Author[] authorsArr = repoMod.getAuthors();
         StringBuilder authorNames = new StringBuilder();
         for (Author author : Arrays.copyOfRange(authorsArr, 0, authorsArr.length - 1)) {
             authorNames.append(author.getUsername()).append(", ");
@@ -67,18 +67,22 @@ public class ModDetailsPanel extends JPanel {
         authorNames.append(authorsArr[authorsArr.length-1]);
         authors.setText(authorNames.toString());
 
-        this.mod = mod;
+        this.repoMod = repoMod;
 
         onModChange();
     }
 
-    private void onModChange() {
-        for (Component component : componentArrayList) {
-            if (component instanceof JButton) {
-                component.setEnabled(mod.getLatestVersion().isHasClient());
-            }
-        }
+    public void setLocalMod(net.glasslauncher.legacy.jsontemplate.Mod mod) {
+        name.setText(mod.getName());
+        description.setText(mod.getDescription());
+        authors.setText(String.join(", ", mod.getAuthors()));
+
+        this.localMod = mod;
+
+        onModChange();
     }
+
+    abstract void onModChange();
 
     public void addToOnModChange(Component component) {
         componentArrayList.add(component);

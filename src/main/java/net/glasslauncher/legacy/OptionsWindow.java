@@ -9,6 +9,7 @@ import net.glasslauncher.legacy.components.JPanelBackgroundImage;
 import net.glasslauncher.legacy.components.JTextFieldFancy;
 import net.glasslauncher.legacy.components.ModDetailsPanel;
 import net.glasslauncher.legacy.components.ModRepoList;
+import net.glasslauncher.legacy.components.RepoModDetailsPanel;
 import net.glasslauncher.legacy.jsontemplate.InstanceConfig;
 import net.glasslauncher.legacy.jsontemplate.Mod;
 import net.glasslauncher.legacy.jsontemplate.ModList;
@@ -345,7 +346,7 @@ public class OptionsWindow extends JDialog {
         JPanel modRepoPanel = new JPanel();
         modRepoPanel.setOpaque(false);
         modRepoPanel.setLayout(null);
-        ModDetailsPanel modDetailsPanel = new ModDetailsPanel();
+        ModDetailsPanel modDetailsPanel = new RepoModDetailsPanel();
         modRepoList = new ModRepoList(modDetailsPanel);
         modRepoPanel.add(modDetailsPanel);
 
@@ -393,7 +394,7 @@ public class OptionsWindow extends JDialog {
                     if (modName.contains(".")) {
                         modName = modName.substring(0, modName.lastIndexOf('.'));
                     }
-                    jarMods.add(jarMods.size(), new Mod(modFile.getName(), modName, 0, true));
+                    jarMods.add(jarMods.size(), new Mod(modFile.getName(), modName, 0, true, new String[]{}, ""));
                 }
             }
         }
