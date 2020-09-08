@@ -10,13 +10,14 @@ import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ModDetailsPanel extends JPanel {
 
-    private ArrayList<JButton> buttonArrayList = new ArrayList<>();
+    private ArrayList<Component> componentArrayList = new ArrayList<>();
 
     private JTextArea description = new JTextAreaFancy("Empty");
     private JTextArea name = new JTextAreaFancy("Select a mod to see its details!");
@@ -68,16 +69,18 @@ public class ModDetailsPanel extends JPanel {
 
         this.mod = mod;
 
-        checkModAvailability();
+        onModChange();
     }
 
-    public void checkModAvailability() {
-        for (JButton button : buttonArrayList) {
-            button.setEnabled(mod.getLatestVersion().isHasClient());
+    private void onModChange() {
+        for (Component component : componentArrayList) {
+            if (component instanceof JButton) {
+                component.setEnabled(mod.getLatestVersion().isHasClient());
+            }
         }
     }
 
-    public void addButtonToHook(JButton button) {
-        buttonArrayList.add(button);
+    public void addToOnModChange(Component component) {
+        componentArrayList.add(component);
     }
 }
