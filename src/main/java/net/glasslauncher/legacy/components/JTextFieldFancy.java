@@ -11,7 +11,6 @@ public class JTextFieldFancy extends HintTextField {
 
     public JTextFieldFancy(String hint) {
         super(hint, new Color(218, 218, 218), Color.GRAY);
-        //setBorder(new EmptyBorder(0, 4, 0, 4));
         setBorder(new EmptyBorder(0, 4, 0, 4));
         setOpaque(false);
     }
