@@ -24,7 +24,9 @@ public class JWebView extends JFXPanel {
     private WebView browser;
     private WebEngine webEngine;
 
-    private String css = "body{ color: #dadada; padding-right: 20px; padding-left: 10px; word-break: break-all; word-break: break-word; font-family: -apple-system,BlinkMacSystemFont,\"Segoe UI\",Roboto,\"Helvetica Neue\",Arial,\"Noto Sans\",sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\",\"Segoe UI Symbol\",\"Noto Color Emoji\"; } a:link, a:visited, a:active, a:hover, a:focus { color: deepskyblue; }";
+    private String css =
+            "body { color: #dadada; padding-right: 20px; padding-left: 10px; word-break: break-all; word-break: break-word; font-family: -apple-system,BlinkMacSystemFont,\"Segoe UI\",Roboto,\"Helvetica Neue\",Arial,\"Noto Sans\",sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\",\"Segoe UI Symbol\",\"Noto Color Emoji\"; }" +
+            "a:link, a:visited, a:active, a:hover, a:focus { color: deepskyblue; }";
 
     public JWebView(String text) {
         super();
