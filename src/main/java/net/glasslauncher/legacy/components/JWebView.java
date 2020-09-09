@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.util.LinkRedirector;
 
 import java.awt.AlphaComposite;
@@ -23,10 +24,6 @@ public class JWebView extends JFXPanel {
     private Stage stage;
     private WebView browser;
     private WebEngine webEngine;
-
-    private String css =
-            "body { color: #dadada; padding-right: 20px; padding-left: 10px; word-break: break-all; word-break: break-word; font-family: -apple-system,BlinkMacSystemFont,\"Segoe UI\",Roboto,\"Helvetica Neue\",Arial,\"Noto Sans\",sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\",\"Segoe UI Symbol\",\"Noto Color Emoji\"; }" +
-            "a:link, a:visited, a:active, a:hover, a:focus { color: deepskyblue; }";
 
     public JWebView(String text) {
         super();
@@ -45,7 +42,7 @@ public class JWebView extends JFXPanel {
             browser.setMaxSize(getWidth(), getHeight());
             webEngine = browser.getEngine();
             webEngine.getLoadWorker().stateProperty().addListener(new LinkRedirector(browser));
-            webEngine.loadContent("<style>" + css + "</style><body>" + text + "</body>");
+            webEngine.loadContent("<style>" + Config.CSS + "</style><body>" + text + "</body>");
             Accessor.getPageFor(webEngine).setBackgroundColor(new Color(52, 52, 52).getRGB());
             ObservableList<Node> children = root.getChildren();
             children.add(browser);
@@ -56,7 +53,7 @@ public class JWebView extends JFXPanel {
 
     public void setText(String text) {
         PlatformImpl.runLater(() -> {
-            webEngine.loadContent("<style>" + css + "</style><body>" + text + "</body>");
+            webEngine.loadContent("<style>" + Config.CSS + "</style><body>" + text + "</body>");
         });
     }
 

@@ -24,6 +24,13 @@ public class Config {
         }
     }
 
+    /**
+     * CSS to de-windows95-ify html formatted areas.
+     */
+    public static String CSS =
+            "body { color: #dadada; padding-right: 20px; padding-left: 10px; word-break: break-all; word-break: break-word; font-family: -apple-system,BlinkMacSystemFont,\"Segoe UI\",Roboto,\"Helvetica Neue\",Arial,\"Noto Sans\",sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\",\"Segoe UI Symbol\",\"Noto Color Emoji\"; }" +
+                    "a:link, a:visited, a:active, a:hover, a:focus { color: deepskyblue; }";
+
     public static String destDirBypass = "";
 
     @Getter private static MCVersions mcVersions;
