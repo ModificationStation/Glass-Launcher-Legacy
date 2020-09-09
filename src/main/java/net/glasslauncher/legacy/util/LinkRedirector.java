@@ -13,7 +13,7 @@ import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.html.HTMLAnchorElement;
 
-import java.awt.*;
+import java.awt.Desktop;
 import java.net.URI;
 
 public class LinkRedirector implements ChangeListener<Worker.State>, EventListener

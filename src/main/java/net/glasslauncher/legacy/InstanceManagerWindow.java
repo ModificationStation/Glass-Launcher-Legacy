@@ -2,8 +2,8 @@ package net.glasslauncher.legacy;
 
 import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.common.FileUtils;
-import net.glasslauncher.legacy.components.JButtonScalingFancy;
 import net.glasslauncher.legacy.components.HintTextField;
+import net.glasslauncher.legacy.components.JButtonScalingFancy;
 import net.glasslauncher.legacy.components.JPanelBackgroundImage;
 import net.glasslauncher.legacy.components.JTextFieldFancy;
 import net.glasslauncher.legacy.util.InstanceManager;

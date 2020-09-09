@@ -1,11 +1,11 @@
 package net.glasslauncher.legacy;
 
 import net.glasslauncher.common.CommonConfig;
-import net.glasslauncher.legacy.components.JPanelDirt;
 import net.glasslauncher.legacy.components.HintPasswordField;
 import net.glasslauncher.legacy.components.HintTextField;
-import net.glasslauncher.legacy.components.MinecraftLogo;
 import net.glasslauncher.legacy.components.JButtonScaling;
+import net.glasslauncher.legacy.components.JPanelDirt;
+import net.glasslauncher.legacy.components.MinecraftLogo;
 import net.glasslauncher.legacy.mc.LaunchArgs;
 import net.glasslauncher.legacy.mc.Wrapper;
 

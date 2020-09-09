@@ -9,7 +9,6 @@ import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
@@ -47,18 +46,13 @@ public abstract class ModDetailsPanel extends JPanel {
         authors.setForeground(new Color(128, 128, 128));
         authors.setBorder(new EmptyBorder(4, 4, 4, 4));
 
-        description.setBorder(new EmptyBorder(6, 6, 6, 6));
-
-        JScrollPane descriptionScroll = new JScrollPane();
-        descriptionScroll.setViewportView(description);
-        descriptionScroll.setOpaque(false);
-        descriptionScroll.getViewport().setOpaque(false);
-        descriptionScroll.setBorder(new EmptyBorder(0, 0, 0, 0));
-        descriptionScroll.setBounds(20, 70, getWidth()-40, getHeight()-90);
-        descriptionScroll.setPreferredSize(new Dimension(getWidth()-40, getHeight()-90));
+        description.setOpaque(false);
+        description.setBorder(new EmptyBorder(0, 0, 0, 0));
+        description.setBounds(20, 70, getWidth()-40, getHeight()-90);
+        description.setPreferredSize(new Dimension(getWidth()-40, getHeight()-90));
 
         add(name);
-        add(descriptionScroll);
+        add(description);
     }
 
     public void setRepoMod(Mod repoMod) {
