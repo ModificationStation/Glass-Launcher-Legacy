@@ -40,10 +40,7 @@ class DragDropHandler extends TransferHandler {
         int dropIndex = dl.getIndex();
 
         try {
-            if (Integer.parseInt((String) transferable.getTransferData(DataFlavor.stringFlavor)) <0) {
-                return false;
-            }
-            else if (Arrays.stream(transferable.getTransferDataFlavors()).anyMatch(DataFlavor::isFlavorJavaFileListType)) {
+            if (Arrays.stream(transferable.getTransferDataFlavors()).anyMatch(DataFlavor::isFlavorJavaFileListType)) {
                 @SuppressWarnings("unchecked") List<File> files = (List<File>) transferable.getTransferData(DataFlavor.javaFileListFlavor);
                 for (File file : files) {
                     String modName = file.getName();
@@ -57,6 +54,9 @@ class DragDropHandler extends TransferHandler {
                 return true;
             }
             else if (Arrays.stream(transferable.getTransferDataFlavors()).anyMatch(DataFlavor::isFlavorTextType)) {
+                if (list.model.size() == 0) {
+                    return false;
+                }
                 int draggedObjectIndex = Integer.parseInt((String) transferable.getTransferData(DataFlavor.stringFlavor));
 
                 Mod draggedObject = model.get(draggedObjectIndex);
