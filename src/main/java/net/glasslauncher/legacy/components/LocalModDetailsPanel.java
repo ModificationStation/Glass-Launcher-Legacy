@@ -2,9 +2,14 @@ package net.glasslauncher.legacy.components;
 
 import net.glasslauncher.legacy.components.events.OnModChange;
 
+import javax.swing.JPanel;
 import java.awt.Component;
 
 public class LocalModDetailsPanel extends ModDetailsPanel {
+    public LocalModDetailsPanel(String instance) {
+        super(instance);
+    }
+
     @Override
     void onModChange() {
         for (Component component : super.componentArrayList) {
@@ -12,5 +17,10 @@ public class LocalModDetailsPanel extends ModDetailsPanel {
                 ((OnModChange) component).onLocalModChange(localMod);
             }
         }
+    }
+
+    @Override
+    void setupButtons(JPanel buttons) {
+
     }
 }

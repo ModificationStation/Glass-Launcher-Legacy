@@ -8,6 +8,7 @@ import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 
+import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.UIManager;
@@ -20,6 +21,8 @@ public abstract class ModDetailsPanel extends JPanel {
 
     ArrayList<Component> componentArrayList = new ArrayList<>();
 
+    private JPanel buttons = new JPanel();
+
     private JWebView description = new JWebView("Empty");
     private JTextPane name = new JTextPaneFancy();
 
@@ -30,7 +33,11 @@ public abstract class ModDetailsPanel extends JPanel {
     Mod repoMod = null;
     net.glasslauncher.legacy.jsontemplate.Mod localMod = null;
 
-    public ModDetailsPanel() {
+    String instance;
+
+    public ModDetailsPanel(String instance) {
+        this.instance = instance;
+
         setBounds(230, 20, 600, 400);
         setOpaque(false);
 
@@ -45,8 +52,15 @@ public abstract class ModDetailsPanel extends JPanel {
         description.setBounds(20, 70, getWidth()-40, getHeight()-90);
         description.setPreferredSize(new Dimension(getWidth()-40, getHeight()-90));
 
+        setupButtons(buttons);
+
+        buttons.setOpaque(false);
+        buttons.setSize(getWidth()-40, 30);
+        buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
+
         add(name);
         add(description);
+        add(buttons);
     }
 
     public void setRepoMod(Mod repoMod) {
@@ -70,6 +84,8 @@ public abstract class ModDetailsPanel extends JPanel {
     }
 
     abstract void onModChange();
+
+    abstract void setupButtons(JPanel buttons);
 
     public void addToOnModChange(Component component) {
         componentArrayList.add(component);

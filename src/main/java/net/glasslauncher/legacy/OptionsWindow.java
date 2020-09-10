@@ -346,7 +346,7 @@ public class OptionsWindow extends JDialog {
         JPanel modRepoPanel = new JPanel();
         modRepoPanel.setOpaque(false);
         modRepoPanel.setLayout(null);
-        ModDetailsPanel modDetailsPanel = new RepoModDetailsPanel();
+        ModDetailsPanel modDetailsPanel = new RepoModDetailsPanel(instName);
         modRepoList = new ModRepoList(modDetailsPanel);
         modRepoPanel.add(modDetailsPanel);
 
