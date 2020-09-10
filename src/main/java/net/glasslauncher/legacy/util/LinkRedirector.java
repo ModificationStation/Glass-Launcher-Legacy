@@ -16,27 +16,22 @@ import org.w3c.dom.html.HTMLAnchorElement;
 import java.awt.Desktop;
 import java.net.URI;
 
-public class LinkRedirector implements ChangeListener<Worker.State>, EventListener
-{
+public class LinkRedirector implements ChangeListener<Worker.State>, EventListener {
     private static final String CLICK_EVENT = "click";
     private static final String ANCHOR_TAG = "a";
 
     private final WebView webView;
 
-    public LinkRedirector(WebView webView)
-    {
+    public LinkRedirector(WebView webView) {
         this.webView = webView;
     }
 
     @Override
-    public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue)
-    {
-        if (Worker.State.SUCCEEDED.equals(newValue))
-        {
+    public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
+        if (Worker.State.SUCCEEDED.equals(newValue)) {
             Document document = webView.getEngine().getDocument();
             NodeList anchors = document.getElementsByTagName(ANCHOR_TAG);
-            for (int i = 0; i < anchors.getLength(); i++)
-            {
+            for (int i = 0; i < anchors.getLength(); i++) {
                 Node node = anchors.item(i);
                 EventTarget eventTarget = (EventTarget) node;
                 eventTarget.addEventListener(CLICK_EVENT, this, false);
@@ -45,30 +40,24 @@ public class LinkRedirector implements ChangeListener<Worker.State>, EventListen
     }
 
     @Override
-    public void handleEvent(Event event)
-    {
+    public void handleEvent(Event event) {
         HTMLAnchorElement anchorElement = (HTMLAnchorElement) event.getCurrentTarget();
         String href = anchorElement.getHref();
 
-        if (Desktop.isDesktopSupported())
-        {
+        if (Desktop.isDesktopSupported()) {
             openLinkInSystemBrowser(href);
-        } else
-        {
+        } else {
             Main.getLogger().warning("OS does not support desktop operations like browsing. Cannot open link \"" + href + "\".");
         }
 
         event.preventDefault();
     }
 
-    private void openLinkInSystemBrowser(String url)
-    {
-        try
-        {
+    public static void openLinkInSystemBrowser(String url) {
+        try {
             URI uri = new URI(url);
             Desktop.getDesktop().browse(uri);
-        } catch (Throwable e)
-        {
+        } catch (Throwable e) {
             Main.getLogger().severe("Error on opening link \"" + url + "\" in system browser.");
             e.printStackTrace();
         }

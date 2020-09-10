@@ -2,13 +2,16 @@ package net.glasslauncher.legacy.components;
 
 import net.glasslauncher.common.FileUtils;
 import net.glasslauncher.legacy.Config;
+import net.glasslauncher.legacy.Main;
 import net.glasslauncher.legacy.OptionsWindow;
 import net.glasslauncher.legacy.components.events.OnModChange;
+import net.glasslauncher.legacy.util.LinkRedirector;
 
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -47,6 +50,16 @@ public class RepoModDetailsPanel extends ModDetailsPanel {
 
         JButton openPageButton = new JButtonScalingFancy();
         openPageButton.setText("Open Page");
+        openPageButton.addActionListener((actionEvent) -> {
+            if (repoMod != null) {
+                if (Desktop.isDesktopSupported()) {
+                    LinkRedirector.openLinkInSystemBrowser(net.glasslauncher.repo.api.Config.REPOSITORY_URL + "mod/" + repoMod.getId());
+                } else {
+                    Main.getLogger().warning("OS does not support desktop operations like browsing. Cannot open link \"" + net.glasslauncher.repo.api.Config.REPOSITORY_URL + "mods/" + repoMod.getId() + "\".");
+                }
+            }
+        });
+
         buttons.add(downloadButton);
         buttons.add(Box.createRigidArea(new Dimension(40, 0)));
         buttons.add(openPageButton);
