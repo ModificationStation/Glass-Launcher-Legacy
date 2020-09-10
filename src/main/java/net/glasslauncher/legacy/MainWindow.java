@@ -67,7 +67,9 @@ class MainWindow extends JFrame {
         // Makes it so the launcher closes when you press the close button
         addWindowListener(new WindowAdapter() {
                               public void windowClosing(WindowEvent we) {
-                                  console.dispose();
+                                  if (console != null) {
+                                      console.dispose();
+                                  }
                                   dispose();
                                   System.exit(0);
                               }

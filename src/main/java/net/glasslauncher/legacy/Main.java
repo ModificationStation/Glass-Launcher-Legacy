@@ -22,7 +22,14 @@ public class Main {
             e.printStackTrace();
         }
 
-        ConsoleWindow console = new ConsoleWindow();
+        ConsoleWindow console = null;
+        if (System.console() != null) {
+            getLogger().info("Detected running with a console.");
+        }
+        else {
+            console = new ConsoleWindow();
+            getLogger().info("Detected not running with a console. Creating a console window...");
+        }
 
         try {
             Config.loadConfigFiles();
