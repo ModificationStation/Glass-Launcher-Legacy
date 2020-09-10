@@ -36,15 +36,16 @@ public class Main {
                 return;
             }
             else if (arg.equals("-help")) {
-                Main.getLogger().info(
+                getLogger().info(
                         "\n" +
-                                "-proxy      : Launches in proxy only mode. No GUI aside from the console is shown. Defaults to all options enabled unless other paramaters are passed." +
-                                " -dosound   : Enables the sound part of the proxy." +
-                                " -dologin   : Enables the login part of the proxy. The server you are joining must be using an online fix for this to work." +
-                                " -doskin    : Enables the skin part of the proxy. Fixes all references to player skins through Mojang/Minecraft servers." +
-                                " -docape    : Enables the cape part of the proxy. Fixes all references to player capes through Mojang/Minecraft servers. Does not allow for custom capes on third party servers."
+                                "-proxy      : Launches in proxy only mode. No GUI aside from the console is shown. Defaults to all options enabled unless other paramaters are passed.\n" +
+                                " -dosound   : Enables the sound part of the proxy.\n" +
+                                " -dologin   : Enables the login part of the proxy. The server you are joining must be using an online fix for this to work.\n" +
+                                " -doskin    : Enables the skin part of the proxy. Fixes all references to player skins through Mojang/Minecraft servers.\n" +
+                                " -docape    : Enables the cape part of the proxy. Fixes all references to player capes through Mojang/Minecraft servers.."
                                 //"-installdir : Changes install dir to the specified path." !! not implemented !!
                 );
+                return;
             }
         }
         mainwin = new MainWindow(console);
