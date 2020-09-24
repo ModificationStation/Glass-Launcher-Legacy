@@ -1,16 +1,15 @@
 plugins {
     id 'com.github.johnrengelman.shadow' version '5.2.0'
     id 'java'
+    id "edu.sc.seis.launch4j" version "2.4.8"
 }
 
-allprojects{
-    repositories {
-        mavenLocal()
-        jcenter()
-        maven { url "https://jitpack.io" }
-        maven { url "https://maven.glass-launcher.net/repo" }
-        maven { url  "https://maven.fabricmc.net/" }
-    }
+repositories {
+    mavenLocal()
+    jcenter()
+    maven { url "https://jitpack.io" }
+    maven { url "https://maven.glass-launcher.net/repo" }
+    maven { url  "https://maven.fabricmc.net/" }
 }
 
 dependencies {
@@ -79,6 +78,21 @@ task listrepos {
         project.repositories.each { println "Name: " + it.name + "; url: " + it.url }
     }
 }
+
+createExe {
+    mainClassName = 'net.glasslauncher.legacy.Main'
+    icon = "${projectDir}/glass.ico"
+    launch4j.outputDir = "libs"
+    launch4j.outfile = "${project.name}-${project.version}.exe"
+    jar = project.tasks["shadowJar"].archiveName
+    doLast {
+        // https://github.com/TheBoegl/gradle-launch4j/issues/68
+        delete("${buildDir}/${launch4j.outputDir}/${launch4j.libraryDir}")
+    }
+}
+tasks.createExe.dependsOn(tasks.shadowJar)
+
+tasks.build.dependsOn(tasks.createExe)
 
 jar {
     manifest {
