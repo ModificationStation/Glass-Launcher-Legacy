@@ -1,7 +1,5 @@
 package net.glasslauncher.legacy.components;
 
-import net.glasslauncher.legacy.Config;
-
 import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 import java.awt.AlphaComposite;

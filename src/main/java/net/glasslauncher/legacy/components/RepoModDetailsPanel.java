@@ -2,8 +2,6 @@ package net.glasslauncher.legacy.components;
 
 import net.glasslauncher.common.FileUtils;
 import net.glasslauncher.legacy.Config;
-import net.glasslauncher.legacy.Main;
-import net.glasslauncher.legacy.OptionsWindow;
 import net.glasslauncher.legacy.components.events.OnModChange;
 import net.glasslauncher.legacy.util.LinkRedirector;
 
@@ -11,7 +9,6 @@ import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import java.awt.Component;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.net.MalformedURLException;
 import java.net.URL;
