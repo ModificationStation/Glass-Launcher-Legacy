@@ -1,3 +1,12 @@
+#### v0.5
+\* The Options and Instances windows are now themed.  
+\* Knot is now used to launch Minecraft instead of EasyMineLauncher. This should fix Minecraft hanging when being closed.  
+\+ Added glass-repo integration.  
+\+ The launcher now remembers the last instance used.  
+\+ Added the `-help` paramater.  
+\+ Added basic mod repo support.  
+\- Cleared up a few unused classes and images.
+
 #### v0.4.5
 \* Fixed the resource proxy not working on old alpha versions.
 
