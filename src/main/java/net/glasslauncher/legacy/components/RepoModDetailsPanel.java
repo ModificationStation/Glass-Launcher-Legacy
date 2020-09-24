@@ -52,11 +52,7 @@ public class RepoModDetailsPanel extends ModDetailsPanel {
         openPageButton.setText("Open Page");
         openPageButton.addActionListener((actionEvent) -> {
             if (repoMod != null) {
-                if (Desktop.isDesktopSupported()) {
-                    LinkRedirector.openLinkInSystemBrowser(net.glasslauncher.repo.api.Config.REPOSITORY_URL + "mod/" + repoMod.getId());
-                } else {
-                    Main.getLogger().warning("OS does not support desktop operations like browsing. Cannot open link \"" + net.glasslauncher.repo.api.Config.REPOSITORY_URL + "mods/" + repoMod.getId() + "\".");
-                }
+                LinkRedirector.openLinkInSystemBrowser(net.glasslauncher.repo.api.Config.REPOSITORY_URL + "mod/" + repoMod.getId());
             }
         });
 

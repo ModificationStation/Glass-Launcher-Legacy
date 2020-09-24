@@ -44,22 +44,22 @@ public class LinkRedirector implements ChangeListener<Worker.State>, EventListen
         HTMLAnchorElement anchorElement = (HTMLAnchorElement) event.getCurrentTarget();
         String href = anchorElement.getHref();
 
-        if (Desktop.isDesktopSupported()) {
-            openLinkInSystemBrowser(href);
-        } else {
-            Main.getLogger().warning("OS does not support desktop operations like browsing. Cannot open link \"" + href + "\".");
-        }
+        openLinkInSystemBrowser(href);
 
         event.preventDefault();
     }
 
     public static void openLinkInSystemBrowser(String url) {
-        try {
-            URI uri = new URI(url);
-            Desktop.getDesktop().browse(uri);
-        } catch (Throwable e) {
-            Main.getLogger().severe("Error on opening link \"" + url + "\" in system browser.");
-            e.printStackTrace();
+        if (Desktop.isDesktopSupported()) {
+            try {
+                URI uri = new URI(url);
+                Desktop.getDesktop().browse(uri);
+            } catch (Throwable e) {
+                Main.getLogger().severe("Error on opening link \"" + url + "\" in system browser.");
+                e.printStackTrace();
+            }
+        } else {
+            Main.getLogger().warning("OS does not support desktop operations like browsing. Cannot open link \"" + url + "\".");
         }
     }
 }
