@@ -75,7 +75,7 @@ public abstract class ModDetailsPanel extends JPanel {
     }
 
     public void setLocalMod(net.glasslauncher.legacy.jsontemplate.Mod mod) {
-        name.setText(mod.getName());
+        name.setText("<style>" + Config.CSS + "</style><body><div style=\"font-size: 18px;\">" + localMod.getName() + " <sup style=\"font-size: 10px;\">by " + localMod.getAuthors()[0] + "</sup></div></body>");
         description.setText(mod.getDescription());
 
         this.localMod = mod;
