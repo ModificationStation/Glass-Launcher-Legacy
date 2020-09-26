@@ -7,12 +7,15 @@ import net.glasslauncher.legacy.components.JButtonScalingFancy;
 import net.glasslauncher.legacy.components.JLabelFancy;
 import net.glasslauncher.legacy.components.JPanelBackgroundImage;
 import net.glasslauncher.legacy.components.JTextFieldFancy;
+import net.glasslauncher.legacy.components.LocalModDetailsPanel;
 import net.glasslauncher.legacy.components.ModDetailsPanel;
+import net.glasslauncher.legacy.components.ModLocalList;
 import net.glasslauncher.legacy.components.ModRepoList;
 import net.glasslauncher.legacy.components.RepoModDetailsPanel;
 import net.glasslauncher.legacy.jsontemplate.InstanceConfig;
 import net.glasslauncher.legacy.jsontemplate.Mod;
 import net.glasslauncher.legacy.jsontemplate.ModList;
+import net.glasslauncher.legacy.mc.LocalMods;
 import net.glasslauncher.legacy.util.InstanceManager;
 import net.glasslauncher.repo.api.mod.RepoReader;
 
@@ -46,7 +49,9 @@ public class OptionsWindow extends JDialog {
     private DragDropList modDragDropList;
     private ModRepoList modRepoList;
 
-    private String instpath;
+    private ArrayList<Mod> loaderMods;
+
+    private String instPath;
     private String instName;
 
     private JTextFieldFancy javaargs;
@@ -73,18 +78,18 @@ public class OptionsWindow extends JDialog {
         add(this.panel);
 
         instName = instance;
-        instpath = CommonConfig.GLASS_PATH + "instances/" + instance + "/";
-        if (!(new File(instpath)).exists()) {
+        instPath = CommonConfig.GLASS_PATH + "instances/" + instance + "/";
+        if (!(new File(instPath)).exists()) {
             JOptionPane.showMessageDialog(this, "Selected instance does not exist, or one hasn't been selected.", "Warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        instanceConfig = (InstanceConfig) JsonConfig.loadConfig(instpath + "instance_config.json", InstanceConfig.class);
+        instanceConfig = (InstanceConfig) JsonConfig.loadConfig(instPath + "instance_config.json", InstanceConfig.class);
         if (instanceConfig == null) {
-            instanceConfig = new InstanceConfig(instpath + "instance_config.json");
+            instanceConfig = new InstanceConfig(instPath + "instance_config.json");
         }
-        modList = (ModList) JsonConfig.loadConfig(instpath + "mods/mods.json", ModList.class);
+        modList = (ModList) JsonConfig.loadConfig(instPath + "mods/mods.json", ModList.class);
         if (modList == null) {
-            modList = new ModList(instpath + "mods/mods.json");
+            modList = new ModList(instPath + "mods/mods.json");
         }
 
         JTabbedPane tabpane = new JTabbedPane();
@@ -93,7 +98,8 @@ public class OptionsWindow extends JDialog {
         tabpane.setBorder(new EmptyBorder(0, -2, -2, -2));
 
         tabpane.addTab("Settings", makeInstSettings());
-        tabpane.addTab("Installed Mods", makeMods());
+        tabpane.addTab("Jar Mods", makeJarMods());
+        tabpane.addTab("Loader Mods", makeLoaderMods());
         tabpane.addTab("Mod Repo", makeModRepo());
 
         addWindowListener(
@@ -236,15 +242,15 @@ public class OptionsWindow extends JDialog {
         return instsettings;
     }
 
-    private JPanel makeMods() {
+    private JPanel makeJarMods() {
         JPanel modsPanel = new JPanel();
         modsPanel.setOpaque(false);
         modsPanel.setLayout(null);
 
         jarMods = new ArrayList<>();
         JScrollPane modListScroll = new JScrollPane();
-        modDragDropList = new DragDropList(jarMods, instpath);
-        refreshModList();
+        modDragDropList = new DragDropList(jarMods, instPath);
+        refreshJarModList();
         modListScroll.setBounds(20, 20, 200, 200);
         modListScroll.setViewportView(modDragDropList);
 
@@ -271,8 +277,8 @@ public class OptionsWindow extends JDialog {
                 progressWindow.setProgressMax(2);
                 progressWindow.setProgress(0);
                 progressWindow.setProgressText("Setting up");
-                File vanillaJar = new File(instpath + ".minecraft/bin/minecraft_vanilla.jar");
-                File moddedJar = new File(instpath + ".minecraft/bin/minecraft.jar");
+                File vanillaJar = new File(instPath + ".minecraft/bin/minecraft_vanilla.jar");
+                File moddedJar = new File(instPath + ".minecraft/bin/minecraft.jar");
                 try {
                     if (vanillaJar.exists()) {
                         moddedJar.delete();
@@ -312,12 +318,12 @@ public class OptionsWindow extends JDialog {
             File[] files = fileChooser.getFiles();
             try {
                 for (File file : files) {
-                    Files.copy(file.toPath(), new File(instpath + "mods/" + file.getName()).toPath());
+                    Files.copy(file.toPath(), new File(instPath + "mods/" + file.getName()).toPath());
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (NullPointerException ignored) {}
-            refreshModList();
+            refreshJarModList();
         });
         addModsButton.setBounds(20, 294, 200, 22);
 
@@ -327,9 +333,9 @@ public class OptionsWindow extends JDialog {
         removeModsButton.addActionListener(event -> {
             for (Object modObj : modDragDropList.getSelectedValuesList()) {
                 Mod mod = (Mod) modObj;
-                (new File(instpath + "mods/" + mod.getFileName())).delete();
+                (new File(instPath + "mods/" + mod.getFileName())).delete();
             }
-            refreshModList();
+            refreshJarModList();
         });
         removeModsButton.setBounds(20, 326, 200, 22);
 
@@ -338,6 +344,78 @@ public class OptionsWindow extends JDialog {
         modsPanel.add(applyModsButton);
         modsPanel.add(addModsButton);
         modsPanel.add(removeModsButton);
+
+        return modsPanel;
+    }
+
+    private JPanel makeLoaderMods() {
+        JPanel modsPanel = new JPanel();
+        modsPanel.setOpaque(false);
+        modsPanel.setLayout(null);
+
+        ModDetailsPanel modDetailsPanel = new LocalModDetailsPanel(instName);
+
+        loaderMods = new ArrayList<>();
+        JScrollPane modListScroll = new JScrollPane();
+        modDragDropList = new ModLocalList(loaderMods, instPath, modDetailsPanel);
+        refreshLoaderModList();
+        modListScroll.setBounds(20, 20, 200, 200);
+        modListScroll.setViewportView(modDragDropList);
+
+        JButtonScalingFancy toggleModsButton = new JButtonScalingFancy();
+        toggleModsButton.setText("Toggle Selected Mods");
+        toggleModsButton.addActionListener(event -> {
+            for (Object modObj : modDragDropList.getSelectedValuesList()) {
+                if (modObj instanceof Mod) {
+                    Mod mod = (Mod) modObj;
+                    mod.setEnabled(!mod.isEnabled());
+
+                } else {
+                    Main.getLogger().severe("Mod object not instance of Mod!");
+                }
+            }
+            modDragDropList.repaint();
+        });
+        toggleModsButton.setBounds(20, 230, 200, 22);
+
+        JButtonScalingFancy addModsButton = new JButtonScalingFancy();
+        addModsButton.setText("Add Mods");
+        addModsButton.addActionListener(event -> {
+            FileDialog fileChooser = new FileDialog(this, "Select Mod");
+            fileChooser.setFilenameFilter((e, str) -> {
+                return str.endsWith(".jar") || str.endsWith(".zip");
+            });
+            fileChooser.setMultipleMode(true);
+            fileChooser.setVisible(true);
+            File[] files = fileChooser.getFiles();
+            try {
+                for (File file : files) {
+                    Files.copy(file.toPath(), new File(instPath + ".minecraft/mods/" + file.getName()).toPath());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (NullPointerException ignored) {}
+            refreshLoaderModList();
+        });
+        addModsButton.setBounds(20, 294, 200, 22);
+
+        JButtonScalingFancy removeModsButton = new JButtonScalingFancy();
+        removeModsButton.setText("Remove Selected Mods");
+        removeModsButton.setForeground(new Color(185, 0, 0));
+        removeModsButton.addActionListener(event -> {
+            for (Object modObj : modDragDropList.getSelectedValuesList()) {
+                Mod mod = (Mod) modObj;
+                (new File(instPath + "mods/" + mod.getFileName())).delete();
+            }
+            refreshLoaderModList();
+        });
+        removeModsButton.setBounds(20, 326, 200, 22);
+
+        modsPanel.add(modListScroll);
+        modsPanel.add(toggleModsButton);
+        modsPanel.add(addModsButton);
+        modsPanel.add(removeModsButton);
+        modsPanel.add(modDetailsPanel);
 
         return modsPanel;
     }
@@ -373,14 +451,14 @@ public class OptionsWindow extends JDialog {
         }
     }
 
-    private void refreshModList() {
+    private void refreshJarModList() {
         jarMods = new ArrayList<>();
-        File modsFolder = new File(instpath + "mods");
+        File modsFolder = new File(instPath + "mods");
         modsFolder.mkdirs();
         File[] mods = modsFolder.listFiles();
         if (mods != null) {
             for (Mod mod : modList.getJarMods()) {
-                if ((new File(instpath + "mods/" + mod.getFileName())).exists()) {
+                if ((new File(instPath + "mods/" + mod.getFileName())).exists()) {
                     jarMods.add(jarMods.size(), mod);
                 }
             }
@@ -396,12 +474,29 @@ public class OptionsWindow extends JDialog {
                     if (modName.contains(".")) {
                         modName = modName.substring(0, modName.lastIndexOf('.'));
                     }
-                    jarMods.add(jarMods.size(), new Mod(modFile.getName(), modName, 0, true, new String[]{}, ""));
+                    jarMods.add(jarMods.size(), new Mod(modFile.getName(), modName, true, new String[]{}, ""));
                 }
             }
         }
         modDragDropList.model.clear();
         for (Mod mod : jarMods) {
+            modDragDropList.model.addElement(mod);
+        }
+        modDragDropList.repaint();
+    }
+
+    private void refreshLoaderModList() {
+        loaderMods = new ArrayList<>();
+        File modsFolder = new File(instPath + ".minecraft/mods");
+        modsFolder.mkdirs();
+        File[] mods = modsFolder.listFiles();
+        if (mods != null) {
+            for (File modFile : mods) {
+                loaderMods.add(loaderMods.size(), LocalMods.getModInfo(instPath, modFile.getName()));
+            }
+        }
+        modDragDropList.model.clear();
+        for (Mod mod : loaderMods) {
             modDragDropList.model.addElement(mod);
         }
         modDragDropList.repaint();

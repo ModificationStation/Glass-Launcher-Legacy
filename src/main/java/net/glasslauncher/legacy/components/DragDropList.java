@@ -10,12 +10,11 @@ import java.awt.Color;
 import java.awt.Component;
 import java.util.ArrayList;
 
-public class DragDropList extends JList {
+public class DragDropList extends JList<Mod> {
     public DefaultListModel<Mod> model;
 
     public DragDropList(ArrayList<Mod> list, String instpath) {
-        super(new DefaultListModel<Mod>());
-        //noinspection unchecked
+        super(new DefaultListModel<>());
         model = (DefaultListModel<Mod>) getModel();
         for (Mod element : list) {
             model.addElement(element);

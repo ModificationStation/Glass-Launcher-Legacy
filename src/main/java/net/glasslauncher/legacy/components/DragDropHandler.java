@@ -47,7 +47,7 @@ class DragDropHandler extends TransferHandler {
                     if (modName.contains(".")) {
                         modName = modName.substring(0, modName.lastIndexOf('.'));
                     }
-                    model.add(dropIndex, new Mod(file.getName(), modName, 0, true, new String[]{}, ""));
+                    model.add(dropIndex, new Mod(file.getName(), modName, true, new String[]{""}, ""));
                     Files.copy(file.toPath(), new File(instpath + "mods/" + file.getName()).toPath());
                     dropIndex++;
                 }

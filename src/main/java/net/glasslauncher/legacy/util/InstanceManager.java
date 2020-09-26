@@ -260,7 +260,7 @@ public class InstanceManager {
                 hasCustomJar = true;
             }
             else if (component.getCachedName() != null) {
-                modList.getJarMods().add(modList.getJarMods().size(), new Mod(component.getUid().replace("org.multimc.jarmod.", "") + ".jar", component.getCachedName(), 0, !component.isDisabled(), new String[]{}, ""));
+                modList.getJarMods().add(modList.getJarMods().size(), new Mod(component.getUid().replace("org.multimc.jarmod.", "") + ".jar", component.getCachedName(), !component.isDisabled(), new String[]{}, ""));
             }
         }
 

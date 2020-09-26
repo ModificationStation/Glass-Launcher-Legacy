@@ -12,9 +12,8 @@ public class Mod {
     @Expose private String[] authors = new String[]{};
     @Expose private String description = "";
 
-    public Mod(String modFileName, String modName, long modType, boolean modEnabled, String[] authors, String description) {
+    public Mod(String modFileName, String modName, boolean modEnabled, String[] authors, String description) {
         this.fileName = modFileName;
-        this.type = modType;
         this.name = modName;
         this.enabled = modEnabled;
         this.authors = authors;
