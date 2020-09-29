@@ -37,7 +37,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.CopyOption;
 import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -49,6 +52,7 @@ public class OptionsWindow extends JDialog {
     private DragDropList modDragDropList;
     private ModRepoList modRepoList;
 
+    private DragDropList loaderModDragDropList;
     private ArrayList<Mod> loaderMods;
 
     private String instPath;
@@ -257,13 +261,8 @@ public class OptionsWindow extends JDialog {
         JButtonScalingFancy toggleModsButton = new JButtonScalingFancy();
         toggleModsButton.setText("Toggle Selected Mods");
         toggleModsButton.addActionListener(event -> {
-            for (Object modObj : modDragDropList.getSelectedValuesList()) {
-                if (modObj instanceof Mod) {
-                    Mod mod = (Mod) modObj;
-                    mod.setEnabled(!mod.isEnabled());
-                } else {
-                    Main.getLogger().severe("Mod object not instance of Mod!");
-                }
+            for (Mod mod : modDragDropList.getSelectedValuesList()) {
+                mod.setEnabled(!mod.isEnabled());
             }
             modDragDropList.repaint();
         });
@@ -357,24 +356,29 @@ public class OptionsWindow extends JDialog {
 
         loaderMods = new ArrayList<>();
         JScrollPane modListScroll = new JScrollPane();
-        modDragDropList = new ModLocalList(loaderMods, instPath, modDetailsPanel);
+        loaderModDragDropList = new ModLocalList(loaderMods, instPath, modDetailsPanel);
         refreshLoaderModList();
         modListScroll.setBounds(20, 20, 200, 200);
-        modListScroll.setViewportView(modDragDropList);
+        modListScroll.setViewportView(loaderModDragDropList);
 
         JButtonScalingFancy toggleModsButton = new JButtonScalingFancy();
         toggleModsButton.setText("Toggle Selected Mods");
         toggleModsButton.addActionListener(event -> {
-            for (Object modObj : modDragDropList.getSelectedValuesList()) {
-                if (modObj instanceof Mod) {
-                    Mod mod = (Mod) modObj;
-                    mod.setEnabled(!mod.isEnabled());
-
-                } else {
-                    Main.getLogger().severe("Mod object not instance of Mod!");
+            for (Mod mod : loaderModDragDropList.getSelectedValuesList()) {
+                try {
+                    File modFile = new File(instPath + ".minecraft/mods/" + mod.getFileName());
+                    if (modFile.getAbsolutePath().endsWith(".disabled")) {
+                        Files.move(modFile.toPath(), Paths.get(modFile.toString().replaceFirst("\\.disabled$", "")));
+                    } else {
+                        Files.move(modFile.toPath(), Paths.get(modFile.getAbsolutePath() + ".disabled"));
+                    }
+                } catch (IOException e) {
+                    Main.getLogger().severe("Failed to rename mod \"" + mod.getFileName() + "\"!");
+                    e.printStackTrace();
                 }
+                refreshLoaderModList();
             }
-            modDragDropList.repaint();
+            loaderModDragDropList.repaint();
         });
         toggleModsButton.setBounds(20, 230, 200, 22);
 
@@ -495,10 +499,10 @@ public class OptionsWindow extends JDialog {
                 loaderMods.add(loaderMods.size(), LocalMods.getModInfo(instPath, modFile.getName()));
             }
         }
-        modDragDropList.model.clear();
+        loaderModDragDropList.model.clear();
         for (Mod mod : loaderMods) {
-            modDragDropList.model.addElement(mod);
+            loaderModDragDropList.model.addElement(mod);
         }
-        modDragDropList.repaint();
+        loaderModDragDropList.repaint();
     }
 }

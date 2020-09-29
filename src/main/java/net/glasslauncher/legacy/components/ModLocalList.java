@@ -5,6 +5,7 @@ import net.glasslauncher.legacy.jsontemplate.Mod;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
+import java.awt.Color;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,16 +23,21 @@ public class ModLocalList extends DragDropList {
                 Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 Mod mod = (Mod) value;
                 setText(" " + mod.getName());
-                //setBackground(new Color(52, 52, 52));
-                //setForeground(new Color(218, 218, 218));
-                if (isSelected && !lastRendered.equals(mod.getFileName())) {
+                if (mod.isEnabled()) {
+                    setBackground(new Color(204, 255, 204));
+                } else {
+                    setBackground(new Color(255, 230, 230));
+                }
+                if (isSelected) {
                     setBackground(getBackground().darker());
-                    try {
-                        panel.setLocalMod(mod);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    if (!lastRendered.equals(mod.getFileName())) {
+                        try {
+                            panel.setLocalMod(mod);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        lastRendered = mod.getFileName();
                     }
-                    lastRendered = mod.getFileName();
                 }
                 return c;
             }
