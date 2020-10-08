@@ -13,22 +13,36 @@ repositories {
 }
 
 dependencies {
+    // Used for unit tests. Unused and safe to remove.
     testCompile group: 'junit', name: 'junit', version: '4.12'
 
+    // Used to make handling data objects far easier.
     compileOnly 'org.projectlombok:lombok:1.18.10'
     annotationProcessor 'org.projectlombok:lombok:1.18.10'
 
+    // Used to run the proxy included in the launcher.
     // https://github.com/adamfisk/LittleProxy/releases/download
     compile group: 'com.github.shs96c', name: 'littleproxy', version: '1fcc11f'
+
+    // Used to hijack and replace urls in the proxy included in glass-launcher.
     // https://repo1.maven.org/maven2/com/github/ganskef/littleproxy-mitm
     compile (group: 'com.github.ganskef', name: 'littleproxy-mitm', version: '1.1.0' ) {
         exclude group: "org.littleshoot", module: "littleproxy"
     }
+
+    // Used to handle JSON data objects.
     // https://repo1.maven.org/maven2/com/google/code/gson/gson
     implementation 'com.google.code.gson:gson:2.8.6'
+
+    // Used to validate various URIs.
     // https://mvnrepository.com/artifact/commons-validator/commons-validator
     compile group: 'commons-validator', name: 'commons-validator', version: '1.6'
 
+    // Used to verify Minecraft and program arguments.
+    // https://mvnrepository.com/artifact/commons-cli/commons-cli
+    compile group: 'commons-cli', name: 'commons-cli', version: '1.4'
+
+    // Used for parsing markdown various markdown styles. Has custom markdown support too.
     compile "com.atlassian.commonmark:commonmark:0.15.2"
     compile "com.atlassian.commonmark:commonmark-ext-autolink:0.15.2"
 
@@ -53,8 +67,13 @@ dependencies {
     compile "tk.valoeghese:ZoesteriaConfig:1.3.2"
     // Fabric Loader dependencies end
 
+    // Used to launch Minecraft.
     compile "com.github.minecraft-cursed-legacy:cursed-fabric-loader:453b245"
+
+    // Used to handle accessing the mod repo.
     compile group: "net.glasslauncher.repo", name: "glass-site-java-api", version: "0.4"
+
+    // Various utility classes that help dramatically with handling files and URLs.
     compile group: "net.glasslauncher", name: "commons", version: "1.0"
 
 }
@@ -62,16 +81,20 @@ dependencies {
 group 'glass-launcher'
 version '0.4.5'
 
+// Tells gradle to scream at you if you try to use any post Java 8 features.
 sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
 }
 
+// Ensures encoding doesn't get screwed up when compiling on various OSes and language encodings.
+// If you get an error when compiling, remove any special characters you added.
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
+// Debug task for when repos break.
 task listrepos {
     doLast {
         println "Repositories:"
@@ -90,13 +113,14 @@ createExe {
         delete("${buildDir}/${launch4j.outputDir}/${launch4j.libraryDir}")
     }
 }
+
 tasks.createExe.dependsOn(tasks.shadowJar)
 
 tasks.build.dependsOn(tasks.createExe)
 
 jar {
     manifest {
-        attributes 'Implementation-Title': 'Gradle Quickstart',
+        attributes 'Implementation-Title': 'Glass Launcher Legacy',
                 'Implementation-Version': version,
                 'Main-Class': 'net.glasslauncher.legacy.Main'
     }
