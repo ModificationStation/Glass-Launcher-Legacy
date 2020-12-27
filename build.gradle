@@ -116,7 +116,7 @@ createExe {
 
 tasks.createExe.dependsOn(tasks.shadowJar)
 
-tasks.build.dependsOn(tasks.createExe)
+//tasks.build.dependsOn(tasks.createExe)
 
 jar {
     manifest {
