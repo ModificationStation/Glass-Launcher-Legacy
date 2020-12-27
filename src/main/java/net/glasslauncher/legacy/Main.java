@@ -11,6 +11,7 @@ public class Main {
     public static MainWindow mainwin;
 
     public static void main(String[] args) {
+        System.out.println("Maybe");
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
