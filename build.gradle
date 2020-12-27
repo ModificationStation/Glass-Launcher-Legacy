@@ -114,7 +114,7 @@ createExe {
     }
 }
 
-tasks.createExe.dependsOn(tasks.shadowJar)
+tasks.build.dependsOn(tasks.shadowJar)
 
 //tasks.build.dependsOn(tasks.createExe)
 
