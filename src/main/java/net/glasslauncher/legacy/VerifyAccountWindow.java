@@ -4,7 +4,7 @@ import lombok.Getter;
 import net.glasslauncher.legacy.components.HintPasswordField;
 import net.glasslauncher.legacy.components.HintTextField;
 import net.glasslauncher.legacy.components.JButtonScaling;
-import net.glasslauncher.legacy.mc.LaunchArgs;
+import net.glasslauncher.legacy.util.MojangLoginHandler;
 
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -35,8 +35,8 @@ public class VerifyAccountWindow extends JDialog {
 
         // Username field
         username = new HintTextField("Username or Email");
-        if (Config.getLauncherConfig().getLastUsedName() != null) {
-            username.setText(Config.getLauncherConfig().getLastUsedName());
+        if (Config.getLauncherConfig().getLastUsedEmail() != null) {
+            username.setText(Config.getLauncherConfig().getLastUsedEmail());
         }
         username.setBounds(10, 14, 166, 22);
         username.addActionListener((e) -> {
@@ -75,13 +75,19 @@ public class VerifyAccountWindow extends JDialog {
         if (password.getForeground() != Color.gray) {
             pass = String.valueOf(password.getPassword());
         }
-        if (!pass.isEmpty() && (new LaunchArgs()).login(username.getText(), pass) != null) {
-            Config.getLauncherConfig().setLastUsedName(username.getText());
+        if (!pass.isEmpty() && !username.getText().isEmpty()) {
+            MojangLoginHandler.login(username.getText(), pass);
+            if (Config.getLauncherConfig().getLoginInfo() == null) {
+                JOptionPane.showMessageDialog(this, "Invalid username or password.");
+                password.setText("");
+                return;
+            }
+            Config.getLauncherConfig().setLastUsedEmail(username.getText());
             Config.getLauncherConfig().saveFile();
             loginValid = true;
             dispose();
         } else {
-            JOptionPane.showMessageDialog(this, "Invalid username or password.");
+            JOptionPane.showMessageDialog(this, "Username or password is empty.");
             password.setText("");
         }
     }

@@ -9,36 +9,37 @@ import net.glasslauncher.legacy.Main;
 import net.glasslauncher.legacy.jsontemplate.InstanceConfig;
 import net.glasslauncher.legacy.jsontemplate.MCVersion;
 import net.glasslauncher.proxy.Proxy;
+import org.checkerframework.checker.units.qual.C;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.logging.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class Wrapper {
     private final String instance;
 
-    private ArrayList<String> args;
+    private final ArrayList<String> args;
     private InstanceConfig instJson;
 
     private Proxy proxy = null;
 
-    public Wrapper(String[] launchArgs) {
-        // 0: username, 1: session, 2: version, 3: doproxy, 4: instance
-        if (launchArgs.length < 5) {
-            Main.getLogger().severe("Got " + launchArgs.length + " args, expected 5.");
-        }
-        this.instance = launchArgs[4];
+    private final Logger logger = CommonConfig.makeLogger("Minecraft", "minecraft");
+
+    public Wrapper() {
+        this.instance = Config.getLauncherConfig().getLastUsedInstance();
         String instPath = CommonConfig.GLASS_PATH + "instances/" + instance + "/.minecraft";
 
         this.getConfig();
         Map<String, MCVersion> mappings = Config.getMcVersions().getMappings();
 
         if (mappings.containsKey(instJson.getVersion())) {
-            Main.getLogger().info("Downloading intermediary mappings for " + instJson.getVersion());
+            Main.LOGGER.info("Downloading intermediary mappings for " + instJson.getVersion());
             FileUtils.downloadFile(mappings.get(instJson.getVersion()).getUrl(), Config.CACHE_PATH + "intermediary_mappings/", null, instJson.getVersion() + ".tiny");
 
             try {
@@ -61,18 +62,18 @@ public class Wrapper {
 
         }
         else {
-            Main.getLogger().info("No intermediary mappings found for " + instJson.getVersion());
+            Main.LOGGER.info("No intermediary mappings found for " + instJson.getVersion());
         }
 
         String extraCP = "";
         if (new File(Config.CACHE_PATH + "intermediary_mappings/" + instJson.getVersion() + ".jar").exists()) {
-            Main.getLogger().info("Adding intermediary mappings for " + instJson.getVersion() + " to classpath.");
+            Main.LOGGER.info("Adding intermediary mappings for " + instJson.getVersion() + " to classpath.");
             extraCP = ";" + Config.CACHE_PATH + "intermediary_mappings/" + instJson.getVersion() + ".jar";
         }
 
         this.args = new ArrayList<>();
         args.add(Config.JAVA_BIN);
-        if (launchArgs[3].equals("true")) {
+        if (instJson.isProxySound() || instJson.isProxyCape() || instJson.isProxySkin() || instJson.isProxyLogin()) {
             args.add("-Dhttp.proxyHost=127.0.0.1");
             args.add("-Dhttp.proxyPort=" + Config.PROXY_PORT);
             boolean[] proxyArgs = new boolean[]{
@@ -106,10 +107,12 @@ public class Wrapper {
         args.add("--gameDir");
         args.add(instPath);
         args.add("--username");
-        args.add(launchArgs[0]);
+        args.add(Config.getLauncherConfig().getLoginInfo().getUsername());
         args.add("--session");
-        args.add(launchArgs[1]);
-        //args.add("--title=Minecraft " + launchArgs[2]);
+        args.add(Config.getLauncherConfig().getLoginInfo().getAccessToken());
+        if (instJson.getVersion() != null && !instJson.getVersion().toLowerCase().equals("none")) {
+            args.add("--title=Minecraft " + instJson.getVersion());
+        }
     }
 
     private void getConfig() {
@@ -117,13 +120,13 @@ public class Wrapper {
         File confFile = new File(instPath + "/instance_config.json");
 
         if (!confFile.exists()) {
-            Main.getLogger().info("Config file does not exist! Using defaults.");
+            Main.LOGGER.info("Config file does not exist! Using defaults.");
             instJson = new InstanceConfig(instPath + "/instance_config.json");
         } else {
             try {
                 instJson = (InstanceConfig) JsonConfig.loadConfig(confFile.getPath(), InstanceConfig.class);
             } catch (Exception e) {
-                Main.getLogger().info("Config file cannot be read! Using defaults.");
+                Main.LOGGER.info("Config file cannot be read! Using defaults.");
                 instJson = new InstanceConfig(instPath + "/instance_config.json");
                 e.printStackTrace();
             }
@@ -143,14 +146,25 @@ public class Wrapper {
         mcEnv.put("user.home", newAppData);
         mcEnv.put("fabric.gameJarPath", Config.getInstancePath(instance) + ".minecraft/bin/minecraft.jar");
 
-        Process mc;
         try {
-            mc = mcInit.start();
-            StreamGobbler mcStdout = new StreamGobbler(mc.getInputStream(), System.out);
-            StreamGobbler mcStderr = new StreamGobbler(mc.getErrorStream(), System.err);
+            logger.setUseParentHandlers(false);
+            ConsoleHandler consoleHandler = new ConsoleHandler();
+            consoleHandler.setFormatter(new MinecraftFormatter());
+            logger.addHandler(consoleHandler);
+            logger.getHandlers()[0].setFormatter(new MinecraftFormatter());
+            Field pattern = logger.getHandlers()[0].getClass().getDeclaredField("pattern");
+            pattern.setAccessible(true);
+            logger.info("Logging minecraft output to \"" + pattern.get(logger.getHandlers()[0]) + "\"");
+            Process mc = mcInit.start();
+            MinecraftLogInterceptor mcStdout = new MinecraftLogInterceptor(mc.getInputStream(), logger, false);
+            MinecraftLogInterceptor mcStderr = new MinecraftLogInterceptor(mc.getErrorStream(), logger, true);
             mcStdout.start();
             mcStderr.start();
-            (new Monitor(mc, proxy)).start();
+
+            (new Monitor(mc, proxy, () -> {
+                logger.removeHandler(consoleHandler);
+                consoleHandler.close();
+            })).start();
 
         } catch (Exception e) {
             e.printStackTrace();

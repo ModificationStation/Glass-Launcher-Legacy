@@ -1,6 +1,5 @@
 package net.glasslauncher.legacy.components;
 
-
 import javax.swing.JPasswordField;
 import java.awt.Color;
 import java.awt.event.FocusEvent;
@@ -45,10 +44,12 @@ public class HintPasswordField extends JPasswordField {
     public void setText(String text) {
         if (text.isEmpty()) {
             setText(hint);
+            setEchoChar((char) 0);
             setForeground(hintColor);
         }
         else {
             super.setText(text);
+            setEchoChar('•');
             setForeground(defaultColor);
         }
     }

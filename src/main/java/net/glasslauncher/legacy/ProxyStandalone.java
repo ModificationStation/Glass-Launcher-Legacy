@@ -26,7 +26,7 @@ public class ProxyStandalone {
             }
         }
         if (!doSound && !doSkin && !doCape && !doLogin) {
-            Main.getLogger().info("No proxy arguments provided! Defaulting to all enabled.");
+            Main.LOGGER.info("No proxy arguments provided! Defaulting to all enabled.");
             doSound = true;
             doSkin = true;
             doCape = true;

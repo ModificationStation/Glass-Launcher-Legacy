@@ -9,14 +9,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.util.logging.*;
 
-public class StreamGobbler extends Thread {
+public class MinecraftLogInterceptor extends Thread {
     private InputStream in;
-    private PrintStream out;
+    private Logger out;
+    private boolean isErr;
 
-    StreamGobbler(InputStream in, PrintStream out) {
+    MinecraftLogInterceptor(InputStream in, Logger out, boolean isErr) {
         this.in = in;
         this.out = out;
+        this.isErr = isErr;
     }
 
     @Override
@@ -25,7 +28,10 @@ public class StreamGobbler extends Thread {
             BufferedReader input = new BufferedReader(new InputStreamReader(in));
             String line;
             while ((line = input.readLine()) != null)
-                out.println(line);
+                if (isErr)
+                    out.severe(line);
+                else
+                    out.info(line);
         } catch (IOException e) {
             e.printStackTrace();
         }

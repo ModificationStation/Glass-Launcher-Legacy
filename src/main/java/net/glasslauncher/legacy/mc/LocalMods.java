@@ -44,7 +44,7 @@ public class LocalMods {
                                 "<b style=\"font-size: 20px\">Authors</b>:<br>" + String.join("<br>", fabricMod.getAuthors())
                 );
             } else {
-                Main.getLogger().info("No fabric.mod.json found in \"" + modFileName + "\"" );
+                Main.LOGGER.info("No fabric.mod.json found in \"" + modFileName + "\"" );
                 modInfo = new Mod(modFileName, (modFileName.endsWith(".zip") || modFileName.endsWith(".jar"))? modFileName.substring(0, modFileName.lastIndexOf('.')) : modFileName, true, new String[]{""}, "This mod has no fabric.mod.json file. This most likely means it is a ModLoader/Forge mod.");
             }
         } catch (Exception e) {

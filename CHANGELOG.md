@@ -1,9 +1,14 @@
 #### v0.5
-\* The Options and Instances windows are now themed.  
-\* Knot is now used to launch Minecraft instead of EasyMineLauncher. This should fix Minecraft hanging when being closed.  
-\+ Added glass-repo integration.  
-\+ Added the `-help` paramater.  
-\+ Added basic mod repo support.  
+\+ Added some basic glass-repo integration.  
+\+ Added the `-help` and `-h` paramater.  
+\+ Added a mod info panel for viewing info about mods, if they have info attached.  
+\+ Added Microsoft account support.
+\+ Added a proper logger for minecraft so you can get an isolated minecraft log inside of `.glass-launcher/logs/minecraft` now.  
+\+ Made the launcher a bit more verbose when doing background tasks.  
+\* The Options and Instances windows are now themed. This is togglable inside the instances window if you prefer the plain theme.  
+\* Knot is now used to launch Minecraft instead of EasyMineLauncher. This should fix Minecraft hanging when being closed, as well as adding [Cursed Fabric](https://github.com/minecraft-cursed-legacy/Cursed-fabric-loader) support.  
+\* Changed how authentication is handled. It is now much less janky and will now remember your auth token.  
+\* Updated dependencies used in glass-launcher.  
 \- Cleared up a few unused classes and images.
 
 #### v0.4.5

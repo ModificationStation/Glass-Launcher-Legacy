@@ -35,10 +35,10 @@ public class ConsoleWindow extends JFrame {
         addWindowListener(new WindowAdapter() {
                               public void windowClosing(WindowEvent we) {
                                   if (!Main.isLauncherActive()) {
-                                      Main.getLogger().info("Closing...");
+                                      Main.LOGGER.info("Closing...");
                                       System.exit(0);
                                   }
-                                  Main.getLogger().info("Close the launcher using the main window!");
+                                  Main.LOGGER.info("Close the launcher using the main window!");
                               }
                           }
         );

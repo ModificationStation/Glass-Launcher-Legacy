@@ -1,14 +1,16 @@
 package net.glasslauncher.legacy;
 
-import lombok.Getter;
 import net.glasslauncher.common.CommonConfig;
 
 import javax.swing.UIManager;
 import java.util.logging.Logger;
 
 public class Main {
-    @Getter private static Logger logger = CommonConfig.makeLogger("GlassLauncher", "glass-launcher");
+    public static final Logger LOGGER = CommonConfig.makeLogger("GlassLauncher", "glass-launcher");
+
     public static MainWindow mainwin;
+
+    public static boolean hasAuthToken = false;
 
     public static void main(String[] args) {
         try {
@@ -24,11 +26,11 @@ public class Main {
 
         ConsoleWindow console = null;
         if (System.console() != null) {
-            getLogger().info("Detected running with a console.");
+            LOGGER.info("Detected running with a console.");
         }
         else {
             console = new ConsoleWindow();
-            getLogger().info("Detected not running with a console. Creating a console window...");
+            LOGGER.info("Detected not running with a console. Creating a console window...");
         }
 
         try {
@@ -42,8 +44,8 @@ public class Main {
                 ProxyStandalone.main(args);
                 return;
             }
-            else if (arg.equals("-help")) {
-                getLogger().info(
+            else if (arg.equals("-help") || arg.equals("-h")) {
+                LOGGER.info(
                         "\n" +
                                 "-proxy      : Launches in proxy only mode. No GUI aside from the console is shown. Defaults to all options enabled unless other paramaters are passed.\n" +
                                 " -dosound   : Enables the sound part of the proxy.\n" +

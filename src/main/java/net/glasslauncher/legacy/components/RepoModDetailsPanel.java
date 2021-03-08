@@ -9,7 +9,6 @@ import net.glasslauncher.repo.api.mod.jsonobj.Version;
 
 import javax.swing.Box;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.awt.Component;
@@ -43,11 +42,11 @@ public class RepoModDetailsPanel extends ModDetailsPanel {
                     URL url = version.getDownloadURL("client", "jar");
                     String path;
                     if (version.getType().equals("Mod Folder")) {
-                        Main.getLogger().info("Downloading mod to mods folder.");
+                        Main.LOGGER.info("Downloading mod to mods folder.");
                         path = Config.getInstancePath(instance) + ".minecraft/mods";
                     }
                     else if (version.getType().equals("Base Edit") || version.getType().equals("jarmod")) {
-                        Main.getLogger().info("Downloading mod to jar mods folder.");
+                        Main.LOGGER.info("Downloading mod to jar mods folder.");
                         path = Config.getInstancePath(instance) + "mods";
                     }
                     else {

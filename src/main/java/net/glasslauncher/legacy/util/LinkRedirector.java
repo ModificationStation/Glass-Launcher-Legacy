@@ -55,11 +55,11 @@ public class LinkRedirector implements ChangeListener<Worker.State>, EventListen
                 URI uri = new URI(url);
                 Desktop.getDesktop().browse(uri);
             } catch (Throwable e) {
-                Main.getLogger().severe("Error on opening link \"" + url + "\" in system browser.");
+                Main.LOGGER.severe("Error on opening link \"" + url + "\" in system browser.");
                 e.printStackTrace();
             }
         } else {
-            Main.getLogger().warning("OS does not support desktop operations like browsing. Cannot open link \"" + url + "\".");
+            Main.LOGGER.warning("OS does not support desktop operations like browsing. Cannot open link \"" + url + "\".");
         }
     }
 }

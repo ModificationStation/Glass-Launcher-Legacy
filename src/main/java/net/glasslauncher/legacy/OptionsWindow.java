@@ -307,9 +307,7 @@ public class OptionsWindow extends JDialog {
         addModsButton.setText("Add Mods");
         addModsButton.addActionListener(event -> {
             FileDialog fileChooser = new FileDialog(this, "Select Mod");
-            fileChooser.setFilenameFilter((e, str) -> {
-                return str.endsWith(".jar") || str.endsWith(".zip");
-            });
+            fileChooser.setFilenameFilter((e, str) -> str.endsWith(".jar") || str.endsWith(".zip"));
             fileChooser.setMultipleMode(true);
             fileChooser.setVisible(true);
             File[] files = fileChooser.getFiles();
@@ -371,7 +369,7 @@ public class OptionsWindow extends JDialog {
                         Files.move(modFile.toPath(), Paths.get(modFile.getAbsolutePath() + ".disabled"));
                     }
                 } catch (IOException e) {
-                    Main.getLogger().severe("Failed to rename mod \"" + mod.getFileName() + "\"!");
+                    Main.LOGGER.severe("Failed to rename mod \"" + mod.getFileName() + "\"!");
                     e.printStackTrace();
                 }
                 refreshLoaderModList();
@@ -384,9 +382,7 @@ public class OptionsWindow extends JDialog {
         addModsButton.setText("Add Mods");
         addModsButton.addActionListener(event -> {
             FileDialog fileChooser = new FileDialog(this, "Select Mod");
-            fileChooser.setFilenameFilter((e, str) -> {
-                return str.endsWith(".jar") || str.endsWith(".zip");
-            });
+            fileChooser.setFilenameFilter((e, str) -> str.endsWith(".jar") || str.endsWith(".zip"));
             fileChooser.setMultipleMode(true);
             fileChooser.setVisible(true);
             File[] files = fileChooser.getFiles();
@@ -431,9 +427,7 @@ public class OptionsWindow extends JDialog {
         modRepoPanel.add(modDetailsPanel);
 
         // Async cause otherwise options freezes when opening for 1-5 seconds.
-        new Thread(() -> {
-            refreshRepo();
-        }).start();
+        new Thread(this::refreshRepo).start();
 
         JScrollPane modListScroll = new JScrollPane();
         modListScroll.getViewport().setBackground(new Color(52, 52, 52));

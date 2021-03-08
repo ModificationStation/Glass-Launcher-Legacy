@@ -56,12 +56,12 @@ public class Proxy extends Thread {
     public void start() {
         httpProxyServer = serverBoot.start();
         httpServer.start();
-        Main.getLogger().info("Proxy servers started!");
+        Main.LOGGER.info("Proxy servers started!");
     }
 
     public void exit() {
         httpProxyServer.stop();
         httpServer.stop(0);
-        Main.getLogger().info("Proxy servers stopped!");
+        Main.LOGGER.info("Proxy servers stopped!");
     }
 }

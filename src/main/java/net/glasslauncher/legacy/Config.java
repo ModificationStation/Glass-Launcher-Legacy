@@ -10,6 +10,7 @@ import net.glasslauncher.legacy.jsontemplate.MCVersions;
 
 import java.io.File;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -83,7 +84,7 @@ public class Config {
     /**
      * The version of the launcher.
      */
-    public static final String VERSION = Main.class.getPackage().getImplementationVersion();
+    public static final String VERSION = Main.class.getPackage().getImplementationVersion() != null? Main.class.getPackage().getImplementationVersion() : "Dev Env";
 
     /**
      * The path of the launcher's cache files.
@@ -108,7 +109,7 @@ public class Config {
         mcVersions = gson.fromJson(new InputStreamReader(Main.class.getResourceAsStream("assets/mcversions.json")), MCVersions.class);
         launcherConfig = (LauncherConfig) JsonConfig.loadConfig(CommonConfig.GLASS_PATH + "launcher_config.json", LauncherConfig.class);
         if (launcherConfig == null) {
-            Main.getLogger().info("Generating new launcher config.");
+            Main.LOGGER.info("Generating new launcher config.");
             launcherConfig = new LauncherConfig(CommonConfig.GLASS_PATH + "launcher_config.json");
         }
     }
@@ -175,9 +176,21 @@ public class Config {
         return CommonConfig.GLASS_PATH + "instances/" + instance + "/";
     }
 
+    public static URL msAuthURL;
+
     static {
         if (Config.OS.equals("windows")) {
             destDirBypass = "\\\\?\\";
+        }
+        try {
+            msAuthURL = new URL("https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize" +
+                    "?client_id=378f5e54-dc51-4d4d-ac0c-a3cceae485bf" +
+                    "&response_type=code" +
+                    "&redirect_uri=https://login.microsoftonline.com/common/oauth2/nativeclient" +
+                    "&scope=XboxLive.signin%20offline_access");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Main.LOGGER.info("This should be impossible!");
         }
     }
 }

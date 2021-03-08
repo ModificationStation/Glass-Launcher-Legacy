@@ -84,7 +84,7 @@ public class TempZipFile {
             try {
                 original.delete();
             } catch (Exception e) {
-                Main.getLogger().info("Failed to delete/check read permissions for \"" + originalPath + "\"");
+                Main.LOGGER.info("Failed to delete/check read permissions for \"" + originalPath + "\"");
                 e.printStackTrace();
                 return;
             }
@@ -100,12 +100,12 @@ public class TempZipFile {
                 Process zipProcess = processBuilder.start();
                 zipProcess.waitFor(10, TimeUnit.MINUTES);
                 if (zipProcess.isAlive()) {
-                    Main.getLogger().warning("Zip process has been running for longer than 10 minutes! Terminating process...");
-                    Main.getLogger().warning("Target folder to zip was: \"" + tempPath + "\"");
+                    Main.LOGGER.warning("Zip process has been running for longer than 10 minutes! Terminating process...");
+                    Main.LOGGER.warning("Target folder to zip was: \"" + tempPath + "\"");
                     zipProcess.destroy();
                     zipProcess.waitFor(10, TimeUnit.SECONDS);
                     if (zipProcess.isAlive()) {
-                        Main.getLogger().warning("Zip process has taken longer than 10 seconds to terminate! Force terminating process...");
+                        Main.LOGGER.warning("Zip process has taken longer than 10 seconds to terminate! Force terminating process...");
                         zipProcess.destroyForcibly();
                     }
                 }

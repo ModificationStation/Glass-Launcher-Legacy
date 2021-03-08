@@ -85,7 +85,7 @@ public class HttpJoinHandler implements HttpHandler {
 			}
 			t.close();
 		} catch (Exception e) {
-            Main.getLogger().severe("Exception while handling join:");
+            Main.LOGGER.severe("Exception while handling join:");
             try {
                 t.sendResponseHeaders(500, 0);
             } catch (Exception ignored) {}

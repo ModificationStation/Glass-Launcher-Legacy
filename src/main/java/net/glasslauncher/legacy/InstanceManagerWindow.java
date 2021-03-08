@@ -4,17 +4,12 @@ import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.common.FileUtils;
 import net.glasslauncher.legacy.components.HintTextField;
 import net.glasslauncher.legacy.components.JButtonScalingFancy;
+import net.glasslauncher.legacy.components.JLabelFancy;
 import net.glasslauncher.legacy.components.JPanelBackgroundImage;
 import net.glasslauncher.legacy.components.JTextFieldFancy;
 import net.glasslauncher.legacy.util.InstanceManager;
 
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.Component;
 import java.awt.Desktop;
@@ -32,6 +27,9 @@ class InstanceManagerWindow extends JDialog {
     private JPanel deletePanel = new JPanel();
     private JPanel panel;
 
+    private JCheckBox hideMSCheckbox;
+    private JCheckBox disableThemeCheckbox;
+
     InstanceManagerWindow(Frame frame) {
         super(frame);
         setModal(true);
@@ -43,7 +41,7 @@ class InstanceManagerWindow extends JDialog {
         setTitle("Instance Manager");
         addWindowListener(new WindowAdapter() {
                               public void windowClosing(WindowEvent we) {
-                                      Main.getLogger().info("Closing instance manager...");
+                                      Main.LOGGER.info("Closing instance manager...");
                                       dispose();
                               }
                           }
@@ -93,9 +91,7 @@ class InstanceManagerWindow extends JDialog {
         instanceZipSelectButton.setText("...");
         instanceZipSelectButton.addActionListener(event -> {
             FileDialog fileChooser = new FileDialog(this, "Select Modpack");
-            fileChooser.setFilenameFilter((e, str) -> {
-                return str.endsWith(".zip");
-            });
+            fileChooser.setFilenameFilter((e, str) -> str.endsWith(".zip"));
             fileChooser.setVisible(true);
             try {
                 String file = fileChooser.getFiles()[0].getAbsolutePath();
@@ -153,14 +149,39 @@ class InstanceManagerWindow extends JDialog {
         JButton instanceFolderButton = new JButtonScalingFancy();
         instanceFolderButton.setText("Open Instances Folder");
         instanceFolderButton.addActionListener((e) -> {
-            Main.getLogger().info("Opening instances folder...");
+            Main.LOGGER.info("Opening instances folder...");
             try {
                 Desktop.getDesktop().open(new File(CommonConfig.GLASS_PATH + "instances"));
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
         });
-        instanceFolderButton.setBounds(5, 257, 150, 22);
+        instanceFolderButton.setBounds(5, 247, 150, 22);
+
+        JLabelFancy hideMSButtonLabel = new JLabelFancy("Hide MS Login Button:");
+        hideMSButtonLabel.setBounds(400, 247, 120, 20);
+
+        hideMSCheckbox = new JCheckBox();
+        hideMSCheckbox.setOpaque(false);
+        hideMSCheckbox.setBounds(530, 247, 20, 20);
+        hideMSCheckbox.setSelected(Config.getLauncherConfig().isHidingMSButton());
+
+        JLabelFancy disableThemeLabel = new JLabelFancy("Disable Custom Theme:");
+        disableThemeLabel.setBounds(400, 223, 120, 20);
+
+        disableThemeCheckbox = new JCheckBox();
+        disableThemeCheckbox.setOpaque(false);
+        disableThemeCheckbox.setBounds(530, 223, 20, 20);
+        disableThemeCheckbox.setSelected(Config.getLauncherConfig().isThemeDisabled());
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent windowEvent) {
+                Config.getLauncherConfig().setHidingMSButton(hideMSCheckbox.isSelected());
+                Config.getLauncherConfig().setThemeDisabled(disableThemeCheckbox.isSelected());
+                Config.getLauncherConfig().saveFile();
+            }
+        });
 
         createPanel.add(installModpackDir);
         createPanel.add(installModpackDirButton);
@@ -171,6 +192,11 @@ class InstanceManagerWindow extends JDialog {
         createPanel.add(instanceVersion);
         createPanel.add(instanceVersionButton);
         createPanel.add(instanceFolderButton);
+        createPanel.add(hideMSButtonLabel);
+        createPanel.add(hideMSCheckbox);
+        createPanel.add(disableThemeLabel);
+        createPanel.add(disableThemeCheckbox);
+
         return createPanel;
     }
 

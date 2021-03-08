@@ -5,13 +5,14 @@ import net.glasslauncher.proxy.Proxy;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.function.*;
 
 public class Monitor {
     private TimerTask task;
 
     private Timer timer = new Timer();
 
-    Monitor(Process mc, Proxy proxy) {
+    Monitor(Process mc, Proxy proxy, Runnable onClose) {
 
         task = new TimerTask() {
             @Override
@@ -20,7 +21,8 @@ public class Monitor {
                     if (proxy != null) {
                         proxy.exit();
                     }
-                    Main.getLogger().info("Minecraft exited with exit code " + mc.exitValue());
+                    onClose.run();
+                    Main.LOGGER.info("Minecraft exited with exit code " + mc.exitValue());
                     timer.cancel();
                 }
             }

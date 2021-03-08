@@ -39,7 +39,7 @@ public class InstanceManager {
      */
     public static void installModpack(String path, ProgressWindow progressWindow) {
         path = path.replace("\\", "/");
-        Main.getLogger().info("Installing " + path);
+        Main.LOGGER.info("Installing " + path);
         boolean isURL = true;
         try {
             try {
@@ -88,13 +88,13 @@ public class InstanceManager {
             }
 
             if ((new File(CommonConfig.GLASS_PATH + "instances/" + instanceName)).exists()) {
-                Main.getLogger().info("Instance \"" + instanceName + "\" already exists!");
+                Main.LOGGER.info("Instance \"" + instanceName + "\" already exists!");
                 return;
             }
             if (isMultiMC) {
                 progressWindow.increaseProgress();
                 progressWindow.setProgressText("Installing MultiMC Modpack...");
-                Main.getLogger().info("Provided instance is a MultiMC instance. Importing...");
+                Main.LOGGER.info("Provided instance is a MultiMC instance. Importing...");
                 InputStream inputStream = mmcPackURL.openStream();
                 String jsonText = FileUtils.convertStreamToString(inputStream);
                 inputStream.close();
@@ -104,7 +104,7 @@ public class InstanceManager {
             } else if (instanceZipFile.getFile("instance_config.json").exists()) {
                 progressWindow.increaseProgress();
                 progressWindow.setProgressText("Installing Glass Launcher Modpack...");
-                Main.getLogger().info("Provided instance is a Glass Launcher instance. Importing...");
+                Main.LOGGER.info("Provided instance is a Glass Launcher instance. Importing...");
                 InstanceConfig instanceConfig = (InstanceConfig) JsonConfig.loadConfig(instanceZipFile.getFile("instance_config.json").getAbsolutePath(), InstanceConfig.class);
                 createBlankInstance(instanceConfig.getVersion(), instanceName, progressWindow);
                 if (new File(Config.getInstancePath(instanceName)).exists()) {
@@ -133,7 +133,7 @@ public class InstanceManager {
             JOptionPane.showMessageDialog(progressWindow, "Account not validated! Aborting.");
             return;
         }
-        Main.getLogger().info("Creating instance \"" + instance + "\" on version " + version);
+        Main.LOGGER.info("Creating instance \"" + instance + "\" on version " + version);
         String versionsCachePath = Config.CACHE_PATH + "versions";
         String instanceFolder = Config.getInstancePath(instance);
         String minecraftFolder = instanceFolder + "/.minecraft";
@@ -148,7 +148,7 @@ public class InstanceManager {
                 try {
                     Files.copy(versionCacheJar.toPath(), new File(minecraftFolder + "/bin/minecraft.jar").toPath());
                 } catch (FileAlreadyExistsException e) {
-                    Main.getLogger().info("Instance \"" + instance + "\" already exists!");
+                    Main.LOGGER.info("Instance \"" + instance + "\" already exists!");
                     return;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -218,7 +218,7 @@ public class InstanceManager {
             }
             ArrayList<File> zips = new ArrayList<>();
             for (int i = mods.getSize(); i != 0; i--) {
-                Main.getLogger().info(instance + "mods/" + mods.getElementAt(i-1).getFileName());
+                Main.LOGGER.info(instance + "mods/" + mods.getElementAt(i-1).getFileName());
                 zips.add(new File(instance + "mods/" + mods.getElementAt(i-1).getFileName()));
             }
             zips.add(vanillaJar);

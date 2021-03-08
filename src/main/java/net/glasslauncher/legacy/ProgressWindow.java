@@ -67,7 +67,7 @@ public class ProgressWindow extends JDialog {
     }
 
     public void setProgressText(String progressText) {
-        Main.getLogger().info(progressText);
+        Main.LOGGER.info(progressText);
         progressBar.setString(progressText);
         progressBar.repaint();
     }
