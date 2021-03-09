@@ -6,15 +6,35 @@ import net.glasslauncher.legacy.Main;
 import net.glasslauncher.legacy.components.events.OnModChange;
 import net.glasslauncher.legacy.util.LinkRedirector;
 import net.glasslauncher.repo.api.RepoConfig;
+import net.glasslauncher.repo.api.mod.jsonobj.Mod;
 import net.glasslauncher.repo.api.mod.jsonobj.Version;
+import org.commonmark.node.Node;
 
 import javax.swing.*;
 import java.awt.*;
 import java.net.*;
+import java.util.*;
 
 public class RepoModDetailsPanel extends ModDetailsPanel {
+
+    private Mod repoMod = null;
+
     public RepoModDetailsPanel(String instance) {
         super(instance);
+    }
+
+    @Override
+    public void setMod(Object localMod) {
+        repoMod = (Mod) localMod;
+
+        name.setText("<style>" +
+                Config.CSS + "</style><body><div style=\"font-size: 18px;\">" +
+                repoMod.getName() + " <sup style=\"font-size: 10px;\">by " +
+                repoMod.getAuthors()[0].getUsername() + "</sup></div></body>");
+        Node document = PARSER.parse(repoMod.getDescription().replace("\n", "  \n"));
+        description.setText(RENDERER.render(document));
+
+        onModChange();
     }
 
     @Override
@@ -41,12 +61,12 @@ public class RepoModDetailsPanel extends ModDetailsPanel {
                         Main.LOGGER.info("Downloading mod to mods folder.");
                         path = Config.getInstancePath(instance) + ".minecraft/mods";
                     }
-                    else if (version.getType().equals("Base Edit") || version.getType().equals("jarmod")) {
+                    else if (version.getType().equals("Base Edit")) {
                         Main.LOGGER.info("Downloading mod to jar mods folder.");
                         path = Config.getInstancePath(instance) + "mods";
                     }
                     else {
-                        JOptionPane.showMessageDialog(this, "This mod has a client file, but must be installed manually!\nOpening URL in browser.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(this, "This mod has a client file, but must be installed manually because of unknown type!\nOpening URL in browser.", "Info", JOptionPane.INFORMATION_MESSAGE);
                         LinkRedirector.openLinkInSystemBrowser(RepoConfig.REPOSITORY_URL + "mod/" + repoMod.getId() + "/versions/" + version.getVersion());
                         return;
                     }
@@ -58,6 +78,7 @@ public class RepoModDetailsPanel extends ModDetailsPanel {
                 JOptionPane.showMessageDialog(this, "This mod does not have a client file!", "Warning", JOptionPane.WARNING_MESSAGE);
             }
         });
+        downloadButton.setMinimumSize(new Dimension(60, 22));
 
         JButton openPageButton = new JButtonScalingFancy();
         openPageButton.setText("Open Page");

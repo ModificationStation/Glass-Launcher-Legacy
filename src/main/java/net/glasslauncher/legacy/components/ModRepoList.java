@@ -24,7 +24,7 @@ public class ModRepoList extends JList<ModPreview> {
                 if (isSelected && !lastRendered.equals(mod.getId())) {
                     setBackground(getBackground().darker());
                     try {
-                        panel.setRepoMod(RepoReader.getMod(mod.getId()));
+                        panel.setMod(RepoReader.getMod(mod.getId()));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

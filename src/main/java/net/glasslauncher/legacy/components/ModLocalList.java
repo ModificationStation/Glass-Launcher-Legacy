@@ -29,7 +29,7 @@ public class ModLocalList extends DragDropList {
                     setBackground(getBackground().darker());
                     if (!lastRendered.equals(mod.getFileName())) {
                         try {
-                            panel.setLocalMod(mod);
+                            panel.setMod(mod);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

@@ -3,10 +3,8 @@ package net.glasslauncher.legacy.components;
 import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.util.HtmlImgHijacker;
-import net.glasslauncher.repo.api.mod.jsonobj.Mod;
 import org.commonmark.Extension;
 import org.commonmark.ext.autolink.AutolinkExtension;
-import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 
@@ -19,17 +17,14 @@ public abstract class ModDetailsPanel extends JPanel {
 
     ArrayList<Component> componentArrayList = new ArrayList<>();
 
-    private JPanel buttons = new JPanel();
+    private final JPanel buttons = new JPanel();
 
-    private JWebView description;
-    private JTextPane name = new JTextPaneFancy();
+    protected JWebView description;
+    protected JTextPane name = new JTextPaneFancy();
 
-    private static ArrayList<Extension> extensions = new ArrayList<Extension>(){{add(AutolinkExtension.create());}};
-    private static HtmlRenderer renderer = HtmlRenderer.builder().extensions(extensions).attributeProviderFactory((c) -> new HtmlImgHijacker()).build();
-    private static Parser parser = Parser.builder().extensions(extensions).build();
-
-    Mod repoMod = null;
-    net.glasslauncher.legacy.jsontemplate.Mod localMod = null;
+    private static final ArrayList<Extension> EXTENSIONS = new ArrayList<Extension>(){{add(AutolinkExtension.create());}};
+    protected static final HtmlRenderer RENDERER = HtmlRenderer.builder().extensions(EXTENSIONS).attributeProviderFactory((c) -> new HtmlImgHijacker()).build();
+    protected static final Parser PARSER = Parser.builder().extensions(EXTENSIONS).build();
 
     String instance;
 
@@ -62,26 +57,7 @@ public abstract class ModDetailsPanel extends JPanel {
         add(buttons);
     }
 
-    public void setRepoMod(Mod repoMod) {
-        name.setText("<style>" + Config.CSS + "</style><body><div style=\"font-size: 18px;\">" + repoMod.getName() + " <sup style=\"font-size: 10px;\">by " + repoMod.getAuthors()[0].getUsername() + "</sup></div></body>");
-        Node document = parser.parse(repoMod.getDescription().replace("\n", "  \n"));
-        description.setText(renderer.render(document));
-
-        this.repoMod = repoMod;
-
-        onModChange();
-    }
-
-    public void setLocalMod(net.glasslauncher.legacy.jsontemplate.Mod mod) {
-        this.localMod = mod;
-        name.setText("<style>" +
-                Config.CSS + "</style><body><div style=\"font-size: 18px;\">" +
-                localMod.getName() + " <sup style=\"font-size: 10px;\">by " +
-                localMod.getAuthors()[0] + "</sup></div></body>");
-        description.setText(mod.getDescription());
-
-        onModChange();
-    }
+    abstract void setMod(Object localMod);
 
     abstract void onModChange();
 
