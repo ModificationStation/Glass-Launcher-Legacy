@@ -3,7 +3,7 @@ package net.glasslauncher.legacy;
 import lombok.Getter;
 import net.glasslauncher.legacy.components.HintPasswordField;
 import net.glasslauncher.legacy.components.HintTextField;
-import net.glasslauncher.legacy.components.JButtonScaling;
+import net.glasslauncher.legacy.components.templates.JButtonScaling;
 import net.glasslauncher.legacy.util.MojangLoginHandler;
 
 import javax.swing.*;

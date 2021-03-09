@@ -1,5 +1,6 @@
-package net.glasslauncher.legacy.components;
+package net.glasslauncher.legacy.components.handlers;
 
+import net.glasslauncher.legacy.components.DragDropList;
 import net.glasslauncher.legacy.jsontemplate.Mod;
 
 import javax.swing.*;
@@ -8,11 +9,11 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 
-class DragDropHandler extends TransferHandler {
+public class DragDropHandler extends TransferHandler {
     private DragDropList list;
     private String instpath;
 
-    DragDropHandler(DragDropList list, String instpath) {
+    public DragDropHandler(DragDropList list, String instpath) {
         this.list = list;
         this.instpath = instpath;
     }

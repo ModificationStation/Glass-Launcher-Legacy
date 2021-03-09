@@ -3,7 +3,7 @@ package net.glasslauncher.legacy;
 import net.chris54721.openmcauthenticator.OpenMCAuthenticator;
 import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.common.FileUtils;
-import net.glasslauncher.legacy.components.JButtonScaling;
+import net.glasslauncher.legacy.components.templates.JButtonScaling;
 import net.glasslauncher.legacy.components.JPanelDirt;
 import net.glasslauncher.legacy.components.LoginPanel;
 import net.glasslauncher.legacy.components.MinecraftLogo;

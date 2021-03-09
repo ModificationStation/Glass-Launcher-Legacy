@@ -1,4 +1,4 @@
-package net.glasslauncher.legacy.components;
+package net.glasslauncher.legacy.components.templates;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,6 +1,7 @@
 package net.glasslauncher.legacy.components;
 
 import net.glasslauncher.legacy.Config;
+import net.glasslauncher.legacy.components.templates.JButtonScaling;
 
 import java.awt.*;
 

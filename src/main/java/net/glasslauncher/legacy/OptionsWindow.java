@@ -8,7 +8,7 @@ import net.glasslauncher.legacy.components.JLabelFancy;
 import net.glasslauncher.legacy.components.JPanelBackgroundImage;
 import net.glasslauncher.legacy.components.JTextFieldFancy;
 import net.glasslauncher.legacy.components.LocalModDetailsPanel;
-import net.glasslauncher.legacy.components.ModDetailsPanel;
+import net.glasslauncher.legacy.components.templates.DetailsPanel;
 import net.glasslauncher.legacy.components.ModLocalList;
 import net.glasslauncher.legacy.components.ModRepoList;
 import net.glasslauncher.legacy.components.RepoModDetailsPanel;
@@ -332,7 +332,7 @@ public class OptionsWindow extends JDialog {
         modsPanel.setOpaque(false);
         modsPanel.setLayout(null);
 
-        ModDetailsPanel modDetailsPanel = new LocalModDetailsPanel(instName);
+        DetailsPanel modDetailsPanel = new LocalModDetailsPanel();
 
         loaderMods = new ArrayList<>();
         JScrollPane modListScroll = new JScrollPane();
@@ -406,7 +406,7 @@ public class OptionsWindow extends JDialog {
         JPanel modRepoPanel = new JPanel();
         modRepoPanel.setOpaque(false);
         modRepoPanel.setLayout(null);
-        ModDetailsPanel modDetailsPanel = new RepoModDetailsPanel(instName);
+        DetailsPanel modDetailsPanel = new RepoModDetailsPanel(instName);
         modRepoList = new ModRepoList(modDetailsPanel);
         modRepoPanel.add(modDetailsPanel);
 

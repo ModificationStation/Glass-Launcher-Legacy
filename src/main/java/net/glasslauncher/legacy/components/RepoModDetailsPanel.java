@@ -3,7 +3,7 @@ package net.glasslauncher.legacy.components;
 import net.glasslauncher.common.FileUtils;
 import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
-import net.glasslauncher.legacy.components.events.OnModChange;
+import net.glasslauncher.legacy.components.templates.DetailsPanel;
 import net.glasslauncher.legacy.util.LinkRedirector;
 import net.glasslauncher.repo.api.RepoConfig;
 import net.glasslauncher.repo.api.mod.jsonobj.Mod;
@@ -13,14 +13,15 @@ import org.commonmark.node.Node;
 import javax.swing.*;
 import java.awt.*;
 import java.net.*;
-import java.util.*;
 
-public class RepoModDetailsPanel extends ModDetailsPanel {
+public class RepoModDetailsPanel extends DetailsPanel {
 
     private Mod repoMod = null;
+    private final String instance;
 
     public RepoModDetailsPanel(String instance) {
-        super(instance);
+        super();
+        this.instance = instance;
     }
 
     @Override
@@ -34,20 +35,10 @@ public class RepoModDetailsPanel extends ModDetailsPanel {
         Node document = PARSER.parse(repoMod.getDescription().replace("\n", "  \n"));
         description.setText(RENDERER.render(document));
 
-        onModChange();
     }
 
     @Override
-    void onModChange() {
-        for (Component component : super.componentArrayList) {
-            if (component instanceof OnModChange) {
-                ((OnModChange) component).onRepoModChange(repoMod);
-            }
-        }
-    }
-
-    @Override
-    void setupButtons(JPanel buttons) {
+    public void setupButtons(JPanel buttons) {
 
         JButton downloadButton = new JButtonScalingFancy();
         downloadButton.setText("Download");

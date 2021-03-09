@@ -2,7 +2,7 @@ package net.glasslauncher.legacy;
 
 import net.glasslauncher.common.ConsoleStream;
 import net.glasslauncher.common.Pastee;
-import net.glasslauncher.legacy.components.JButtonScaling;
+import net.glasslauncher.legacy.components.templates.JButtonScaling;
 
 import javax.imageio.*;
 import javax.swing.*;

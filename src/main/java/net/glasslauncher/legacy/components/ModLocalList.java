@@ -1,5 +1,6 @@
 package net.glasslauncher.legacy.components;
 
+import net.glasslauncher.legacy.components.templates.DetailsPanel;
 import net.glasslauncher.legacy.jsontemplate.Mod;
 
 import javax.swing.*;
@@ -11,7 +12,7 @@ public class ModLocalList extends DragDropList {
     // Fix for the renderer being called twice every click for some reason.
     private String lastRendered = "";
 
-    public ModLocalList(ArrayList<Mod> mods, String instPath, ModDetailsPanel panel) {
+    public ModLocalList(ArrayList<Mod> mods, String instPath, DetailsPanel panel) {
         super(mods, instPath);
 
         this.setCellRenderer(new DefaultListCellRenderer() {

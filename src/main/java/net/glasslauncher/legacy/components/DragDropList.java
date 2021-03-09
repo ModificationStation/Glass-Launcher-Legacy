@@ -1,5 +1,7 @@
 package net.glasslauncher.legacy.components;
 
+import net.glasslauncher.legacy.components.handlers.DragDropHandler;
+import net.glasslauncher.legacy.components.handlers.DragListener;
 import net.glasslauncher.legacy.jsontemplate.Mod;
 
 import javax.swing.*;

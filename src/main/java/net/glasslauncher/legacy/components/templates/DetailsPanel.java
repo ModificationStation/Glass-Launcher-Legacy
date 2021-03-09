@@ -1,7 +1,9 @@
-package net.glasslauncher.legacy.components;
+package net.glasslauncher.legacy.components.templates;
 
 import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.legacy.Config;
+import net.glasslauncher.legacy.components.JTextPaneFancy;
+import net.glasslauncher.legacy.components.JWebView;
 import net.glasslauncher.legacy.util.HtmlImgHijacker;
 import org.commonmark.Extension;
 import org.commonmark.ext.autolink.AutolinkExtension;
@@ -13,23 +15,18 @@ import javax.swing.border.*;
 import java.awt.*;
 import java.util.*;
 
-public abstract class ModDetailsPanel extends JPanel {
+public abstract class DetailsPanel extends JPanel {
 
-    ArrayList<Component> componentArrayList = new ArrayList<>();
+    public final JPanel buttons = new JPanel();
 
-    private final JPanel buttons = new JPanel();
-
-    protected JWebView description;
-    protected JTextPane name = new JTextPaneFancy();
+    public JWebView description;
+    public JTextPane name = new JTextPaneFancy();
 
     private static final ArrayList<Extension> EXTENSIONS = new ArrayList<Extension>(){{add(AutolinkExtension.create());}};
     protected static final HtmlRenderer RENDERER = HtmlRenderer.builder().extensions(EXTENSIONS).attributeProviderFactory((c) -> new HtmlImgHijacker()).build();
     protected static final Parser PARSER = Parser.builder().extensions(EXTENSIONS).build();
 
-    String instance;
-
-    public ModDetailsPanel(String instance) {
-        this.instance = instance;
+    public DetailsPanel() {
 
         setBounds(230, 20, 600, 400);
         setOpaque(false);
@@ -57,13 +54,7 @@ public abstract class ModDetailsPanel extends JPanel {
         add(buttons);
     }
 
-    abstract void setMod(Object localMod);
+    public abstract void setMod(Object localMod);
 
-    abstract void onModChange();
-
-    abstract void setupButtons(JPanel buttons);
-
-    public void addToOnModChange(Component component) {
-        componentArrayList.add(component);
-    }
+    public abstract void setupButtons(JPanel buttons);
 }

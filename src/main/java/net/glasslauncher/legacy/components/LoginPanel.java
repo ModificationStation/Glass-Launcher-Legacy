@@ -3,6 +3,7 @@ package net.glasslauncher.legacy.components;
 import lombok.Getter;
 import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
+import net.glasslauncher.legacy.components.templates.JButtonScaling;
 
 import javax.imageio.*;
 import javax.swing.*;

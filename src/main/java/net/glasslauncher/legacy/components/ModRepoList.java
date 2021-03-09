@@ -1,5 +1,6 @@
 package net.glasslauncher.legacy.components;
 
+import net.glasslauncher.legacy.components.templates.DetailsPanel;
 import net.glasslauncher.repo.api.mod.RepoReader;
 import net.glasslauncher.repo.api.mod.jsonobj.ModPreview;
 
@@ -11,7 +12,7 @@ public class ModRepoList extends JList<ModPreview> {
     // Fix for the renderer being called twice every click for some reason.
     private String lastRendered = "";
 
-    public ModRepoList(ModDetailsPanel panel) {
+    public ModRepoList(DetailsPanel panel) {
 
         this.setCellRenderer(new DefaultListCellRenderer() {
             @Override
