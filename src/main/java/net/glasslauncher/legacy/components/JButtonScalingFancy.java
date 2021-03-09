@@ -2,11 +2,7 @@ package net.glasslauncher.legacy.components;
 
 import net.glasslauncher.legacy.Config;
 
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import java.awt.*;
 
 public class JButtonScalingFancy extends JButtonScaling {
 

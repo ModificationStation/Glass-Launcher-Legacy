@@ -1,7 +1,7 @@
 package net.glasslauncher.legacy.components;
 
-import javax.swing.JButton;
-import java.awt.Insets;
+import javax.swing.*;
+import java.awt.*;
 
 public class JButtonScaling extends JButton {
 

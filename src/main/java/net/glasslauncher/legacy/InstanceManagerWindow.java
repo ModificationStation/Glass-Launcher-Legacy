@@ -10,18 +10,11 @@ import net.glasslauncher.legacy.components.JTextFieldFancy;
 import net.glasslauncher.legacy.util.InstanceManager;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.Component;
-import java.awt.Desktop;
-import java.awt.Dimension;
-import java.awt.FileDialog;
-import java.awt.Frame;
-import java.awt.GridLayout;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.File;
-import java.io.IOException;
-import java.util.Objects;
+import javax.swing.border.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import java.util.*;
 
 class InstanceManagerWindow extends JDialog {
     private JPanel deletePanel = new JPanel();

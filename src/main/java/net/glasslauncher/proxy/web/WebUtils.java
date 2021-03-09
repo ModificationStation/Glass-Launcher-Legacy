@@ -4,17 +4,12 @@ import com.google.gson.Gson;
 import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.jsontemplate.Profile;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
+import java.io.*;
+import java.net.*;
+import java.nio.file.*;
+import java.nio.file.attribute.*;
+import java.util.*;
+import java.util.concurrent.*;
 
 public class WebUtils {
     public static String getStringFromURL(String url) throws IOException {

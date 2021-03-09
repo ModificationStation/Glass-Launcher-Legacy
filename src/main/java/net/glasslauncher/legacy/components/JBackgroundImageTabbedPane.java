@@ -1,10 +1,10 @@
 package net.glasslauncher.legacy.components;
 
-import javax.imageio.ImageIO;
-import javax.swing.JTabbedPane;
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.net.URL;
+import javax.imageio.*;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.*;
+import java.net.*;
 
 public class JBackgroundImageTabbedPane extends JTabbedPane {
 

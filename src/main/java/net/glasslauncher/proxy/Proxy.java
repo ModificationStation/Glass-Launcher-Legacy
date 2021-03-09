@@ -14,8 +14,8 @@ import org.littleshoot.proxy.impl.DefaultHttpProxyServer;
 import org.littleshoot.proxy.mitm.Authority;
 import org.littleshoot.proxy.mitm.CertificateSniffingMitmManager;
 
-import java.io.File;
-import java.net.InetSocketAddress;
+import java.io.*;
+import java.net.*;
 
 public class Proxy extends Thread {
     private HttpProxyServerBootstrap serverBoot;

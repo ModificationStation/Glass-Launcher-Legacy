@@ -2,13 +2,9 @@ package net.glasslauncher.legacy.components;
 
 import net.glasslauncher.legacy.Config;
 
-import javax.swing.JTextArea;
-import javax.swing.border.EmptyBorder;
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import javax.swing.*;
+import javax.swing.border.*;
+import java.awt.*;
 
 public class JTextAreaFancy extends JTextArea {
 

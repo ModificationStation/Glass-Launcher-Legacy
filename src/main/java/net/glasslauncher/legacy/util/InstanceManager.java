@@ -18,18 +18,12 @@ import net.glasslauncher.legacy.jsontemplate.MultiMCComponent;
 import net.glasslauncher.legacy.jsontemplate.MultiMCPack;
 import net.glasslauncher.proxy.web.WebUtils;
 
-import javax.swing.DefaultListModel;
-import javax.swing.JOptionPane;
-import javax.swing.ListModel;
-import java.io.File;
-import java.io.InputStream;
-import java.net.URL;
-import java.nio.file.FileAlreadyExistsException;
+import javax.swing.*;
+import java.io.*;
+import java.net.*;
 import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Objects;
+import java.nio.file.*;
+import java.util.*;
 
 public class InstanceManager {
 

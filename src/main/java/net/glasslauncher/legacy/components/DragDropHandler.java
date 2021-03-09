@@ -2,15 +2,11 @@ package net.glasslauncher.legacy.components;
 
 import net.glasslauncher.legacy.jsontemplate.Mod;
 
-import javax.swing.DefaultListModel;
-import javax.swing.JList;
-import javax.swing.TransferHandler;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.io.File;
-import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.List;
+import javax.swing.*;
+import java.awt.datatransfer.*;
+import java.io.*;
+import java.nio.file.*;
+import java.util.*;
 
 class DragDropHandler extends TransferHandler {
     private DragDropList list;

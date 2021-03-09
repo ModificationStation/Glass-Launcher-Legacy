@@ -1,12 +1,8 @@
 package net.glasslauncher.legacy;
 
-import javax.swing.JEditorPane;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.event.HyperlinkEvent;
-import java.awt.Component;
-import java.awt.Desktop;
-import java.awt.Font;
+import javax.swing.*;
+import javax.swing.event.*;
+import java.awt.*;
 
 public class OpenLinkWindow extends JOptionPane {
 

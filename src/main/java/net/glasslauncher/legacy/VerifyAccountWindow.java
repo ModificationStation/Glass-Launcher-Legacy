@@ -6,14 +6,8 @@ import net.glasslauncher.legacy.components.HintTextField;
 import net.glasslauncher.legacy.components.JButtonScaling;
 import net.glasslauncher.legacy.util.MojangLoginHandler;
 
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.Window;
+import javax.swing.*;
+import java.awt.*;
 
 public class VerifyAccountWindow extends JDialog {
     @Getter boolean loginValid = false;

@@ -8,14 +8,9 @@ import net.glasslauncher.legacy.util.LinkRedirector;
 import net.glasslauncher.repo.api.RepoConfig;
 import net.glasslauncher.repo.api.mod.jsonobj.Version;
 
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.net.MalformedURLException;
-import java.net.URL;
+import javax.swing.*;
+import java.awt.*;
+import java.net.*;
 
 public class RepoModDetailsPanel extends ModDetailsPanel {
     public RepoModDetailsPanel(String instance) {

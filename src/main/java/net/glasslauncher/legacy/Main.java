@@ -1,12 +1,10 @@
 package net.glasslauncher.legacy;
 
 import com.sun.javafx.application.PlatformImpl;
-import javafx.application.*;
-import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.common.LoggerFactory;
 
-import javax.swing.UIManager;
-import java.util.logging.Logger;
+import javax.swing.*;
+import java.util.logging.*;
 
 public class Main {
     public static final Logger LOGGER = LoggerFactory.makeLogger("GlassLauncher", "glass-launcher");

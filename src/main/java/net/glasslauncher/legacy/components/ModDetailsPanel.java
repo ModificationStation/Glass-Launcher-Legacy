@@ -1,6 +1,5 @@
 package net.glasslauncher.legacy.components;
 
-import lombok.SneakyThrows;
 import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.util.HtmlImgHijacker;
@@ -11,15 +10,10 @@ import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 
-import javax.swing.BoxLayout;
-import javax.swing.JPanel;
-import javax.swing.JTextPane;
-import javax.swing.UIManager;
-import javax.swing.border.EmptyBorder;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.io.*;
-import java.util.ArrayList;
+import javax.swing.*;
+import javax.swing.border.*;
+import java.awt.*;
+import java.util.*;
 
 public abstract class ModDetailsPanel extends JPanel {
 

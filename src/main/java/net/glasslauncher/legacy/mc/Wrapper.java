@@ -10,17 +10,12 @@ import net.glasslauncher.legacy.Main;
 import net.glasslauncher.legacy.jsontemplate.InstanceConfig;
 import net.glasslauncher.legacy.jsontemplate.MCVersion;
 import net.glasslauncher.proxy.Proxy;
-import org.checkerframework.checker.units.qual.C;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.*;
 import java.lang.reflect.*;
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
+import java.util.zip.*;
 
 public class Wrapper {
     private final String instance;

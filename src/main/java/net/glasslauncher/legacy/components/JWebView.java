@@ -1,10 +1,8 @@
 package net.glasslauncher.legacy.components;
 
 import lombok.Getter;
-import lombok.SneakyThrows;
 import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.legacy.Config;
-import net.glasslauncher.legacy.Main;
 
 import javax.swing.*;
 import javax.swing.event.*;

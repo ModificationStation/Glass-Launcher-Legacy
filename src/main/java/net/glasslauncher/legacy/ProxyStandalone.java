@@ -2,7 +2,7 @@ package net.glasslauncher.legacy;
 
 import net.glasslauncher.proxy.Proxy;
 
-import java.io.File;
+import java.io.*;
 
 public class ProxyStandalone {
     /**

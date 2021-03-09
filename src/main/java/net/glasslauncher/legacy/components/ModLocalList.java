@@ -2,13 +2,10 @@ package net.glasslauncher.legacy.components;
 
 import net.glasslauncher.legacy.jsontemplate.Mod;
 
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.DefaultListModel;
-import javax.swing.JList;
-import java.awt.Color;
-import java.awt.Component;
-import java.util.ArrayList;
+import javax.swing.*;
+import java.awt.*;
 import java.util.List;
+import java.util.*;
 
 public class ModLocalList extends DragDropList {
     // Fix for the renderer being called twice every click for some reason.

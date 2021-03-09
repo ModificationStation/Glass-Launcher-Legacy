@@ -3,11 +3,8 @@ package net.glasslauncher.legacy.components;
 import net.glasslauncher.repo.api.mod.RepoReader;
 import net.glasslauncher.repo.api.mod.jsonobj.ModPreview;
 
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.DefaultListModel;
-import javax.swing.JList;
-import java.awt.Color;
-import java.awt.Component;
+import javax.swing.*;
+import java.awt.*;
 import java.util.List;
 
 public class ModRepoList extends JList<ModPreview> {

@@ -1,9 +1,8 @@
 package net.glasslauncher.legacy.components;
 
-import javax.swing.JPasswordField;
-import java.awt.Color;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
 public class HintPasswordField extends JPasswordField {
     private final Color defaultColor;

@@ -6,8 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.glasslauncher.common.JsonConfig;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Getter @Setter
 public class ModList extends JsonConfig {

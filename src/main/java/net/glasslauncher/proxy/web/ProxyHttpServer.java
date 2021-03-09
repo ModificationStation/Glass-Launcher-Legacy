@@ -3,8 +3,8 @@ package net.glasslauncher.proxy.web;
 import com.sun.net.httpserver.HttpServer;
 import net.glasslauncher.legacy.Config;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
+import java.io.*;
+import java.net.*;
 
 public final class ProxyHttpServer {
     public static HttpServer start() throws IOException {

@@ -4,22 +4,12 @@ import net.glasslauncher.common.ConsoleStream;
 import net.glasslauncher.common.Pastee;
 import net.glasslauncher.legacy.components.JButtonScaling;
 
-import javax.imageio.ImageIO;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dialog;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.net.URISyntaxException;
+import javax.imageio.*;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import java.net.*;
 
 public class ConsoleWindow extends JFrame {
     private JTextArea textArea = new JTextArea();

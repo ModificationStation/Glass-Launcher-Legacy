@@ -3,12 +3,11 @@ package net.glasslauncher.legacy.components;
 import lombok.Getter;
 import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
-import net.glasslauncher.legacy.util.MSLoginHandler;
 
 import javax.imageio.*;
 import javax.swing.*;
-import java.awt.Dimension;
-import java.awt.event.ActionListener;
+import java.awt.*;
+import java.awt.event.*;
 
 public class LoginPanel extends JPanel {
 

@@ -3,9 +3,7 @@ package net.glasslauncher.legacy.mc;
 import net.glasslauncher.legacy.Main;
 import net.glasslauncher.proxy.Proxy;
 
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.function.*;
+import java.util.*;
 
 public class Monitor {
     private TimerTask task;

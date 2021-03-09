@@ -1,9 +1,8 @@
 package net.glasslauncher.legacy.util;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Worker;
-import javafx.scene.web.WebView;
+import javafx.beans.value.*;
+import javafx.concurrent.*;
+import javafx.scene.web.*;
 import net.glasslauncher.legacy.Main;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -13,8 +12,8 @@ import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.html.HTMLAnchorElement;
 
-import java.awt.Desktop;
-import java.net.URI;
+import java.awt.*;
+import java.net.*;
 
 public class LinkRedirector implements ChangeListener<Worker.State>, EventListener {
     private static final String CLICK_EVENT = "click";

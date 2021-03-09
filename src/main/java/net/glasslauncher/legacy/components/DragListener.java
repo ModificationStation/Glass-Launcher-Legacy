@@ -1,15 +1,8 @@
 package net.glasslauncher.legacy.components;
 
 
-import java.awt.datatransfer.StringSelection;
-import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DragGestureEvent;
-import java.awt.dnd.DragGestureListener;
-import java.awt.dnd.DragSource;
-import java.awt.dnd.DragSourceDragEvent;
-import java.awt.dnd.DragSourceDropEvent;
-import java.awt.dnd.DragSourceEvent;
-import java.awt.dnd.DragSourceListener;
+import java.awt.datatransfer.*;
+import java.awt.dnd.*;
 
 class DragListener implements DragSourceListener, DragGestureListener {
     DragDropList list;
