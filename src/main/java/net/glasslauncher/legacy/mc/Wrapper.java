@@ -4,6 +4,7 @@ import net.fabricmc.loader.launch.knot.KnotClient;
 import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.common.FileUtils;
 import net.glasslauncher.common.JsonConfig;
+import net.glasslauncher.common.LoggerFactory;
 import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
 import net.glasslauncher.legacy.jsontemplate.InstanceConfig;
@@ -29,7 +30,7 @@ public class Wrapper {
 
     private Proxy proxy = null;
 
-    private final Logger logger = CommonConfig.makeLogger("Minecraft", "minecraft");
+    private final Logger logger = LoggerFactory.makeLogger("Minecraft", "minecraft");
 
     public Wrapper() {
         this.instance = Config.getLauncherConfig().getLastUsedInstance();

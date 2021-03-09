@@ -136,7 +136,6 @@ public class OptionsWindow extends JDialog {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    dispose();
                   }
             }
         );

@@ -2,6 +2,7 @@ package net.glasslauncher.legacy;
 
 import net.chris54721.openmcauthenticator.OpenMCAuthenticator;
 import net.glasslauncher.common.CommonConfig;
+import net.glasslauncher.common.FileUtils;
 import net.glasslauncher.legacy.components.*;
 import net.glasslauncher.legacy.jsontemplate.LoginInfo;
 import net.glasslauncher.legacy.mc.Wrapper;
@@ -65,6 +66,7 @@ class MainWindow extends JFrame {
                                       console.dispose();
                                   }
                                   dispose();
+                                  FileUtils.delete(new File(CommonConfig.GLASS_PATH + "cache/repo-images"));
                                   System.exit(0);
                               }
                           }

@@ -1,6 +1,9 @@
 package net.glasslauncher.legacy.components;
 
+import lombok.SneakyThrows;
+import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.legacy.Config;
+import net.glasslauncher.legacy.util.HtmlImgHijacker;
 import net.glasslauncher.repo.api.mod.jsonobj.Mod;
 import org.commonmark.Extension;
 import org.commonmark.ext.autolink.AutolinkExtension;
@@ -15,6 +18,7 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.io.*;
 import java.util.ArrayList;
 
 public abstract class ModDetailsPanel extends JPanel {
@@ -23,11 +27,11 @@ public abstract class ModDetailsPanel extends JPanel {
 
     private JPanel buttons = new JPanel();
 
-    private JWebView description = new JWebView("Empty");
+    private JWebView description;
     private JTextPane name = new JTextPaneFancy();
 
     private static ArrayList<Extension> extensions = new ArrayList<Extension>(){{add(AutolinkExtension.create());}};
-    private static HtmlRenderer renderer = HtmlRenderer.builder().extensions(extensions).build();
+    private static HtmlRenderer renderer = HtmlRenderer.builder().extensions(extensions).attributeProviderFactory((c) -> new HtmlImgHijacker()).build();
     private static Parser parser = Parser.builder().extensions(extensions).build();
 
     Mod repoMod = null;
@@ -45,12 +49,13 @@ public abstract class ModDetailsPanel extends JPanel {
         name.setFont(UIManager.getFont("Label.font").deriveFont(18f));
         name.setBorder(new EmptyBorder(4, 4, 4, 4));
         name.setContentType("text/html");
-        name.setText("<style>" + Config.CSS + "</style><body><div style=\"font-size: 18px;\">" + "Select a mod to see its details!" + "</div></body>");
+        name.setText("<head><base href=\"file://" + CommonConfig.GLASS_PATH + "cache/repo-images\"><style>" + Config.CSS + "</style></head><body><div style=\"font-size: 18px;\">" + "Select a mod to see its details!" + "</div></body>");
 
-        description.setOpaque(false);
-        description.setBorder(new EmptyBorder(0, 0, 0, 0));
-        description.setBounds(20, 70, getWidth()-40, getHeight()-90);
-        description.setPreferredSize(new Dimension(getWidth()-40, getHeight()-90));
+        //description.setOpaque(false);
+        //description.setBorder(new EmptyBorder(0, 0, 0, 0));
+        description = new JWebView("Empty");
+        description.getJScrollPane().setBounds(20, 70, getWidth()-40, getHeight()-90);
+        description.getJScrollPane().setPreferredSize(new Dimension(getWidth()-40, getHeight()-90));
 
         setupButtons(buttons);
 
@@ -59,14 +64,13 @@ public abstract class ModDetailsPanel extends JPanel {
         buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
 
         add(name);
-        add(description);
+        add(description.getJScrollPane());
         add(buttons);
     }
 
     public void setRepoMod(Mod repoMod) {
         name.setText("<style>" + Config.CSS + "</style><body><div style=\"font-size: 18px;\">" + repoMod.getName() + " <sup style=\"font-size: 10px;\">by " + repoMod.getAuthors()[0].getUsername() + "</sup></div></body>");
-        Node document = parser.parse(repoMod.getDescription());
-
+        Node document = parser.parse(repoMod.getDescription().replace("\n", "  \n"));
         description.setText(renderer.render(document));
 
         this.repoMod = repoMod;

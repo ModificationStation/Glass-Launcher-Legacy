@@ -1,16 +1,17 @@
 package net.glasslauncher.legacy;
 
+import com.sun.javafx.application.PlatformImpl;
+import javafx.application.*;
 import net.glasslauncher.common.CommonConfig;
+import net.glasslauncher.common.LoggerFactory;
 
 import javax.swing.UIManager;
 import java.util.logging.Logger;
 
 public class Main {
-    public static final Logger LOGGER = CommonConfig.makeLogger("GlassLauncher", "glass-launcher");
+    public static final Logger LOGGER = LoggerFactory.makeLogger("GlassLauncher", "glass-launcher");
 
     public static MainWindow mainwin;
-
-    public static boolean hasAuthToken = false;
 
     public static void main(String[] args) {
         try {
@@ -23,6 +24,8 @@ public class Main {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        // Bad javafx, no cleanup for you.
+        PlatformImpl.setImplicitExit(false);
 
         ConsoleWindow console = null;
         if (System.console() != null) {

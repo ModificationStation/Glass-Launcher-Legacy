@@ -83,12 +83,12 @@ dependencies {
     // Used to handle accessing the mod repo.
     // https://glass-repo.net
     // No public documentation yet, though if you figure it out, you can use it for whatever.
-    compile group: "net.glasslauncher.repo", name: "glass-site-java-api", version: "0.4"
+    compile group: "net.glasslauncher.repo", name: "glass-site-java-api", version: "0.5"
 
     // Various utility classes that help dramatically with handling files and URLs.
     // https://glass-launcher.net
     // Same thing, use if you want, though there are no docs.
-    compile group: "net.glasslauncher", name: "commons", version: "1.0"
+    compile group: "net.glasslauncher", name: "commons", version: "1.2"
 
 }
 

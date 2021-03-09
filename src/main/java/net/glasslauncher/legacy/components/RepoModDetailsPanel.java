@@ -5,6 +5,7 @@ import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
 import net.glasslauncher.legacy.components.events.OnModChange;
 import net.glasslauncher.legacy.util.LinkRedirector;
+import net.glasslauncher.repo.api.RepoConfig;
 import net.glasslauncher.repo.api.mod.jsonobj.Version;
 
 import javax.swing.Box;
@@ -51,7 +52,7 @@ public class RepoModDetailsPanel extends ModDetailsPanel {
                     }
                     else {
                         JOptionPane.showMessageDialog(this, "This mod has a client file, but must be installed manually!\nOpening URL in browser.", "Info", JOptionPane.INFORMATION_MESSAGE);
-                        LinkRedirector.openLinkInSystemBrowser(net.glasslauncher.repo.api.Config.REPOSITORY_URL + "mod/" + repoMod.getId() + "/versions/" + version.getVersion());
+                        LinkRedirector.openLinkInSystemBrowser(RepoConfig.REPOSITORY_URL + "mod/" + repoMod.getId() + "/versions/" + version.getVersion());
                         return;
                     }
                     FileUtils.downloadFile(String.valueOf(url), path, null, repoMod.getId() + "-" + repoMod.getLatestVersion().getVersion() + ".jar");
@@ -67,7 +68,7 @@ public class RepoModDetailsPanel extends ModDetailsPanel {
         openPageButton.setText("Open Page");
         openPageButton.addActionListener((actionEvent) -> {
             if (repoMod != null) {
-                LinkRedirector.openLinkInSystemBrowser(net.glasslauncher.repo.api.Config.REPOSITORY_URL + "mod/" + repoMod.getId());
+                LinkRedirector.openLinkInSystemBrowser(RepoConfig.REPOSITORY_URL + "mod/" + repoMod.getId());
             }
         });
 
