@@ -24,6 +24,8 @@ public class Main {
         }
         // Bad javafx, no cleanup for you.
         PlatformImpl.setImplicitExit(false);
+        // Make tooltips show faster.
+        ToolTipManager.sharedInstance().setInitialDelay(0);
 
         ConsoleWindow console = null;
         if (System.console() != null) {

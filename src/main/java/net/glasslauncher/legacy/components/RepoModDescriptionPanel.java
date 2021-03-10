@@ -14,39 +14,46 @@ import javax.swing.*;
 import java.awt.*;
 import java.net.*;
 
-public class RepoModDetailsPanel extends DetailsPanel {
+public class RepoModDescriptionPanel extends DetailsPanel {
 
-    private Mod repoMod = null;
+    private Version version = null;
     private final String instance;
 
-    public RepoModDetailsPanel(String instance) {
+    private JButton downloadButton;
+
+    public RepoModDescriptionPanel(String instance, Mod mod) {
         super();
         this.instance = instance;
-    }
-
-    @Override
-    public void setMod(Object localMod) {
-        repoMod = (Mod) localMod;
 
         name.setText("<style>" +
                 Config.CSS + "</style><body><div style=\"font-size: 18px;\">" +
-                repoMod.getName() + " <sup style=\"font-size: 10px;\">by " +
-                repoMod.getAuthors()[0].getUsername() + "</sup></div></body>");
-        Node document = PARSER.parse(repoMod.getDescription().replace("\n", "  \n"));
+                mod.getName() + " <sup style=\"font-size: 10px;\">by " +
+                mod.getAuthors()[0].getUsername() + "</sup></div></body>");
+        Node document = PARSER.parse(mod.getDescription().replace("\n", "  \n"));
         description.setText(RENDERER.render(document));
+    }
 
+    @Override
+    public void setMod(Object version) {
+        this.version = (Version) version;
+
+        name.setText("<style>" +
+                Config.CSS + "</style><body><div style=\"font-size: 18px;\">" +
+                this.version.getVersion() + " <sup style=\"font-size: 10px;\"></div></body>");
+        Node document = PARSER.parse(this.version.getDescription().replace("\n", "  \n"));
+        description.setText(RENDERER.render(document));
+        downloadButton.setEnabled(true);
     }
 
     @Override
     public void setupButtons(JPanel buttons) {
 
-        JButton downloadButton = new JButtonScalingFancy();
-        downloadButton.setText("Download");
+        downloadButton = new JButtonScalingFancy();
+        downloadButton.setText("  Download  ");
         downloadButton.addActionListener((actionEvent) -> {
-            if (repoMod != null && repoMod.getLatestVersion() != null && repoMod.getLatestVersion().isHasClient()) {
+            if (version != null && version.isHasClient()) {
                 try {
-                    Version version = repoMod.getLatestVersion();
-                    URL url = version.getDownloadURL("client", "jar");
+                    URL url = version.getDownloadURL(Version.CLIENT, "jar");
                     String path;
                     if (version.getType().equals("Mod Folder")) {
                         Main.LOGGER.info("Downloading mod to mods folder.");
@@ -58,10 +65,10 @@ public class RepoModDetailsPanel extends DetailsPanel {
                     }
                     else {
                         JOptionPane.showMessageDialog(this, "This mod has a client file, but must be installed manually because of unknown type!\nOpening URL in browser.", "Info", JOptionPane.INFORMATION_MESSAGE);
-                        LinkRedirector.openLinkInSystemBrowser(RepoConfig.REPOSITORY_URL + "mod/" + repoMod.getId() + "/versions/" + version.getVersion());
+                        LinkRedirector.openLinkInSystemBrowser(RepoConfig.REPOSITORY_URL + "mod/" + version.getParentMod() + "/versions/" + version.getVersion());
                         return;
                     }
-                    FileUtils.downloadFile(String.valueOf(url), path, null, repoMod.getId() + "-" + repoMod.getLatestVersion().getVersion() + ".jar");
+                    FileUtils.downloadFile(String.valueOf(url), path, null, version.getParentMod() + "-" + version.getVersion() + ".jar");
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
@@ -69,13 +76,13 @@ public class RepoModDetailsPanel extends DetailsPanel {
                 JOptionPane.showMessageDialog(this, "This mod does not have a client file!", "Warning", JOptionPane.WARNING_MESSAGE);
             }
         });
-        downloadButton.setMinimumSize(new Dimension(60, 22));
+        downloadButton.setEnabled(false);
 
         JButton openPageButton = new JButtonScalingFancy();
-        openPageButton.setText("Open Page");
+        openPageButton.setText("  Open Page  ");
         openPageButton.addActionListener((actionEvent) -> {
-            if (repoMod != null) {
-                LinkRedirector.openLinkInSystemBrowser(RepoConfig.REPOSITORY_URL + "mod/" + repoMod.getId());
+            if (version != null) {
+                LinkRedirector.openLinkInSystemBrowser(RepoConfig.REPOSITORY_URL + "mod/" + version.getParentMod());
             }
         });
 

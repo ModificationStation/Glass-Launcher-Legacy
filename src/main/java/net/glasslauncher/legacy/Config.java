@@ -27,8 +27,8 @@ public class Config {
                 "font-family: -apple-system,BlinkMacSystemFont,\"Segoe UI\",Roboto,\"Helvetica Neue\",Arial,\"Noto Sans\",sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\",\"Segoe UI Symbol\",\"Noto Color Emoji\";" +
                 "background-color: rgb(76, 76, 76);" +
             "}" +
-            "a:link, a:visited, a:active, a:hover, a:focus {" +
-                "color: deepskyblue;" +
+            "a {" +
+                "color: rgb(0, 191, 255);" +
             "}";
 
     /**

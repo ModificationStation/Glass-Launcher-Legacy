@@ -4,14 +4,15 @@ import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.common.JsonConfig;
 import net.glasslauncher.legacy.components.DragDropList;
 import net.glasslauncher.legacy.components.JButtonScalingFancy;
+import net.glasslauncher.legacy.components.JDetailsTable;
 import net.glasslauncher.legacy.components.JLabelFancy;
 import net.glasslauncher.legacy.components.JPanelBackgroundImage;
 import net.glasslauncher.legacy.components.JTextFieldFancy;
 import net.glasslauncher.legacy.components.LocalModDetailsPanel;
+import net.glasslauncher.legacy.components.handlers.RepoModTableModel;
 import net.glasslauncher.legacy.components.templates.DetailsPanel;
 import net.glasslauncher.legacy.components.ModLocalList;
-import net.glasslauncher.legacy.components.ModRepoList;
-import net.glasslauncher.legacy.components.RepoModDetailsPanel;
+import net.glasslauncher.legacy.components.RepoModVersionList;
 import net.glasslauncher.legacy.jsontemplate.InstanceConfig;
 import net.glasslauncher.legacy.jsontemplate.Mod;
 import net.glasslauncher.legacy.jsontemplate.ModList;
@@ -28,12 +29,13 @@ import java.nio.file.*;
 import java.util.*;
 
 public class OptionsWindow extends JDialog {
+    private Frame parent;
     private JPanel panel;
     private InstanceConfig instanceConfig;
     private ModList modList;
     private ArrayList<Mod> jarMods;
     private DragDropList modDragDropList;
-    private ModRepoList modRepoList;
+    private RepoModVersionList modRepoList;
 
     private DragDropList loaderModDragDropList;
     private ArrayList<Mod> loaderMods;
@@ -52,11 +54,12 @@ public class OptionsWindow extends JDialog {
 
     /**
      * Sets up options window for given instance.
-     * @param panel Frame object to block while open.
+     * @param frame Frame object to block while open.
      * @param instance Target instance.
      */
-    public OptionsWindow(Frame panel, String instance) {
-        super(panel);
+    public OptionsWindow(Frame frame, String instance) {
+        super(frame);
+        parent = frame;
         setModal(true);
         setLayout(new GridLayout());
         setResizable(false);
@@ -402,30 +405,37 @@ public class OptionsWindow extends JDialog {
         return modsPanel;
     }
 
+    JDetailsTable table;
+    RepoModTableModel tableModel;
+
     private JPanel makeModRepo() {
         JPanel modRepoPanel = new JPanel();
+        modRepoPanel.setLayout(new BorderLayout());
         modRepoPanel.setOpaque(false);
-        modRepoPanel.setLayout(null);
-        DetailsPanel modDetailsPanel = new RepoModDetailsPanel(instName);
-        modRepoList = new ModRepoList(modDetailsPanel);
-        modRepoPanel.add(modDetailsPanel);
+//        DetailsPanel modDetailsPanel = new RepoModDetailsPanel(instName);
+//        modRepoList = new ModRepoList(modDetailsPanel);
+//        modRepoPanel.add(modDetailsPanel);
+        tableModel = new RepoModTableModel();
+        table = new JDetailsTable(parent, tableModel, instName);
+        table.setFillsViewportHeight(true);
 
         // Async cause otherwise options freezes when opening for 1-5 seconds.
         new Thread(this::refreshRepo).start();
 
         JScrollPane modListScroll = new JScrollPane();
-        modListScroll.getViewport().setBackground(new Color(52, 52, 52));
-        modListScroll.setBounds(20, 20, 200, 380);
+        if (!Config.getLauncherConfig().isThemeDisabled()) {
+            modListScroll.getViewport().setBackground(new Color(52, 52, 52));
+        }
         modListScroll.setBorder(new EmptyBorder(0, 0, 0, 0));
-        modListScroll.setViewportView(modRepoList);
-        modRepoPanel.add(modListScroll);
+        modListScroll.setViewportView(table);
+        modRepoPanel.add(modListScroll, BorderLayout.CENTER);
 
         return modRepoPanel;
     }
 
     private void refreshRepo() {
         try {
-            modRepoList.refresh(Arrays.asList(RepoReader.getMods()));
+            tableModel.setMods(Arrays.asList(RepoReader.getMods()));
         } catch (Exception e) {
             e.printStackTrace();
         }
