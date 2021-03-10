@@ -135,7 +135,7 @@ class MainWindow extends JFrame {
         mainPanel.add(blogContainer, BorderLayout.CENTER);
         mainPanel.add(loginForm, BorderLayout.SOUTH);
 
-        loginPanel.setHasToken(verifyLogin());
+        loginPanel.setHasToken(verifyLogin(false));
 
         pack();
         setLocationRelativeTo(null);
@@ -192,7 +192,7 @@ class MainWindow extends JFrame {
             Main.LOGGER.severe("Selected instance is null or empty! Aborting launch.");
             return;
         }
-        if (!verifyLogin()) {
+        if (!verifyLogin(true)) {
             loginPanel.setHasToken(false);
             Main.LOGGER.severe("Aborting launch.");
             return;
@@ -202,9 +202,11 @@ class MainWindow extends JFrame {
         Config.getLauncherConfig().saveFile();
         Wrapper mc = new Wrapper();
         mc.startMC();
+        Config.getLauncherConfig().setLoginInfo(null);
+        loginPanel.setHasToken(false);
     }
 
-    private boolean verifyLogin() {
+    private boolean verifyLogin(boolean canOffline) {
         if (Config.getLauncherConfig().isMSToken()) {
             Main.LOGGER.info("Verifying stored MS auth token...");
             if (!(new MSLoginHandler(this)).verify()) {
@@ -239,6 +241,9 @@ class MainWindow extends JFrame {
                     Main.LOGGER.severe("Unable to log in!");
                     return false;
                 }
+            }
+            if (!loginPanel.getUsername().getText().isEmpty() && canOffline) {
+                Config.getLauncherConfig().setLoginInfo(new LoginInfo(loginPanel.getUsername().getText(), ""));
             }
             return Config.getLauncherConfig().getLoginInfo() != null;
         }
