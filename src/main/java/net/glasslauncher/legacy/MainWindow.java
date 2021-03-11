@@ -202,7 +202,9 @@ class MainWindow extends JFrame {
         Wrapper mc = new Wrapper();
         mc.startMC();
         Config.getLauncherConfig().setLoginInfo(null);
-        loginPanel.setHasToken(false);
+        if (Config.getLauncherConfig().getLoginInfo().getAccessToken().isEmpty()) {
+            loginPanel.setHasToken(false);
+        }
     }
 
     private boolean verifyLogin(boolean canOffline) {
