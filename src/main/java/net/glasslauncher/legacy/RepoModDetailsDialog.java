@@ -20,11 +20,13 @@ import java.util.List;
 public class RepoModDetailsDialog extends JDialog {
 
     private final String instName;
+    private final Frame parent;
     private Mod mod = null;
 
-    public RepoModDetailsDialog(Frame owner, String modid, String instance) {
-        super(owner, true);
+    public RepoModDetailsDialog(Frame parent, String modid, String instance) {
+        super(parent, true);
         instName = instance;
+        this.parent = parent;
         try {
             mod = RepoReader.getMod(modid);
         } catch (IOException e) {
@@ -36,7 +38,7 @@ public class RepoModDetailsDialog extends JDialog {
         setMinimumSize(new Dimension(837, 448));
 
         setupGUI();
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(parent);
     }
 
     @Override
@@ -49,7 +51,7 @@ public class RepoModDetailsDialog extends JDialog {
     private void setupGUI() {
         JPanel panel = new JPanelBackgroundImage(Main.class.getResource("assets/blogbackground.png"));
         panel.setLayout(null);
-        DetailsPanel detailsPanel = new RepoModDescriptionPanel(instName, mod);
+        DetailsPanel detailsPanel = new RepoModDescriptionPanel(parent, instName, mod);
         panel.add(detailsPanel);
         RepoModVersionList versionList = new RepoModVersionList(detailsPanel, mod.getId());
         versionList.refresh(Arrays.asList(mod.getVersions()));

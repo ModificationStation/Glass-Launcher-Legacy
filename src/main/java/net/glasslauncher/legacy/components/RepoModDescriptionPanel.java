@@ -3,6 +3,7 @@ package net.glasslauncher.legacy.components;
 import net.glasslauncher.common.FileUtils;
 import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
+import net.glasslauncher.legacy.ProgressWindow;
 import net.glasslauncher.legacy.components.templates.DetailsPanel;
 import net.glasslauncher.legacy.util.LinkRedirector;
 import net.glasslauncher.repo.api.RepoConfig;
@@ -18,12 +19,14 @@ public class RepoModDescriptionPanel extends DetailsPanel {
 
     private Version version = null;
     private final String instance;
+    private final Frame parent;
 
     private JButton downloadButton;
 
-    public RepoModDescriptionPanel(String instance, Mod mod) {
+    public RepoModDescriptionPanel(Frame parent, String instance, Mod mod) {
         super();
         this.instance = instance;
+        this.parent = parent;
 
         name.setText("<style>" +
                 Config.CSS + "</style><body><div style=\"font-size: 18px;\">" +
@@ -68,7 +71,23 @@ public class RepoModDescriptionPanel extends DetailsPanel {
                         LinkRedirector.openLinkInSystemBrowser(RepoConfig.REPOSITORY_URL + "mod/" + version.getParentMod() + "/versions/" + version.getVersion());
                         return;
                     }
-                    FileUtils.downloadFile(String.valueOf(url), path, null, version.getParentMod() + "-" + version.getVersion() + ".jar");
+                    ProgressWindow progressWindow = new ProgressWindow(parent, "Downloading Mod");
+                    progressWindow.setProgressMax(2);
+                    new Thread(() -> {
+                        progressWindow.setVisible(true);
+                    }).start();
+                    progressWindow.setProgress(1);
+                    progressWindow.setProgressText("Downloading " + version.getParentMod() + " " + version.getVersion());
+                    boolean downloaded = FileUtils.downloadFile(String.valueOf(url), path, null, version.getParentMod() + "-" + version.getVersion() + ".jar");
+                    progressWindow.setProgress(2);
+                    progressWindow.setProgressText("Done!");
+                    progressWindow.dispose();
+                    if (downloaded) {
+                        JOptionPane.showMessageDialog(parent, "Successfully downloaded " + version.getParentMod() + " " + version.getVersion());
+                    }
+                    else {
+                        JOptionPane.showMessageDialog(parent, "Unable to download " + version.getParentMod() + " " + version.getVersion(), "Warning", JOptionPane.WARNING_MESSAGE);
+                    }
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }

@@ -50,7 +50,7 @@ class InstanceManagerWindow extends JDialog {
 
         panel.add(tabbedPane);
 
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(panel);
         setVisible(true);
     }
 

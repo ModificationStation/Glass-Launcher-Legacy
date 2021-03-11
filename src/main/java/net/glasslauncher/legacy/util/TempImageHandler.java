@@ -13,9 +13,6 @@ public class TempImageHandler {
         Main.LOGGER.info("Downloading image " + img + " to temp...");
         String imageChecksum = getStringChecksum(MessageDigest.getInstance("MD5"), img);
 
-        String[] parts = img.split("\\.");
-        imageChecksum += "." + parts[parts.length-1];
-
         if (!FileUtils.downloadFile(img, CommonConfig.GLASS_PATH + "cache/repo-images", null, imageChecksum)) {
             throw new IOException("Failed to download image.");
         }

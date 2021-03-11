@@ -39,7 +39,6 @@ class MainWindow extends JFrame {
         setTitle("Glass Launcher " + Config.VERSION);
         setIconImage(Toolkit.getDefaultToolkit().createImage(MainWindow.class.getResource("assets/glass.png")));
         setLayout(new GridLayout(1, 1));
-        setLocationRelativeTo(null);
         pack();
         setPreferredSize(new Dimension(orgWidth + insets.left + insets.right, orgHeight + insets.top + insets.bottom));
         setMinimumSize(new Dimension(650, 400));

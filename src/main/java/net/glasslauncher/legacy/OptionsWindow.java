@@ -130,7 +130,7 @@ public class OptionsWindow extends JDialog {
 
         this.panel.add(tabpane);
         pack();
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(frame);
         setVisible(true);
     }
 
