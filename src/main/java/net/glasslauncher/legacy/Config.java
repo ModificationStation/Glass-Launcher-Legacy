@@ -112,7 +112,7 @@ public class Config {
                 (getLauncherConfig().isThemeDisabled()? "" :
                 "background-color: rgb(76, 76, 76);" +
                 "color: #dadada;") +
-                "padding-right: 20px;" +
+                "padding-right: 10px;" +
                 "padding-left: 10px;" +
                 "word-break: break-all;" +
                 "word-break: break-word;" +
