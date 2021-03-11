@@ -50,10 +50,12 @@ public class MSLoginHandler {
 
     private WebView webView;
     private final JDialog frame;
+    private final Frame parent;
 
     private final Gson gson = new Gson();
 
     public MSLoginHandler(JFrame parent) {
+        this.parent = parent;
         frame = new JDialog(parent);
         frame.setModal(true);
         frame.setMinimumSize(new Dimension(500, 600));
@@ -105,6 +107,7 @@ public class MSLoginHandler {
                 }
             });
         });
+        frame.setLocationRelativeTo(parent);
         frame.setVisible(true);
     }
 
