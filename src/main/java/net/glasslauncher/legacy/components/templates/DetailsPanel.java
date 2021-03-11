@@ -35,7 +35,7 @@ public abstract class DetailsPanel extends JPanel {
         name.setFont(UIManager.getFont("Label.font").deriveFont(18f));
         name.setBorder(new EmptyBorder(4, 4, 4, 4));
         name.setContentType("text/html");
-        name.setText("<head><base href=\"file://" + CommonConfig.GLASS_PATH + "cache/repo-images\"><style>" + Config.CSS + "</style></head><body><div style=\"font-size: 18px;\">" + "Select a mod to see its details!" + "</div></body>");
+        name.setText("<head><base href=\"file://" + CommonConfig.GLASS_PATH + "cache/repo-images\"><style>" + Config.getCSS() + "</style></head><body><div style=\"font-size: 18px;\">" + "Select a mod to see its details!" + "</div></body>");
 
         //description.setOpaque(false);
         //description.setBorder(new EmptyBorder(0, 0, 0, 0));

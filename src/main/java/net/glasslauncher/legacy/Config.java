@@ -15,23 +15,6 @@ import java.util.*;
 public class Config {
 
     /**
-     * CSS to de-windows95-ify html formatted areas.
-     */
-    public static String CSS =
-            "body {" +
-                "color: #dadada;" +
-                "padding-right: 20px;" +
-                "padding-left: 10px;" +
-                "word-break: break-all;" +
-                "word-break: break-word;" +
-                "font-family: -apple-system,BlinkMacSystemFont,\"Segoe UI\",Roboto,\"Helvetica Neue\",Arial,\"Noto Sans\",sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\",\"Segoe UI Symbol\",\"Noto Color Emoji\";" +
-                "background-color: rgb(76, 76, 76);" +
-            "}" +
-            "a {" +
-                "color: rgb(0, 191, 255);" +
-            "}";
-
-    /**
      * Used to fix an issue with windows where classes like aux.class are seen as system names.
      * Otherwise does nothing.
      */
@@ -119,6 +102,25 @@ public class Config {
             Main.LOGGER.info("Generating new launcher config.");
             launcherConfig = new LauncherConfig(CommonConfig.GLASS_PATH + "launcher_config.json");
         }
+    }
+
+    /**
+     * CSS to de-windows95-ify html formatted areas.
+     */
+    public static String getCSS() {
+        return "body {" +
+                (getLauncherConfig().isThemeDisabled()? "" :
+                "background-color: rgb(76, 76, 76);" +
+                "color: #dadada;") +
+                "padding-right: 20px;" +
+                "padding-left: 10px;" +
+                "word-break: break-all;" +
+                "word-break: break-word;" +
+                "font-family: -apple-system,BlinkMacSystemFont,\"Segoe UI\",Roboto,\"Helvetica Neue\",Arial,\"Noto Sans\",sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\",\"Segoe UI Symbol\",\"Noto Color Emoji\";" +
+                "}" +
+                "a {" +
+                "color: rgb(0, 191, 255);" +
+                "}";
     }
 
     /**

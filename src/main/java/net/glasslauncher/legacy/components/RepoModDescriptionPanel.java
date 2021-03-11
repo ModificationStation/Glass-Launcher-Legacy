@@ -29,7 +29,7 @@ public class RepoModDescriptionPanel extends DetailsPanel {
         this.parent = parent;
 
         name.setText("<style>" +
-                Config.CSS + "</style><body><div style=\"font-size: 18px;\">" +
+                Config.getCSS() + "</style><body><div style=\"font-size: 18px;\">" +
                 mod.getName() + " <sup style=\"font-size: 10px;\">by " +
                 mod.getAuthors()[0].getUsername() + "</sup></div></body>");
         Node document = PARSER.parse(mod.getDescription().replace("\n", "  \n"));
@@ -41,7 +41,7 @@ public class RepoModDescriptionPanel extends DetailsPanel {
         this.version = (Version) version;
 
         name.setText("<style>" +
-                Config.CSS + "</style><body><div style=\"font-size: 18px;\">" +
+                Config.getCSS() + "</style><body><div style=\"font-size: 18px;\">" +
                 this.version.getVersion() + " <sup style=\"font-size: 10px;\"></div></body>");
         Node document = PARSER.parse(this.version.getDescription().replace("\n", "  \n"));
         description.setText(RENDERER.render(document));

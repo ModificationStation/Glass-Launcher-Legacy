@@ -18,7 +18,7 @@ public class LocalModDetailsPanel extends DetailsPanel {
     public void setMod(Object mod) {
         this.localMod = (Mod) mod;
         name.setText("<style>" +
-                Config.CSS + "</style><body><div style=\"font-size: 18px;\">" +
+                Config.getCSS() + "</style><body><div style=\"font-size: 18px;\">" +
                 localMod.getName() + " <sup style=\"font-size: 10px;\">by " +
                 localMod.getAuthors()[0] + "</sup></div></body>");
         description.setText(localMod.getDescription());
