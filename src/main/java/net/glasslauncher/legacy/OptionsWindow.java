@@ -239,7 +239,12 @@ public class OptionsWindow extends JDialog {
         jarMods = new ArrayList<>();
         JScrollPane modListScroll = new JScrollPane();
         modDragDropList = new DragDropList(jarMods, instPath);
+        if (!Config.getLauncherConfig().isThemeDisabled()) {
+            modListScroll.getViewport().setBackground(new Color(52, 52, 52));
+            modDragDropList.setBackground(new Color(52, 52, 52));
+        }
         refreshJarModList();
+        modListScroll.setBorder(new EmptyBorder(0, 0, 0, 0));
         modListScroll.setBounds(20, 20, 200, 200);
         modListScroll.setViewportView(modDragDropList);
 
@@ -340,7 +345,12 @@ public class OptionsWindow extends JDialog {
         loaderMods = new ArrayList<>();
         JScrollPane modListScroll = new JScrollPane();
         loaderModDragDropList = new ModLocalList(loaderMods, instPath, modDetailsPanel);
+        if (!Config.getLauncherConfig().isThemeDisabled()) {
+            modListScroll.getViewport().setBackground(new Color(52, 52, 52));
+            loaderModDragDropList.setBackground(new Color(52, 52, 52));
+        }
         refreshLoaderModList();
+        modListScroll.setBorder(new EmptyBorder(0, 0, 0, 0));
         modListScroll.setBounds(20, 20, 200, 200);
         modListScroll.setViewportView(loaderModDragDropList);
 
