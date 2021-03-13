@@ -93,8 +93,7 @@ public class Wrapper {
         args.add("-Djava.library.path=" + instPath + "/bin/natives");
         args.add("-Dfabric.gameJarPath=" + instPath + "/bin/minecraft.jar");
         args.add("-cp");
-        args.add(Config.getAbsolutePathForCP(instance, new String[] {
-                System.getProperty("java.class.path"),
+        args.add(System.getProperty("java.class.path") + (Config.OS.equals("windows")? ";" : ":") + Config.getAbsolutePathForCP(instance, new String[] {
                 ".minecraft/bin/minecraft.jar",
                 ".minecraft/bin/lwjgl.jar",
                 ".minecraft/bin/lwjgl_util.jar",
