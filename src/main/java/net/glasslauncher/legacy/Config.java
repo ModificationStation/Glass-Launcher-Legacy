@@ -164,7 +164,7 @@ public class Config {
         StringBuilder paths = new StringBuilder();
 
         for (int i = 0; i < (relPaths.length-1); i++) {
-            paths.append(instPath).append(relPaths[i]).append(";");
+            paths.append(instPath).append(relPaths[i]).append(OS.equals("windows")? ";" : ":");
         }
 
         paths.append(instPath).append(relPaths[relPaths.length-1]);
