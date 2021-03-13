@@ -3,10 +3,10 @@ package net.glasslauncher.legacy;
 import net.chris54721.openmcauthenticator.OpenMCAuthenticator;
 import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.common.FileUtils;
-import net.glasslauncher.legacy.components.templates.JButtonScaling;
 import net.glasslauncher.legacy.components.JPanelDirt;
 import net.glasslauncher.legacy.components.LoginPanel;
 import net.glasslauncher.legacy.components.MinecraftLogo;
+import net.glasslauncher.legacy.components.templates.JButtonScaling;
 import net.glasslauncher.legacy.jsontemplate.LoginInfo;
 import net.glasslauncher.legacy.mc.Wrapper;
 import net.glasslauncher.legacy.util.MSLoginHandler;
@@ -201,9 +201,9 @@ class MainWindow extends JFrame {
         Config.getLauncherConfig().saveFile();
         Wrapper mc = new Wrapper();
         mc.startMC();
-        Config.getLauncherConfig().setLoginInfo(null);
         if (Config.getLauncherConfig().getLoginInfo().getAccessToken().isEmpty()) {
             loginPanel.setHasToken(false);
+            Config.getLauncherConfig().setLoginInfo(null);
         }
     }
 
