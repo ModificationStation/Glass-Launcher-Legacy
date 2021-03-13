@@ -20,8 +20,8 @@ import java.io.*;
 import java.util.*;
 
 class MainWindow extends JFrame {
-    private int orgWidth = 854;
-    private int orgHeight = 480;
+    private int orgWidth = 870;
+    private int orgHeight = 520;
 
     private final Panel mainPanel = new Panel();
     private LoginPanel loginPanel;
