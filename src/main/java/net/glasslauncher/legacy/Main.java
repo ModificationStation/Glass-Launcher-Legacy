@@ -22,8 +22,6 @@ public class Main {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // Bad javafx, no cleanup for you.
-        PlatformImpl.setImplicitExit(false);
         // Make tooltips show faster.
         ToolTipManager.sharedInstance().setInitialDelay(0);
 
@@ -40,6 +38,16 @@ public class Main {
             Config.loadConfigFiles();
         } catch (Exception e) {
             e.printStackTrace();
+            throw new RuntimeException("Something went extremely wrong reading config!");
+        }
+
+        // Bad javafx, no cleanup for you cause you like to break.
+        try {
+            Class.forName("com.sun.javafx.application.PlatformImpl");
+            com.sun.javafx.application.PlatformImpl.setImplicitExit(false);
+        } catch (Exception e) {
+            Main.LOGGER.warning("Can't find a valid JavaFX installation! Disabling Microsoft authentication.");
+            Config.getLauncherConfig().setHidingMSButton(true);
         }
 
         for (String arg : args) {
