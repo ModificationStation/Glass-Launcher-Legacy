@@ -1,6 +1,5 @@
 package net.glasslauncher.legacy;
 
-import com.sun.javafx.application.PlatformImpl;
 import net.glasslauncher.common.LoggerFactory;
 
 import javax.swing.*;
