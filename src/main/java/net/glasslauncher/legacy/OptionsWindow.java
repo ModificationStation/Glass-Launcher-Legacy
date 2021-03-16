@@ -50,6 +50,7 @@ public class OptionsWindow extends JDialog {
     private JCheckBox capeproxy;
     private JCheckBox soundproxy;
     private JCheckBox loginproxy;
+    private JCheckBox disableIntermediary;
     private JComboBox<String> instanceVersion;
 
     /**
@@ -102,6 +103,7 @@ public class OptionsWindow extends JDialog {
                     instanceConfig.setProxyCape(capeproxy.isSelected());
                     instanceConfig.setProxySound(soundproxy.isSelected());
                     instanceConfig.setProxyLogin(loginproxy.isSelected());
+                    instanceConfig.setDisableIntermediary(disableIntermediary.isSelected());
                     instanceConfig.setVersion((String) instanceVersion.getSelectedItem());
 
                     modList.setJarMods(new ArrayList<>());
@@ -131,6 +133,14 @@ public class OptionsWindow extends JDialog {
         this.panel.add(tabpane);
         pack();
         setLocationRelativeTo(frame);
+
+        if (jarMods.size() > 0 && !instanceConfig.isDisableIntermediary()) {
+            int response = JOptionPane.showConfirmDialog(this, "Jar mods detected. Do you want to disable intermediary mappings?\nThis will break fabric mods, but will unbreak your jar mods.", "Warning", JOptionPane.YES_NO_OPTION);
+            if (response == JOptionPane.YES_OPTION) {
+                disableIntermediary.setSelected(true);
+            }
+        }
+
         setVisible(true);
     }
 
@@ -214,6 +224,16 @@ public class OptionsWindow extends JDialog {
         loginproxy.setBounds(150, 181, 20, 20);
         loginproxy.setSelected(instanceConfig.isProxyLogin());
         instsettings.add(loginproxy);
+
+        JLabelFancy disableIntermediaryLabel = new JLabelFancy("Disable Intermediary (Can break jar mods if off):");
+        disableIntermediaryLabel.setBounds(20, 208, 250, 20);
+        instsettings.add(disableIntermediaryLabel);
+
+        disableIntermediary = new JCheckBox();
+        disableIntermediary.setOpaque(false);
+        disableIntermediary.setBounds(280, 209, 20, 20);
+        disableIntermediary.setSelected(instanceConfig.isDisableIntermediary());
+        instsettings.add(disableIntermediary);
 
         JLabelFancy instanceVersionLabel = new JLabelFancy("Minecraft Version:");
         instanceVersionLabel.setBounds(20, 372, 120, 20);
