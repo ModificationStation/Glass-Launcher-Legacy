@@ -42,7 +42,7 @@ public class JWebView {
     public void setText(String text) {
         SwingUtilities.invokeLater(() -> {
             try {
-                webview.setText("<head><base href=\"" + (new File(CommonConfig.GLASS_PATH + "cache/repo-images")).toURI().toURL() + "\"><style>" + Config.getCSS() + "</style></head><body>" + text + "</body>");
+                webview.setText("<head><base href=\"" + (new File(CommonConfig.getGlassPath() + "cache/repo-images")).toURI().toURL() + "\"><style>" + Config.getCSS() + "</style></head><body>" + text + "</body>");
                 webview.select(0, 0);
                 webview.revalidate();
             } catch (Exception e) {

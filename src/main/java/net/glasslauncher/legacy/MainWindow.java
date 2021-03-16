@@ -54,7 +54,7 @@ class MainWindow extends JFrame {
                                       console.dispose();
                                   }
                                   dispose();
-                                  FileUtils.delete(new File(CommonConfig.GLASS_PATH + "cache/repo-images"));
+                                  FileUtils.delete(new File(CommonConfig.getGlassPath() + "cache/repo-images"));
                                   System.exit(0);
                               }
                           }
@@ -167,7 +167,7 @@ class MainWindow extends JFrame {
     public void refreshInstanceList() {
         Main.LOGGER.info("Refreshing instance list...");
         instsel.setModel(new DefaultComboBoxModel<>());
-        File file = new File(CommonConfig.GLASS_PATH + "instances");
+        File file = new File(CommonConfig.getGlassPath() + "instances");
         String[] instances = file.list((current, name) -> new File(current, name).isDirectory());
         String lastUsedInstance = Config.getLauncherConfig().getLastUsedInstance();
         boolean exists = false;

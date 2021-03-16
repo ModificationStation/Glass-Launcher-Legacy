@@ -81,7 +81,7 @@ public class InstanceManager {
                 }
             }
 
-            if ((new File(CommonConfig.GLASS_PATH + "instances/" + instanceName)).exists()) {
+            if ((new File(CommonConfig.getGlassPath() + "instances/" + instanceName)).exists()) {
                 Main.LOGGER.info("Instance \"" + instanceName + "\" already exists!");
                 return;
             }
@@ -330,7 +330,7 @@ public class InstanceManager {
         try {
             for (MinecraftResource minecraftResource : minecraftResources.getFiles()) {
                 File file = new File(basePath + minecraftResource.getFile());
-                File cacheFile = new File(CommonConfig.GLASS_PATH + "cache/resources/" + minecraftResource.getFile());
+                File cacheFile = new File(CommonConfig.getGlassPath() + "cache/resources/" + minecraftResource.getFile());
                 String md5 = minecraftResource.getMd5();
                 String url = baseURL + minecraftResource.getFile().replace(" ", "%20");
 

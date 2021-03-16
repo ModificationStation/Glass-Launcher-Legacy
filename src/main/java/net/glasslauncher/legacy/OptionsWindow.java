@@ -68,7 +68,7 @@ public class OptionsWindow extends JDialog {
         add(this.panel);
 
         instName = instance;
-        instPath = CommonConfig.GLASS_PATH + "instances/" + instance + "/";
+        instPath = CommonConfig.getGlassPath() + "instances/" + instance + "/";
         if (!(new File(instPath)).exists()) {
             JOptionPane.showMessageDialog(this, "Selected instance does not exist, or one hasn't been selected.", "Warning", JOptionPane.WARNING_MESSAGE);
             return;

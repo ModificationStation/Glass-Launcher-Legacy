@@ -18,7 +18,7 @@ public class TempZipFile {
     public TempZipFile(String zipFilePath) {
         File zipFile = new File(zipFilePath);
         originalPath = zipFilePath;
-        tempPath = CommonConfig.GLASS_PATH + "temp/" + zipFile.getName();
+        tempPath = CommonConfig.getGlassPath() + "temp/" + zipFile.getName();
         File tempFile = new File(destDirBypass + tempPath);
         if (tempFile.exists()) {
             try {

@@ -79,7 +79,7 @@ public class Config {
     /**
      * The path of the launcher's cache files.
      */
-    public static final String CACHE_PATH = CommonConfig.GLASS_PATH + "cache/";
+    public static final String CACHE_PATH = CommonConfig.getGlassPath() + "cache/";
 
     /**
      * The path of the Java binary running the launcher.
@@ -97,10 +97,10 @@ public class Config {
     public static void loadConfigFiles() {
         Gson gson = new Gson();
         mcVersions = gson.fromJson(new InputStreamReader(Main.class.getResourceAsStream("assets/mcversions.json")), MCVersions.class);
-        launcherConfig = (LauncherConfig) JsonConfig.loadConfig(CommonConfig.GLASS_PATH + "launcher_config.json", LauncherConfig.class);
+        launcherConfig = (LauncherConfig) JsonConfig.loadConfig(CommonConfig.getGlassPath() + "launcher_config.json", LauncherConfig.class);
         if (launcherConfig == null) {
             Main.LOGGER.info("Generating new launcher config.");
-            launcherConfig = new LauncherConfig(CommonConfig.GLASS_PATH + "launcher_config.json");
+            launcherConfig = new LauncherConfig(CommonConfig.getGlassPath() + "launcher_config.json");
         }
     }
 
@@ -182,7 +182,7 @@ public class Config {
         if (instance == null || instance.isEmpty()) {
             throw new IllegalArgumentException("Instance cannot be empty or null!");
         }
-        return CommonConfig.GLASS_PATH + "instances/" + instance + "/";
+        return CommonConfig.getGlassPath() + "instances/" + instance + "/";
     }
 
     public static URL msAuthURL;

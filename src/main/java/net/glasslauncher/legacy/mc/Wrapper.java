@@ -29,7 +29,7 @@ public class Wrapper {
 
     public Wrapper() {
         this.instance = Config.getLauncherConfig().getLastUsedInstance();
-        String instPath = CommonConfig.GLASS_PATH + "instances/" + instance + "/.minecraft";
+        String instPath = CommonConfig.getGlassPath() + "instances/" + instance + "/.minecraft";
 
         this.getConfig();
         Map<String, MCVersion> mappings = Config.getMcVersions().getMappings();
@@ -112,7 +112,7 @@ public class Wrapper {
     }
 
     private void getConfig() {
-        String instPath = CommonConfig.GLASS_PATH + "instances/" + instance;
+        String instPath = CommonConfig.getGlassPath() + "instances/" + instance;
         File confFile = new File(instPath + "/instance_config.json");
 
         if (!confFile.exists()) {
@@ -136,7 +136,7 @@ public class Wrapper {
         mcInit.directory(new File(Config.getInstancePath(instance) + "/.minecraft"));
 
         Map<String, String> mcEnv = mcInit.environment();
-        String newAppData = CommonConfig.GLASS_PATH + "instances/" + instance;
+        String newAppData = CommonConfig.getGlassPath() + "instances/" + instance;
         mcEnv.put("appdata", newAppData);
         mcEnv.put("home", newAppData);
         mcEnv.put("user.home", newAppData);

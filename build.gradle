@@ -1,3 +1,5 @@
+import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
+
 plugins {
     id 'com.github.johnrengelman.shadow' version '5.2.0'
     id 'java'
@@ -8,8 +10,8 @@ repositories {
     mavenCentral()
     mavenLocal()
     jcenter()
+    maven { url "https://maven.glass-launcher.net/repo/" }
     maven { url "https://jitpack.io" }
-    maven { url "https://maven.glass-launcher.net/repo" }
     maven { url  "https://maven.fabricmc.net/" }
 }
 
@@ -88,7 +90,7 @@ dependencies {
     // Various utility classes that help dramatically with handling files and URLs.
     // https://glass-launcher.net
     // Same thing, use if you want, though there are no docs.
-    compile group: "net.glasslauncher", name: "commons", version: "1.2"
+    compile group: "net.glasslauncher", name: "commons", version: "1.3"
 
 }
 
@@ -114,7 +116,7 @@ task listrepos {
 
 // Creates a fully functional exe on windows. Does not work on other OSes (duh).
 createExe {
-    if (org.gradle.nativeplatform.platform.internal.DefaultNativePlatform.currentOperatingSystem.isWindows()) {
+    if (DefaultNativePlatform.currentOperatingSystem.isWindows()) {
         mainClassName = 'net.glasslauncher.legacy.Main'
         icon = "${projectDir}/glass.ico"
         launch4j.outputDir = "libs"
