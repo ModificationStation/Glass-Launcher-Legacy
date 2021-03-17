@@ -1,11 +1,19 @@
 #### v0.5
-\+ Added some basic glass-repo integration.  
-\+ Added the `-help` and `-h` paramater.  
+\+ Added some ~~basic~~ pretty advanced glass-repo integration.  
+\+ Added the `-help` and `-h` parameters.  
 \+ Added a mod info panel for viewing info about mods, if they have info attached.  
-\+ Added Microsoft account support.
-\+ Added a proper logger for minecraft so you can get an isolated minecraft log inside of `.glass-launcher/logs/minecraft` now.  
+\+ Added Microsoft account support. The button can be hidden in the instances window for those who dislike it.  
+\+ Added a proper logger for minecraft so you can get an isolated minecraft log inside of `.glass-launcher/logs/minecraft` now.    
 \+ Made the launcher a bit more verbose when doing background tasks.  
-\* The Options and Instances windows are now themed. This is togglable inside the instances window if you prefer the plain theme.  
+\+ Added some basic compatibility checks.  
+\+ Added the ability to set the install folder through the `-installdir` parameter.  
+\+ Added a new default theme! Can be disabled in the instances window for your system default.  
+\+ Mods can be dragged into a mod list to be added to the current instance.  
+\+ Made it so instance versions can be changed. Jars will have to be provided manually though.  
+\* Changed how glass-launcher gets its version. No more mislabelled launcher versions.  
+\* Made the console not display if `-noguiconsole` is passed, or if Java detects an attached console.  
+\* Fixed new subwindows not being centered on the parent window. Should make it less painful to use on multi-monitor setups.  
+\* JavaFX is no longer mandatory, everything now works without JavaFX aside from Microsoft auth.    
 \* Knot is now used to launch Minecraft instead of EasyMineLauncher. This should fix Minecraft hanging when being closed, as well as adding [Cursed Fabric](https://github.com/minecraft-cursed-legacy/Cursed-fabric-loader) support.  
 \* Changed how authentication is handled. It is now much less janky and will now remember your auth token.  
 \* Updated dependencies used in glass-launcher.  
