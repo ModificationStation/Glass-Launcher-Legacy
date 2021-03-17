@@ -13,7 +13,9 @@ public class RepoModTableModel extends AbstractTableModel {
             "Name",
             "Short Description",
             "Latest Version",
-            "Minecraft Versions"
+            "Minecraft Versions",
+            "Types",
+            "Categories"
     };
 
     public RepoModTableModel() {
@@ -30,6 +32,8 @@ public class RepoModTableModel extends AbstractTableModel {
                 add(mod.getShortDescription());
                 add(mod.getLatestVersion());
                 add(Arrays.toString(mod.getMinecraftVersions()).replaceAll("[\\[\\]]", ""));
+                add(Arrays.toString(mod.getTypes()).replaceAll("[\\[\\]]", ""));
+                add(Arrays.toString(mod.getCategories()).replaceAll("[\\[\\]]", ""));
             }});
             idList.add(mod.getId());
         });
@@ -45,7 +49,7 @@ public class RepoModTableModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return 5;
+        return HEADERS.length;
     }
 
     @Override

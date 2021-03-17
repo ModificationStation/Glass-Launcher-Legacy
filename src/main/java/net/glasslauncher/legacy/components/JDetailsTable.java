@@ -15,6 +15,8 @@ public class JDetailsTable extends JTable {
 
     public JDetailsTable(Frame parent, RepoModTableModel tableModel, String instName) {
         super(tableModel);
+        setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        setAutoCreateRowSorter(true);
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {

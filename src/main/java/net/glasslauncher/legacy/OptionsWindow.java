@@ -22,6 +22,8 @@ import net.glasslauncher.repo.api.mod.RepoReader;
 
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -442,16 +444,30 @@ public class OptionsWindow extends JDialog {
         tableModel = new RepoModTableModel();
         table = new JDetailsTable(parent, tableModel, instName);
         table.setFillsViewportHeight(true);
+        TableRowSorter<? extends TableModel> sorter = (TableRowSorter<? extends TableModel>) table.getRowSorter();
+        sorter.setSortable(5, false);
+        sorter.setSortable(6, false);
+        table.getTableHeader().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int col = table.columnAtPoint(e.getPoint());
+                if (col > 4) {
+                    System.out.println("yay!");
+                }
+                else {
+                    super.mouseClicked(e);
+                }
+            }
+        });
 
         // Async cause otherwise options freezes when opening for 1-5 seconds.
         new Thread(this::refreshRepo).start();
 
-        JScrollPane modListScroll = new JScrollPane();
+        JScrollPane modListScroll = new JScrollPane(table);
         if (!Config.getLauncherConfig().isThemeDisabled()) {
             modListScroll.getViewport().setBackground(new Color(52, 52, 52));
         }
         modListScroll.setBorder(new EmptyBorder(0, 0, 0, 0));
-        modListScroll.setViewportView(table);
         modRepoPanel.add(modListScroll, BorderLayout.CENTER);
 
         return modRepoPanel;
