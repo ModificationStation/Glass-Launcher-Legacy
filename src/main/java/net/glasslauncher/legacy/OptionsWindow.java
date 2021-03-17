@@ -35,7 +35,6 @@ public class OptionsWindow extends JDialog {
     private ModList modList;
     private ArrayList<Mod> jarMods;
     private DragDropList modDragDropList;
-    private RepoModVersionList modRepoList;
 
     private DragDropList loaderModDragDropList;
     private ArrayList<Mod> loaderMods;
@@ -96,6 +95,12 @@ public class OptionsWindow extends JDialog {
         addWindowListener(
             new WindowAdapter() {
                 public void windowClosing(WindowEvent we) {
+                    if (jarMods.size() > 0 && !instanceConfig.isDisableIntermediary()) {
+                        int response = JOptionPane.showConfirmDialog(parent, "Jar mods detected. Do you want to disable intermediary mappings?\nThis will break fabric mods, but will unbreak your jar mods.", "Warning", JOptionPane.YES_NO_OPTION);
+                        if (response == JOptionPane.YES_OPTION) {
+                            disableIntermediary.setSelected(true);
+                        }
+                    }
                     instanceConfig.setJavaArgs(javaargs.getText());
                     instanceConfig.setMaxRam(maxram.getText());
                     instanceConfig.setMinRam(minram.getText());
@@ -133,13 +138,6 @@ public class OptionsWindow extends JDialog {
         this.panel.add(tabpane);
         pack();
         setLocationRelativeTo(frame);
-
-        if (jarMods.size() > 0 && !instanceConfig.isDisableIntermediary()) {
-            int response = JOptionPane.showConfirmDialog(this, "Jar mods detected. Do you want to disable intermediary mappings?\nThis will break fabric mods, but will unbreak your jar mods.", "Warning", JOptionPane.YES_NO_OPTION);
-            if (response == JOptionPane.YES_OPTION) {
-                disableIntermediary.setSelected(true);
-            }
-        }
 
         setVisible(true);
     }
@@ -338,8 +336,7 @@ public class OptionsWindow extends JDialog {
         removeModsButton.setText("Remove Selected Mods");
         removeModsButton.setForeground(new Color(185, 0, 0));
         removeModsButton.addActionListener(event -> {
-            for (Object modObj : modDragDropList.getSelectedValuesList()) {
-                Mod mod = (Mod) modObj;
+            for (Mod mod : modDragDropList.getSelectedValuesList()) {
                 (new File(instPath + "mods/" + mod.getFileName())).delete();
             }
             refreshJarModList();
@@ -418,9 +415,9 @@ public class OptionsWindow extends JDialog {
         removeModsButton.setText("Remove Selected Mods");
         removeModsButton.setForeground(new Color(185, 0, 0));
         removeModsButton.addActionListener(event -> {
-            for (Object modObj : modDragDropList.getSelectedValuesList()) {
-                Mod mod = (Mod) modObj;
-                (new File(instPath + "mods/" + mod.getFileName())).delete();
+            System.out.println(loaderModDragDropList);
+            for (Mod mod : loaderModDragDropList.getSelectedValuesList()) {
+                (new File(instPath + ".minecraft/mods/" + mod.getFileName())).delete();
             }
             refreshLoaderModList();
         });
@@ -442,9 +439,6 @@ public class OptionsWindow extends JDialog {
         JPanel modRepoPanel = new JPanel();
         modRepoPanel.setLayout(new BorderLayout());
         modRepoPanel.setOpaque(false);
-//        DetailsPanel modDetailsPanel = new RepoModDetailsPanel(instName);
-//        modRepoList = new ModRepoList(modDetailsPanel);
-//        modRepoPanel.add(modDetailsPanel);
         tableModel = new RepoModTableModel();
         table = new JDetailsTable(parent, tableModel, instName);
         table.setFillsViewportHeight(true);
