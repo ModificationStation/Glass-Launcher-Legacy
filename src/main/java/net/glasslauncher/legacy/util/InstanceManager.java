@@ -328,15 +328,62 @@ public class InstanceManager {
         }
 
         try {
+            //Multiple Thread Downloader - Start
+            ArrayList<DownloadThread> downloadHandlers = new ArrayList<>();
+            int maximumDownloadThreads = 16;
+            //Multiple Thread Downloader - End
+
+
             for (MinecraftResource minecraftResource : minecraftResources.getFiles()) {
+
+
+                //Limit the number of download threads. Basically sleep the main thread while waiting for threads to finish.
+                int runningThreads = 0;
+                for (DownloadThread downloadThread : downloadHandlers) {
+                    if (!downloadThread.isCompleted()) {
+                        runningThreads = runningThreads + 1;
+                    }
+                }
+                //Join threads and wait for them to finish. This isn't the most effective system, but it works.
+                if (runningThreads > maximumDownloadThreads) {
+                    for (DownloadThread downloadThread : downloadHandlers) {
+                        if (!downloadThread.isCompleted()) {
+                            downloadThread.join();
+                        }
+                    }
+                }
+
+
                 File file = new File(basePath + minecraftResource.getFile());
                 File cacheFile = new File(CommonConfig.getGlassPath() + "cache/resources/" + minecraftResource.getFile());
                 String md5 = minecraftResource.getMd5();
                 String url = baseURL + minecraftResource.getFile().replace(" ", "%20");
 
-                FileUtils.downloadFile(url, cacheFile.getParent(), md5);
-                file.getParentFile().mkdirs();
-                Files.copy(cacheFile.toPath(), file.toPath());
+//                System.out.println("Queueing " + url + " for download.");
+                DownloadThread download = new DownloadThread(url, cacheFile, file, md5);
+                download.start();
+                downloadHandlers.add(download);
+            }
+
+            //Retrieve manifests from threads
+            boolean isCompleted = false;
+            while (!isCompleted) {
+                isCompleted = true;
+                for (DownloadThread download : downloadHandlers) {
+                    if (!download.isCompleted()) {
+                        isCompleted = false;
+                        continue;
+                    }
+                    if (download.getData() instanceof Exception) {
+                        Exception exception = (Exception) download.getData();
+                        throw exception;
+                    }
+
+                    //Version downloaded successfully
+
+                }
+
+
             }
         } catch (Exception e) {
             e.printStackTrace();
