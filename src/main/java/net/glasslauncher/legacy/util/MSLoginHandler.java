@@ -9,6 +9,7 @@ import javafx.scene.*;
 import javafx.scene.layout.*;
 import javafx.scene.web.*;
 import net.glasslauncher.legacy.Config;
+import net.glasslauncher.legacy.Main;
 import net.glasslauncher.legacy.jsontemplate.LoginInfo;
 import net.glasslauncher.legacy.jsontemplate.MCProfile;
 import net.glasslauncher.legacy.jsontemplate.MSAccessToken;
@@ -21,6 +22,7 @@ import java.net.*;
 import java.nio.charset.*;
 import java.util.*;
 import java.util.concurrent.atomic.*;
+import java.util.logging.Logger;
 
 /**
  * Mostly shamelessly copy-pasted from MineOnline cause I know nothing about MS auth stuff.
@@ -62,12 +64,16 @@ public class MSLoginHandler {
         frame.setResizable(false);
     }
 
-    public boolean verify() {
+    public boolean verifyStoredToken() {
         String token = Config.getLauncherConfig().getLoginInfo().getAccessToken();
         if (token != null && !token.isEmpty() && checkMcProfile(token)) {
             return true;
         }
-        login();
+        Main.LOGGER.warning("Couldn't verify token. Requesting new login.");
+        int response = JOptionPane.showConfirmDialog(parent, "Couldn't verify stored MS token. This is normal and just requires you to login again.", "Confirm", JOptionPane.YES_NO_OPTION);
+        if (response == JOptionPane.YES_OPTION) {
+            login();
+        }
         return Config.getLauncherConfig().getLoginInfo() != null;
     }
 

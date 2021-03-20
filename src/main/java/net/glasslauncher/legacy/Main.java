@@ -104,8 +104,8 @@ public class Main {
                                 " -dosound      : Enables the sound part of the proxy.\n" +
                                 " -dologin      : Enables the login part of the proxy. The server you are joining must be using an online fix for this to do anything.\n" +
                                 " -doskin       : Enables the skin part of the proxy. Fixes all references to player skins through Mojang/Minecraft servers.\n" +
-                                " -docape       : Enables the cape part of the proxy. Fixes all references to player capes through Mojang/Minecraft servers." +
-                                "-noguiconsole  : Forces the launcher to run without a console window." +
+                                " -docape       : Enables the cape part of the proxy. Fixes all references to player capes through Mojang/Minecraft servers.\n" +
+                                "-noguiconsole  : Forces the launcher to run without a console window.\n" +
                                 "-installdir    : Changes install dir to the specified path."
                 );
                 return;

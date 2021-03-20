@@ -210,7 +210,7 @@ class MainWindow extends JFrame {
     private boolean verifyLogin(boolean canOffline) {
         if (Config.getLauncherConfig().isMSToken()) {
             Main.LOGGER.info("Verifying stored MS auth token...");
-            if (!(new MSLoginHandler(this)).verify()) {
+            if (!(new MSLoginHandler(this)).verifyStoredToken()) {
                 Main.LOGGER.severe("Unable to verify stored MS auth token.");
                 Config.getLauncherConfig().setLoginInfo(null);
                 return false;
