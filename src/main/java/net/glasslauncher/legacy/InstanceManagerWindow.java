@@ -17,8 +17,8 @@ import java.io.*;
 import java.util.*;
 
 class InstanceManagerWindow extends JDialog {
-    private JPanel deletePanel = new JPanel();
     private JPanel panel;
+    private JPanel deletePanel = new JPanel();
 
     private JCheckBox hideMSCheckbox;
     private JCheckBox disableThemeCheckbox;
@@ -47,6 +47,7 @@ class InstanceManagerWindow extends JDialog {
         tabbedPane.setBorder(new EmptyBorder(0, -2, -2, -2));
         tabbedPane.addTab("Create", makeCreateTab());
         tabbedPane.addTab("Delete Instance", makeDeleteTab());
+        tabbedPane.addTab("Launcher Settings", makeLauncherTab());
 
         panel.add(tabbedPane);
 
@@ -151,31 +152,6 @@ class InstanceManagerWindow extends JDialog {
         });
         instanceFolderButton.setBounds(5, 247, 150, 22);
 
-        JLabelFancy hideMSButtonLabel = new JLabelFancy("Hide MS Login Button:");
-        hideMSButtonLabel.setBounds(400, 247, 120, 20);
-
-        hideMSCheckbox = new JCheckBox();
-        hideMSCheckbox.setOpaque(false);
-        hideMSCheckbox.setBounds(530, 247, 20, 20);
-        hideMSCheckbox.setSelected(Config.getLauncherConfig().isHidingMSButton());
-
-        JLabelFancy disableThemeLabel = new JLabelFancy("Disable Custom Theme:");
-        disableThemeLabel.setBounds(400, 223, 120, 20);
-
-        disableThemeCheckbox = new JCheckBox();
-        disableThemeCheckbox.setOpaque(false);
-        disableThemeCheckbox.setBounds(530, 223, 20, 20);
-        disableThemeCheckbox.setSelected(Config.getLauncherConfig().isThemeDisabled());
-
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent windowEvent) {
-                Config.getLauncherConfig().setHidingMSButton(hideMSCheckbox.isSelected());
-                Config.getLauncherConfig().setThemeDisabled(disableThemeCheckbox.isSelected());
-                Config.getLauncherConfig().saveFile();
-            }
-        });
-
         createPanel.add(installModpackDir);
         createPanel.add(installModpackDirButton);
         createPanel.add(instanceZipSelectButton);
@@ -185,10 +161,6 @@ class InstanceManagerWindow extends JDialog {
         createPanel.add(instanceVersion);
         createPanel.add(instanceVersionButton);
         createPanel.add(instanceFolderButton);
-        createPanel.add(hideMSButtonLabel);
-        createPanel.add(hideMSCheckbox);
-        createPanel.add(disableThemeLabel);
-        createPanel.add(disableThemeCheckbox);
 
         return createPanel;
     }
@@ -219,8 +191,11 @@ class InstanceManagerWindow extends JDialog {
                 deleteButton.setAlignmentX(Component.CENTER_ALIGNMENT);
                 deleteButton.addActionListener((e) -> {
                     try {
-                        FileUtils.delete(instance);
-                        updateInstanceList();
+                        int response = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete \"" + instance.getName() + "\"?", "Confirm", JOptionPane.YES_NO_OPTION);
+                        if (response == JOptionPane.YES_OPTION) {
+                            FileUtils.delete(instance);
+                            updateInstanceList();
+                        }
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
@@ -228,5 +203,44 @@ class InstanceManagerWindow extends JDialog {
                 deletePanel.add(deleteButton);
             }
         }
+    }
+
+    private JPanel makeLauncherTab() {
+        JPanel launcherPanel = new JPanel();
+        launcherPanel.setOpaque(false);
+        launcherPanel.setBounds(0, 0, 580, 340);
+        launcherPanel.setLayout(null);
+
+        JLabelFancy hideMSButtonLabel = new JLabelFancy("Hide MS Login Button:");
+        hideMSButtonLabel.setBounds(5, 5, 120, 20);
+
+        hideMSCheckbox = new JCheckBox();
+        hideMSCheckbox.setOpaque(false);
+        hideMSCheckbox.setBounds(135, 6, 20, 20);
+        hideMSCheckbox.setSelected(Config.getLauncherConfig().isHidingMSButton());
+
+        JLabelFancy disableThemeLabel = new JLabelFancy("Disable Custom Theme:");
+        disableThemeLabel.setBounds(5, 29, 120, 20);
+
+        disableThemeCheckbox = new JCheckBox();
+        disableThemeCheckbox.setOpaque(false);
+        disableThemeCheckbox.setBounds(135, 30, 20, 20);
+        disableThemeCheckbox.setSelected(Config.getLauncherConfig().isThemeDisabled());
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent windowEvent) {
+                Config.getLauncherConfig().setHidingMSButton(hideMSCheckbox.isSelected());
+                Config.getLauncherConfig().setThemeDisabled(disableThemeCheckbox.isSelected());
+                Config.getLauncherConfig().saveFile();
+            }
+        });
+
+        launcherPanel.add(hideMSButtonLabel);
+        launcherPanel.add(hideMSCheckbox);
+        launcherPanel.add(disableThemeLabel);
+        launcherPanel.add(disableThemeCheckbox);
+
+        return launcherPanel;
     }
 }
