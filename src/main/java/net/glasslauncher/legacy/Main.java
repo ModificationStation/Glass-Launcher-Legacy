@@ -101,7 +101,7 @@ public class Main {
                 LOGGER.info(
                         "\n" +
                                 "-proxy         : Launches in proxy only mode. No GUI aside from the console is shown. Defaults to all options enabled unless other paramaters are passed.\n" +
-                                " -dosound      : Enables the sound part of the proxy.\n" +
+                                " -dosound      : Enables the sound part of the proxy. Uses the oldest sound where available, so sounds might not be accurate on newer versions.\n" +
                                 " -dologin      : Enables the login part of the proxy. The server you are joining must be using an online fix for this to do anything.\n" +
                                 " -doskin       : Enables the skin part of the proxy. Fixes all references to player skins through Mojang/Minecraft servers.\n" +
                                 " -docape       : Enables the cape part of the proxy. Fixes all references to player capes through Mojang/Minecraft servers.\n" +
