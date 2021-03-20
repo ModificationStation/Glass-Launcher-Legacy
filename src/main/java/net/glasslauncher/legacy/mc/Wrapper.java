@@ -34,7 +34,7 @@ public class Wrapper {
         this.getConfig();
         Map<String, MCVersion> mappings = Config.getMcVersions().getMappings();
 
-        if (mappings.containsKey(instJson.getVersion()) && !instJson.isDisableIntermediary()) {
+        if (!instJson.isDisableIntermediary() && mappings.containsKey(instJson.getVersion())) {
             Main.LOGGER.info("Downloading intermediary mappings for " + instJson.getVersion());
             FileUtils.downloadFile(mappings.get(instJson.getVersion()).getUrl(), Config.CACHE_PATH + "intermediary_mappings/", null, instJson.getVersion() + ".tiny");
 
