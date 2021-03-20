@@ -57,6 +57,7 @@ public class Proxy extends Thread {
         httpProxyServer = serverBoot.start();
         httpServer.start();
         Main.LOGGER.info("Proxy servers started!");
+        Main.LOGGER.info("Add \"-Dhttp.proxyHost=" + httpServer.getAddress().getHostString() + " -Dhttp.proxyPort=" + httpServer.getAddress().getPort() + "\" to your launch settings to use the proxy if you aren't using glass-launcher to launch!");
     }
 
     public void exit() {
