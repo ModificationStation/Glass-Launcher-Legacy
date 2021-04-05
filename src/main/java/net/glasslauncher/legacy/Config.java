@@ -66,6 +66,12 @@ public class Config {
     }});
 
     /**
+     * Base URL for use when downloading resources.
+     * https://resourceproxy.pymcl.net/MinecraftResources/ is also an alternative in case the modstation mirror stops working.
+     */
+    public static final String BASE_RESOURCES_URL = "https://mcresources.modification-station.net/MinecraftResources/";
+
+    /**
      * The current OS of the user.
      * @see #getOSString()
      */
