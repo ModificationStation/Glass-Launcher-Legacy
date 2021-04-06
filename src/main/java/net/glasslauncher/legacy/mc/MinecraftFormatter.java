@@ -1,6 +1,7 @@
 package net.glasslauncher.legacy.mc;
 
-import java.util.logging.*;
+import java.util.logging.Formatter;
+import java.util.logging.LogRecord;
 
 public class MinecraftFormatter extends Formatter {
     @Override

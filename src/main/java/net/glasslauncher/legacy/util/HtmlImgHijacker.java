@@ -5,7 +5,7 @@ import org.commonmark.node.Image;
 import org.commonmark.node.Node;
 import org.commonmark.renderer.html.AttributeProvider;
 
-import java.util.*;
+import java.util.Map;
 
 public class HtmlImgHijacker implements AttributeProvider {
     @Override

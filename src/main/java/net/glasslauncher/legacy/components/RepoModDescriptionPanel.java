@@ -13,7 +13,8 @@ import org.commonmark.node.Node;
 
 import javax.swing.*;
 import java.awt.*;
-import java.net.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class RepoModDescriptionPanel extends DetailsPanel {
 

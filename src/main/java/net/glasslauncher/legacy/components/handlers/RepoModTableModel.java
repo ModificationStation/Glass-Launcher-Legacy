@@ -3,7 +3,9 @@ package net.glasslauncher.legacy.components.handlers;
 import net.glasslauncher.repo.api.mod.jsonobj.ModPreview;
 
 import javax.swing.table.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class RepoModTableModel extends AbstractTableModel {
     private List<List<String>> mods = new ArrayList<>();

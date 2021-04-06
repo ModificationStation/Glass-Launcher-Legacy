@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.*;
+import java.util.logging.Logger;
 
 public class Main {
     public static Logger LOGGER;

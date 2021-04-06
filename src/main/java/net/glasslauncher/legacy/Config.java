@@ -8,9 +8,12 @@ import net.glasslauncher.common.JsonConfig;
 import net.glasslauncher.legacy.jsontemplate.LauncherConfig;
 import net.glasslauncher.legacy.jsontemplate.MCVersions;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.File;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Config {
 

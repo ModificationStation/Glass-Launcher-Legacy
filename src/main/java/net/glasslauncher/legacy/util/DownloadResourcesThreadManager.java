@@ -1,6 +1,5 @@
 package net.glasslauncher.legacy.util;
 
-import lombok.Getter;
 import net.glasslauncher.common.FileUtils;
 import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;

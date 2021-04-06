@@ -6,7 +6,7 @@ import io.netty.handler.codec.http.HttpResponse;
 import net.glasslauncher.legacy.Config;
 import org.littleshoot.proxy.HttpFiltersAdapter;
 
-import java.util.*;
+import java.util.List;
 
 public class ProxyFilter extends HttpFiltersAdapter {
     private static List<String> ignoredHosts = Config.PROXY_IGNORED_HOSTS;

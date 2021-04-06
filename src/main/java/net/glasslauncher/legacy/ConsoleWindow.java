@@ -4,12 +4,13 @@ import net.glasslauncher.common.ConsoleStream;
 import net.glasslauncher.common.Pastee;
 import net.glasslauncher.legacy.components.templates.JButtonScaling;
 
-import javax.imageio.*;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.net.URISyntaxException;
 
 public class ConsoleWindow extends JFrame {
     private JTextArea textArea = new JTextArea();

@@ -7,11 +7,13 @@ import net.glasslauncher.legacy.jsontemplate.FabricMod;
 import net.glasslauncher.legacy.jsontemplate.LoaderMod;
 import net.glasslauncher.legacy.jsontemplate.Mod;
 
-import java.io.*;
-import java.net.*;
+import java.io.File;
+import java.net.URI;
 import java.nio.file.FileSystem;
-import java.nio.file.*;
-import java.util.*;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.HashMap;
 
 public class LocalMods {
 

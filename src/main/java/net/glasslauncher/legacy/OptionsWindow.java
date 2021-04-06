@@ -2,17 +2,9 @@ package net.glasslauncher.legacy;
 
 import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.common.JsonConfig;
-import net.glasslauncher.legacy.components.DragDropList;
-import net.glasslauncher.legacy.components.JButtonScalingFancy;
-import net.glasslauncher.legacy.components.JDetailsTable;
-import net.glasslauncher.legacy.components.JLabelFancy;
-import net.glasslauncher.legacy.components.JPanelBackgroundImage;
-import net.glasslauncher.legacy.components.JTextFieldFancy;
-import net.glasslauncher.legacy.components.LocalModDetailsPanel;
+import net.glasslauncher.legacy.components.*;
 import net.glasslauncher.legacy.components.handlers.RepoModTableModel;
 import net.glasslauncher.legacy.components.templates.DetailsPanel;
-import net.glasslauncher.legacy.components.ModLocalList;
-import net.glasslauncher.legacy.components.RepoModVersionList;
 import net.glasslauncher.legacy.jsontemplate.InstanceConfig;
 import net.glasslauncher.legacy.jsontemplate.Mod;
 import net.glasslauncher.legacy.jsontemplate.ModList;
@@ -22,13 +14,15 @@ import net.glasslauncher.repo.api.mod.RepoReader;
 
 import javax.swing.*;
 import javax.swing.border.*;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
+import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.*;
-import java.nio.file.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class OptionsWindow extends JDialog {
     private Frame parent;

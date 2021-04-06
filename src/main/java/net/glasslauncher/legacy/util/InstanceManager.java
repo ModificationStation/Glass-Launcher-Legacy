@@ -13,12 +13,17 @@ import net.glasslauncher.legacy.jsontemplate.*;
 import net.glasslauncher.proxy.web.WebUtils;
 
 import javax.swing.*;
-import java.awt.*;
-import java.io.*;
-import java.net.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileSystem;
-import java.nio.file.*;
-import java.util.*;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class InstanceManager {
     private static DownloadResourcesThreadManager downloadResourcesThreadManager;

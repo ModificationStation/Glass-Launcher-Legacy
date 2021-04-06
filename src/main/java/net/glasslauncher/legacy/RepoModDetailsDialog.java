@@ -1,21 +1,17 @@
 package net.glasslauncher.legacy;
 
 import net.glasslauncher.legacy.components.JPanelBackgroundImage;
-import net.glasslauncher.legacy.components.JPanelDirt;
 import net.glasslauncher.legacy.components.RepoModDescriptionPanel;
 import net.glasslauncher.legacy.components.RepoModVersionList;
 import net.glasslauncher.legacy.components.templates.DetailsPanel;
 import net.glasslauncher.repo.api.mod.RepoReader;
 import net.glasslauncher.repo.api.mod.jsonobj.Mod;
-import net.glasslauncher.repo.api.mod.jsonobj.ModPreview;
-import net.glasslauncher.repo.api.mod.jsonobj.Version;
 
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
-import java.io.*;
-import java.util.*;
-import java.util.List;
+import java.io.IOException;
+import java.util.Arrays;
 
 public class RepoModDetailsDialog extends JDialog {
 

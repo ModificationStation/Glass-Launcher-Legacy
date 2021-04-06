@@ -2,7 +2,7 @@ package net.glasslauncher.legacy.jsontemplate;
 
 import lombok.Getter;
 
-import java.util.*;
+import java.util.HashMap;
 
 @Getter
 public class FabricMod {

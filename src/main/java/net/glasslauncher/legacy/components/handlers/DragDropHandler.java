@@ -5,9 +5,10 @@ import net.glasslauncher.legacy.jsontemplate.Mod;
 
 import javax.swing.*;
 import java.awt.datatransfer.*;
-import java.io.*;
-import java.nio.file.*;
-import java.util.*;
+import java.io.File;
+import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.List;
 
 public class DragDropHandler extends TransferHandler {
     private DragDropList list;

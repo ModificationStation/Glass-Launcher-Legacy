@@ -2,11 +2,11 @@ package net.glasslauncher.legacy.components;
 
 import net.glasslauncher.legacy.Main;
 
-import javax.imageio.*;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.*;
-import java.io.*;
+import java.io.IOException;
 
 public class JPanelDirt extends JPanel {
     private Image bgImage;

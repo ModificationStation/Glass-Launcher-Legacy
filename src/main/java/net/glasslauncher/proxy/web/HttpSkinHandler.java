@@ -9,12 +9,16 @@ import net.glasslauncher.legacy.jsontemplate.ProfileProperties;
 import net.glasslauncher.legacy.jsontemplate.TextureURLs;
 import net.glasslauncher.legacy.jsontemplate.Textures;
 
-import javax.imageio.*;
+import javax.imageio.ImageIO;
 import java.awt.image.*;
-import java.io.*;
-import java.net.*;
-import java.nio.charset.*;
-import java.util.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.Map;
 
 public class HttpSkinHandler implements HttpHandler {
     private int isCape;

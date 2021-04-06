@@ -2,12 +2,13 @@ package net.glasslauncher.legacy.util;
 
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
-import javafx.application.*;
-import javafx.collections.*;
-import javafx.embed.swing.*;
-import javafx.scene.*;
-import javafx.scene.layout.*;
-import javafx.scene.web.*;
+import javafx.application.Platform;
+import javafx.collections.ListChangeListener;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
+import javafx.scene.web.WebHistory;
+import javafx.scene.web.WebView;
 import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
 import net.glasslauncher.legacy.jsontemplate.LoginInfo;
@@ -17,12 +18,18 @@ import net.glasslauncher.legacy.jsontemplate.XBResponse;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.*;
-import java.net.*;
-import java.nio.charset.*;
-import java.util.*;
-import java.util.concurrent.atomic.*;
-import java.util.logging.Logger;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Mostly shamelessly copy-pasted from MineOnline cause I know nothing about MS auth stuff.

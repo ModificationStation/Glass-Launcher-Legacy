@@ -5,11 +5,12 @@ import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.jsontemplate.Profile;
 
 import java.io.*;
-import java.net.*;
-import java.nio.file.*;
-import java.nio.file.attribute.*;
-import java.util.*;
-import java.util.concurrent.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class WebUtils {
     public static String getStringFromURL(String url) throws IOException {

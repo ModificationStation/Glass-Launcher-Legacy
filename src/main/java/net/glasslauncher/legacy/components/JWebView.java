@@ -7,7 +7,7 @@ import net.glasslauncher.legacy.Config;
 import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;
-import java.io.*;
+import java.io.File;
 
 public class JWebView {
 
