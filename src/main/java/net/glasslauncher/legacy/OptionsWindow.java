@@ -11,6 +11,7 @@ import net.glasslauncher.legacy.jsontemplate.ModList;
 import net.glasslauncher.legacy.mc.LocalMods;
 import net.glasslauncher.legacy.util.InstanceManager;
 import net.glasslauncher.repo.api.mod.RepoReader;
+import net.glasslauncher.repo.api.mod.jsonobj.ModValues;
 
 import javax.swing.*;
 import javax.swing.border.*;
@@ -37,6 +38,9 @@ public class OptionsWindow extends JDialog {
 
     private String instPath;
     private String instName;
+    private ModValues validValues;
+    private String typeFilter = "";
+    private String categoryFilter = "";
 
     private JTextFieldFancy javaargs;
     private JTextFieldFancy minram;
@@ -47,6 +51,8 @@ public class OptionsWindow extends JDialog {
     private JCheckBox loginproxy;
     private JCheckBox disableIntermediary;
     private JComboBox<String> instanceVersion;
+
+    private boolean ignoreInstanceVersion = false;
 
     /**
      * Sets up options window for given instance.
@@ -438,21 +444,58 @@ public class OptionsWindow extends JDialog {
         tableModel = new RepoModTableModel();
         table = new JDetailsTable(parent, tableModel, instName);
         table.setFillsViewportHeight(true);
-        TableRowSorter<? extends TableModel> sorter = (TableRowSorter<? extends TableModel>) table.getRowSorter();
-        sorter.setSortable(5, false);
-        sorter.setSortable(6, false);
-        table.getTableHeader().addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int col = table.columnAtPoint(e.getPoint());
-                if (col > 4) {
-                    System.out.println("yay!");
-                }
-                else {
-                    super.mouseClicked(e);
-                }
+// TODO: Haha, table bugs go brrr. To be fixed in 1.0.
+
+//        TableRowSorter<? extends TableModel> sorter = (TableRowSorter<? extends TableModel>) table.getRowSorter();
+//        sorter.setRowFilter(new RowFilter<TableModel, Integer>() {
+//            @Override
+//            public boolean include(Entry<? extends TableModel, ? extends Integer> entry) {
+//                return ignoreInstanceVersion || entry.getStringValue(4).equals(instanceConfig.getVersion());
+//            }
+//        });
+//        sorter.setSortable(5, false);
+//        sorter.setSortable(6, false);
+//        table.getTableHeader().addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mouseClicked(MouseEvent e) {
+//                int col = table.columnAtPoint(e.getPoint());
+//                if (col == 5) {
+//                    ComboBoxWindow comboBoxWindow = new ComboBoxWindow(parent, validValues.getTypes());
+//                    comboBoxWindow.setVisible(true);
+//                    if (comboBoxWindow.getValue() != null) {
+//                        typeFilter = comboBoxWindow.getValue();
+//                        table.getRowSorter().allRowsChanged();
+//                    }
+//                    else {
+//                        typeFilter = "";
+//                    }
+//                }
+//                else if (col == 6) {
+//                    ComboBoxWindow comboBoxWindow = new ComboBoxWindow(parent, validValues.getCategories());
+//                    comboBoxWindow.setVisible(true);
+//                    if (comboBoxWindow.getValue() != null) {
+//                        categoryFilter = comboBoxWindow.getValue();
+//                        table.getRowSorter().allRowsChanged();
+//                    }
+//                    else {
+//                        categoryFilter = "";
+//                    }
+//                }
+//                else {
+//                    super.mouseClicked(e);
+//                }
+//                System.out.println(typeFilter);
+//                System.out.println(categoryFilter);
+//            }
+//        });
+
+        new Thread(() -> {
+            try {
+                validValues = RepoReader.getValidValues().getValidValues();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        });
+        }).start();
 
         // Async cause otherwise options freezes when opening for 1-5 seconds.
         new Thread(this::refreshRepo).start();
@@ -470,6 +513,7 @@ public class OptionsWindow extends JDialog {
     private void refreshRepo() {
         try {
             tableModel.setMods(Arrays.asList(RepoReader.getMods()));
+            tableModel.fireTableDataChanged();
         } catch (Exception e) {
             e.printStackTrace();
         }
