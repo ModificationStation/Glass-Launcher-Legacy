@@ -30,9 +30,6 @@ public class DownloadResourcesThreadManager {
         ThreadPoolExecutor pool = (ThreadPoolExecutor) Executors.newFixedThreadPool(MAX_THREADS);
         for (MinecraftResource downloadData : downloadData) {
             try {
-                if (downloadData.getFile().contains("blocks")) {
-                    System.out.println("Got");
-                }
                 pool.submit(() -> {
                     try {
                         File cacheFile = new File(Config.CACHE_PATH, "resources/" + downloadData.getFile());
