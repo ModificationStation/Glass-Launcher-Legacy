@@ -9,6 +9,7 @@ import net.glasslauncher.legacy.components.MinecraftLogo;
 import net.glasslauncher.legacy.components.templates.JButtonScaling;
 import net.glasslauncher.legacy.jsontemplate.LoginInfo;
 import net.glasslauncher.legacy.mc.Wrapper;
+import net.glasslauncher.legacy.util.LoginVerifier;
 import net.glasslauncher.legacy.util.MSLoginHandler;
 import net.glasslauncher.legacy.util.MojangLoginHandler;
 
@@ -134,7 +135,8 @@ class MainWindow extends JFrame {
         mainPanel.add(blogContainer, BorderLayout.CENTER);
         mainPanel.add(loginForm, BorderLayout.SOUTH);
 
-        loginPanel.setHasToken(verifyLogin(false));
+        Config.getLauncherConfig().setLastUsedInstance(instsel.getSelectedItem().toString());
+        loginPanel.setHasToken(LoginVerifier.verifyLogin(false, loginPanel, this));
 
         pack();
         setLocationRelativeTo(null);
@@ -191,7 +193,7 @@ class MainWindow extends JFrame {
             Main.LOGGER.severe("Selected instance is null or empty! Aborting launch.");
             return;
         }
-        if (!verifyLogin(true)) {
+        if (!LoginVerifier.verifyLogin(true, loginPanel, this)) {
             loginPanel.setHasToken(false);
             Main.LOGGER.severe("Aborting launch.");
             return;
@@ -205,49 +207,5 @@ class MainWindow extends JFrame {
             loginPanel.setHasToken(false);
             Config.getLauncherConfig().setLoginInfo(null);
         }
-    }
-
-    private boolean verifyLogin(boolean canOffline) {
-        if (Config.getLauncherConfig().isMSToken()) {
-            Main.LOGGER.info("Verifying stored MS auth token...");
-            if (!(new MSLoginHandler(this)).verifyStoredToken()) {
-                Main.LOGGER.severe("Unable to verify stored MS auth token.");
-                Config.getLauncherConfig().setLoginInfo(null);
-                return false;
-            }
-            loginPanel.getUsername().setText(Config.getLauncherConfig().getLoginInfo().getUsername());
-            Main.LOGGER.info("MS auth token has been verified!");
-        }
-        else {
-            if (Config.getLauncherConfig().getLoginInfo() != null) {
-                Main.LOGGER.info("Verifying stored Mojang auth token...");
-                try {
-                    OpenMCAuthenticator.validate(Config.getLauncherConfig().getLoginInfo().getAccessToken(), Config.getLauncherConfig().getClientToken());
-                    Main.LOGGER.info("Mojang auth token has been verified!");
-                    return true;
-                } catch (Exception e) {
-                    Main.LOGGER.warning("Unable to verify stored Mojang auth token.");
-                    Config.getLauncherConfig().setLoginInfo(null);
-                    return false;
-                }
-            }
-            String pass = "";
-            if (loginPanel.getPassword().getForeground() != Color.gray) {
-                pass = String.valueOf(loginPanel.getPassword().getPassword());
-            }
-            if (!pass.isEmpty()) {
-                MojangLoginHandler.login(loginPanel.getUsername().getText(), pass);
-                LoginInfo loginInfo = Config.getLauncherConfig().getLoginInfo();
-                if (loginInfo == null) {
-                    Main.LOGGER.severe("Unable to log in!");
-                    return false;
-                }
-            }
-            if (!loginPanel.getUsername().getText().isEmpty() && canOffline) {
-                Config.getLauncherConfig().setLoginInfo(new LoginInfo(loginPanel.getUsername().getText(), ""));
-            }
-            return Config.getLauncherConfig().getLoginInfo() != null;
-        }
-        return true;
     }
 }

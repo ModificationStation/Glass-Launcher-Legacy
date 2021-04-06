@@ -59,11 +59,11 @@ public class MSLoginHandler {
 
     private WebView webView;
     private final JDialog frame;
-    private final Frame parent;
+    private final Window parent;
 
     private final Gson gson = new Gson();
 
-    public MSLoginHandler(JFrame parent) {
+    public MSLoginHandler(Window parent) {
         this.parent = parent;
         frame = new JDialog(parent);
         frame.setModal(true);
