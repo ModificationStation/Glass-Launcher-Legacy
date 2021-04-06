@@ -1,14 +1,9 @@
 package net.glasslauncher.legacy;
 
 import lombok.Getter;
-import net.glasslauncher.legacy.components.HintPasswordField;
-import net.glasslauncher.legacy.components.HintTextField;
 import net.glasslauncher.legacy.components.LoginPanel;
-import net.glasslauncher.legacy.components.templates.JButtonScaling;
-import net.glasslauncher.legacy.mc.Wrapper;
 import net.glasslauncher.legacy.util.LoginVerifier;
 import net.glasslauncher.legacy.util.MSLoginHandler;
-import net.glasslauncher.legacy.util.MojangLoginHandler;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,8 +12,6 @@ import java.awt.event.*;
 public class VerifyAccountWindow extends JDialog {
     @Getter boolean loginValid = false;
 
-    protected JPasswordField password;
-    protected HintTextField username;
     protected LoginPanel loginPanel;
 
     public VerifyAccountWindow(Window frame) {
