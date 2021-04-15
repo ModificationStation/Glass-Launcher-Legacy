@@ -132,7 +132,9 @@ class MainWindow extends JFrame {
         mainPanel.add(blogContainer, BorderLayout.CENTER);
         mainPanel.add(loginForm, BorderLayout.SOUTH);
 
-        Config.getLauncherConfig().setLastUsedInstance(instsel.getSelectedItem().toString());
+        if (instsel.getSelectedItem() != null) {
+            Config.getLauncherConfig().setLastUsedInstance(instsel.getSelectedItem().toString());
+        }
         loginPanel.setHasToken(LoginVerifier.verifyLogin(false, loginPanel, this));
 
         pack();
