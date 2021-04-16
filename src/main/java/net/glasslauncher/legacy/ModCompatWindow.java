@@ -23,7 +23,7 @@ public class ModCompatWindow extends JDialog {
         setModal(true);
         setLayout(new GridLayout());
         setResizable(false);
-        setTitle("Instance Options");
+        setTitle("Mod Compatibility");
 
         this.panel = new JPanelBackgroundImage(Main.class.getResource("assets/blogbackground.png"));
         add(this.panel);

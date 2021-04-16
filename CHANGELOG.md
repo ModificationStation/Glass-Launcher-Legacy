@@ -5,7 +5,8 @@
 \+ Added Microsoft account support. The button can be hidden in the instances window for those who dislike it.  
 \+ Added a proper logger for minecraft so you can get an isolated minecraft log inside of `.glass-launcher/logs/minecraft` now.    
 \+ Made the launcher a bit more verbose when doing background tasks.  
-\+ Added some basic compatibility checks.  
+\+ Added fabric intermediary + jarmod warnings.  
+\+ Added a pretty neat jar mod compatibility checker.  
 \+ Added the ability to set the install folder through the `-installdir` parameter.  
 \+ Added a new default theme! Can be disabled in the instances window for your system default.  
 \+ Mods can be dragged into a mod list to be added to the current instance.  
