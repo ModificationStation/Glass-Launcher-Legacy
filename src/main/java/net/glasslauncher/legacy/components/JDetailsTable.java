@@ -21,15 +21,8 @@ public class JDetailsTable extends JTable {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (e.getClickCount() == 2) {
-                    new RepoModDetailsDialog(parent, tableModel.ids.get(self.getSelectedRow()), instName).setVisible(true);
+                    new RepoModDetailsDialog(parent, ((String) getValueAt(self.rowAtPoint(e.getPoint()), 0)), instName).setVisible(true);
                 }
-            }
-        });
-        getInputMap(JTable.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "OpenModDetails");
-        getActionMap().put("OpenModDetails", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new RepoModDetailsDialog(parent, tableModel.ids.get(self.getSelectedRow()), instName).setVisible(true);
             }
         });
         if (!Config.getLauncherConfig().isThemeDisabled()) {
@@ -45,7 +38,7 @@ public class JDetailsTable extends JTable {
         Point point = event.getPoint();
         int col = columnAtPoint(point);
         int row = rowAtPoint(point);
-        if (getModel().getValueAt(row, col) != null) {
+        if (getValueAt(row, col) != null) {
             return getModel().getValueAt(row, col).toString();
         }
         return super.getToolTipText(event);

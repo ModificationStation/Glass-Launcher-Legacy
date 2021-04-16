@@ -54,7 +54,7 @@ public abstract class DetailsPanel extends JPanel {
         add(buttons);
     }
 
-    public abstract void setMod(Object localMod);
+    public abstract void setMod(Object object);
 
     public abstract void setupButtons(JPanel buttons);
 }
