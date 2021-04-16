@@ -1,13 +1,12 @@
 package net.glasslauncher.legacy;
 
+import com.google.gson.Gson;
 import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.common.JsonConfig;
 import net.glasslauncher.legacy.components.*;
 import net.glasslauncher.legacy.components.handlers.RepoModTableModel;
 import net.glasslauncher.legacy.components.templates.DetailsPanel;
-import net.glasslauncher.legacy.jsontemplate.InstanceConfig;
-import net.glasslauncher.legacy.jsontemplate.Mod;
-import net.glasslauncher.legacy.jsontemplate.ModList;
+import net.glasslauncher.legacy.jsontemplate.*;
 import net.glasslauncher.legacy.mc.LocalMods;
 import net.glasslauncher.legacy.util.InstanceManager;
 import net.glasslauncher.repo.api.mod.RepoReader;
@@ -22,8 +21,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
+import java.util.zip.ZipFile;
 
 public class OptionsWindow extends JDialog {
     private Frame parent;
@@ -41,6 +40,7 @@ public class OptionsWindow extends JDialog {
     private ModValues validValues;
     private String typeFilter = "";
     private String categoryFilter = "";
+    private boolean modCompatChecked = true;
 
     private JTextFieldFancy javaargs;
     private JTextFieldFancy minram;
@@ -103,6 +103,12 @@ public class OptionsWindow extends JDialog {
                             disableIntermediary.setSelected(true);
                         }
                     }
+                    if (!modCompatChecked) {
+                        int response = JOptionPane.showConfirmDialog(parent, "Jar mod compatiblity has not been checked!\nAre you sure you don't want to run a check to see if any mods conflict?");
+                        if (response != JOptionPane.YES_OPTION) {
+                            checkModCompat();
+                        }
+                    }
                     instanceConfig.setJavaArgs(javaargs.getText());
                     instanceConfig.setMaxRam(maxram.getText());
                     instanceConfig.setMinRam(minram.getText());
@@ -133,7 +139,7 @@ public class OptionsWindow extends JDialog {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                  }
+                }
             }
         );
 
@@ -275,6 +281,7 @@ public class OptionsWindow extends JDialog {
                 mod.setEnabled(!mod.isEnabled());
             }
             modDragDropList.repaint();
+            modCompatChecked = false;
         });
         toggleModsButton.setBounds(20, 230, 200, 22);
 
@@ -331,6 +338,7 @@ public class OptionsWindow extends JDialog {
                 e.printStackTrace();
             } catch (NullPointerException ignored) {}
             refreshJarModList();
+            modCompatChecked = false;
         });
         addModsButton.setBounds(20, 294, 200, 22);
 
@@ -342,14 +350,24 @@ public class OptionsWindow extends JDialog {
                 (new File(instPath + "mods/" + mod.getFileName())).delete();
             }
             refreshJarModList();
+//            modCompatChecked = false;
         });
         removeModsButton.setBounds(20, 326, 200, 22);
+
+        JButtonScalingFancy checkCompatButton = new JButtonScalingFancy();
+        checkCompatButton.setText("Check Compatibility");
+        checkCompatButton.addActionListener(event -> {
+            checkModCompat();
+            modCompatChecked = true;
+        });
+        checkCompatButton.setBounds(20, 358, 200, 22);
 
         modsPanel.add(modListScroll);
         modsPanel.add(toggleModsButton);
         modsPanel.add(applyModsButton);
         modsPanel.add(addModsButton);
         modsPanel.add(removeModsButton);
+        modsPanel.add(checkCompatButton);
 
         return modsPanel;
     }
@@ -567,5 +585,44 @@ public class OptionsWindow extends JDialog {
             loaderModDragDropList.model.addElement(mod);
         }
         loaderModDragDropList.repaint();
+    }
+
+    private void checkModCompat() {
+        HashMap<Mod, HashMap<Mod, ModCompatInfo>> incompatibleMods = new HashMap<>();
+        Object[] objArray = modDragDropList.model.toArray();
+        ArrayList<Mod> theRealArray = new ArrayList<Mod>(){{Arrays.stream(objArray).forEach((obj) -> add((Mod) obj)); }};
+        for (Mod mod : theRealArray) {
+            try {
+                File modPath = new File(instPath, "mods/" + mod.getFileName());
+                ZipFile modFile = new ZipFile(modPath, ZipFile.OPEN_READ);
+                ArrayList<String> modFileNames = new ArrayList<>();
+                modFile.stream().forEach(zipEntry -> modFileNames.add(zipEntry.getName()));
+                for (Mod checkedMod : theRealArray) {
+                    if (mod == checkedMod) {
+                        continue;
+                    }
+                    try {
+                        File checkedModPath = new File(instPath, "mods/" + checkedMod.getFileName());
+                        ZipFile checkedModFile = new ZipFile(checkedModPath, ZipFile.OPEN_READ);
+                        checkedModFile.stream().forEach(zipEntry -> {
+                            if (modFileNames.contains(zipEntry.getName())) {
+                                incompatibleMods.computeIfAbsent(mod, mod1 -> new HashMap<>());
+                                if (incompatibleMods.get(mod).get(checkedMod) == null) {
+                                    incompatibleMods.get(mod).put(checkedMod, new ModCompatInfo(checkedMod));
+                                }
+                                incompatibleMods.get(mod).get(checkedMod).getClasses().add(new ClassInfo(zipEntry.getName()));
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        System.out.println((new Gson()).toJson(incompatibleMods));
+        new ModCompatWindow(parent, instName, incompatibleMods).setVisible(true);
     }
 }
