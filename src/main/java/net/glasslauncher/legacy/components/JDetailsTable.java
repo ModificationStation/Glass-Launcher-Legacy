@@ -39,7 +39,7 @@ public class JDetailsTable extends JTable {
         int col = columnAtPoint(point);
         int row = rowAtPoint(point);
         if (getValueAt(row, col) != null) {
-            return getModel().getValueAt(row, col).toString();
+            return getModel().getValueAt(convertRowIndexToModel(row), col).toString();
         }
         return super.getToolTipText(event);
     }
