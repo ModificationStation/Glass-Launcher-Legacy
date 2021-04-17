@@ -37,8 +37,6 @@ public abstract class DetailsPanel extends JPanel {
         name.setContentType("text/html");
         name.setText("<head><base href=\"file://" + CommonConfig.getGlassPath() + "cache/repo-images\"><style>" + Config.getCSS() + "</style></head><body><div style=\"font-size: 18px;\">" + "Select a mod to see its details!" + "</div></body>");
 
-        //description.setOpaque(false);
-        //description.setBorder(new EmptyBorder(0, 0, 0, 0));
         description = new JWebView("Empty");
         description.getJScrollPane().setBounds(20, 70, getWidth()-40, getHeight()-90);
         description.getJScrollPane().setPreferredSize(new Dimension(getWidth()-40, getHeight()-90));

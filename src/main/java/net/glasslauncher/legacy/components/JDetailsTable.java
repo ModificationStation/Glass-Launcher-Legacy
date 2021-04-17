@@ -38,7 +38,7 @@ public class JDetailsTable extends JTable {
         Point point = event.getPoint();
         int col = columnAtPoint(point);
         int row = rowAtPoint(point);
-        if (getValueAt(row, col) != null) {
+        if (row >= 0 && col >= 0 && getValueAt(row, col) != null) {
             return getModel().getValueAt(convertRowIndexToModel(row), col).toString();
         }
         return super.getToolTipText(event);

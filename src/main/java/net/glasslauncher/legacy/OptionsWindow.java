@@ -11,6 +11,7 @@ import net.glasslauncher.legacy.mc.LocalMods;
 import net.glasslauncher.legacy.util.InstanceManager;
 import net.glasslauncher.repo.api.mod.RepoReader;
 import net.glasslauncher.repo.api.mod.jsonobj.ModValues;
+import net.glasslauncher.repo.api.mod.jsonobj.ValidModValues;
 
 import javax.swing.*;
 import javax.swing.border.*;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.List;
 import java.util.zip.ZipFile;
 
 public class OptionsWindow extends JDialog {
@@ -35,11 +37,16 @@ public class OptionsWindow extends JDialog {
     private DragDropList loaderModDragDropList;
     private ArrayList<Mod> loaderMods;
 
+
+    private JDetailsTable table;
+    private RepoModTableModel tableModel;
+
     private String instPath;
     private String instName;
     private ModValues validValues;
     private String typeFilter = "";
     private String categoryFilter = "";
+    private String versionFilter = "";
     private boolean modCompatChecked = true;
 
     private JTextFieldFancy javaargs;
@@ -350,7 +357,6 @@ public class OptionsWindow extends JDialog {
                 (new File(instPath + "mods/" + mod.getFileName())).delete();
             }
             refreshJarModList();
-//            modCompatChecked = false;
         });
         removeModsButton.setBounds(20, 326, 200, 22);
 
@@ -435,7 +441,6 @@ public class OptionsWindow extends JDialog {
         removeModsButton.setText("Remove Selected Mods");
         removeModsButton.setForeground(new Color(185, 0, 0));
         removeModsButton.addActionListener(event -> {
-            System.out.println(loaderModDragDropList);
             for (Mod mod : loaderModDragDropList.getSelectedValuesList()) {
                 (new File(instPath + ".minecraft/mods/" + mod.getFileName())).delete();
             }
@@ -452,9 +457,6 @@ public class OptionsWindow extends JDialog {
         return modsPanel;
     }
 
-    JDetailsTable table;
-    RepoModTableModel tableModel;
-
     private JPanel makeModRepo() {
         JPanel modRepoPanel = new JPanel();
         modRepoPanel.setLayout(new BorderLayout());
@@ -464,12 +466,8 @@ public class OptionsWindow extends JDialog {
         table.setFillsViewportHeight(true);
 
         TableRowSorter<? extends TableModel> sorter = (TableRowSorter<? extends TableModel>) table.getRowSorter();
-        sorter.setRowFilter(new RowFilter<TableModel, Integer>() {
-            @Override
-            public boolean include(Entry<? extends TableModel, ? extends Integer> entry) {
-                return ignoreInstanceVersion || entry.getStringValue(4).equals(instanceConfig.getVersion());
-            }
-        });
+        sorter.setRowFilter(getRowFilter(typeFilter, categoryFilter));
+        sorter.setSortsOnUpdates(true);
         sorter.setSortable(5, false);
         sorter.setSortable(6, false);
         table.getTableHeader().addMouseListener(new MouseAdapter() {
@@ -481,7 +479,7 @@ public class OptionsWindow extends JDialog {
                     comboBoxWindow.setVisible(true);
                     if (comboBoxWindow.getValue() != null) {
                         typeFilter = comboBoxWindow.getValue();
-                        table.getRowSorter().allRowsChanged();
+                        sorter.setRowFilter(getRowFilter(typeFilter, categoryFilter));
                     }
                     else {
                         typeFilter = "";
@@ -492,23 +490,23 @@ public class OptionsWindow extends JDialog {
                     comboBoxWindow.setVisible(true);
                     if (comboBoxWindow.getValue() != null) {
                         categoryFilter = comboBoxWindow.getValue();
-                        table.getRowSorter().allRowsChanged();
+                        sorter.setRowFilter(getRowFilter(typeFilter, categoryFilter));
                     }
                     else {
                         categoryFilter = "";
                     }
+                    System.out.println(categoryFilter);
+                    System.out.println(typeFilter);
                 }
                 else {
                     super.mouseClicked(e);
                 }
-                System.out.println(typeFilter);
-                System.out.println(categoryFilter);
             }
         });
 
         new Thread(() -> {
             try {
-                validValues = RepoReader.getValidValues().getValidValues();
+                validValues = new HijackedValidModValues(RepoReader.getValidValues().getValidValues());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -622,7 +620,19 @@ public class OptionsWindow extends JDialog {
             }
         }
 
-        System.out.println((new Gson()).toJson(incompatibleMods));
         new ModCompatWindow(parent, instName, incompatibleMods).setVisible(true);
+    }
+
+    private RowFilter<TableModel, Integer> getRowFilter(String typeFilter, String categoryFilter) {
+        return new RowFilter<TableModel, Integer>() {
+            @Override
+            public boolean include(Entry<? extends TableModel, ? extends Integer> entry) {
+                return
+                        (ignoreInstanceVersion || entry.getStringValue(4).equals(instanceConfig.getVersion())) &&
+                                ((typeFilter.isEmpty() || typeFilter.equals("None")) || Arrays.asList(entry.getStringValue(5).split(", ")).contains(typeFilter)) &&
+                                ((categoryFilter.isEmpty() || categoryFilter.equals("None")) || Arrays.asList(entry.getStringValue(6).split(", ")).contains(categoryFilter))
+                        ;
+            }
+        };
     }
 }
