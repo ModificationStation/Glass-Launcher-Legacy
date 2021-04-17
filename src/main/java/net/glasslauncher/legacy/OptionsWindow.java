@@ -1,6 +1,5 @@
 package net.glasslauncher.legacy;
 
-import com.google.gson.Gson;
 import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.common.JsonConfig;
 import net.glasslauncher.legacy.components.*;
@@ -11,7 +10,6 @@ import net.glasslauncher.legacy.mc.LocalMods;
 import net.glasslauncher.legacy.util.InstanceManager;
 import net.glasslauncher.repo.api.mod.RepoReader;
 import net.glasslauncher.repo.api.mod.jsonobj.ModValues;
-import net.glasslauncher.repo.api.mod.jsonobj.ValidModValues;
 
 import javax.swing.*;
 import javax.swing.border.*;
@@ -22,8 +20,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.zip.ZipFile;
 
 public class OptionsWindow extends JDialog {
@@ -619,7 +618,6 @@ public class OptionsWindow extends JDialog {
                 e.printStackTrace();
             }
         }
-
         new ModCompatWindow(parent, instName, incompatibleMods).setVisible(true);
     }
 

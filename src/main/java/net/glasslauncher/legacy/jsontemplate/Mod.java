@@ -1,7 +1,5 @@
 package net.glasslauncher.legacy.jsontemplate;
 
-import com.google.gson.annotations.Expose;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 

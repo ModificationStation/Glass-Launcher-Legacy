@@ -1,6 +1,8 @@
 package net.glasslauncher.legacy;
 
-import net.glasslauncher.legacy.components.*;
+import net.glasslauncher.legacy.components.CompatList;
+import net.glasslauncher.legacy.components.CompatibilityDetailsPanel;
+import net.glasslauncher.legacy.components.JPanelBackgroundImage;
 import net.glasslauncher.legacy.jsontemplate.Mod;
 import net.glasslauncher.legacy.jsontemplate.ModCompatInfo;
 
