@@ -12,23 +12,18 @@ import java.awt.*;
 import java.util.HashMap;
 
 public class ModCompatWindow extends JDialog {
-    private final Frame parent;
 
-    private final JPanel panel;
-    private final String instName;
     private final HashMap<Mod, HashMap<Mod, ModCompatInfo>> compatInfo;
 
-    public ModCompatWindow(Frame frame, String instName, HashMap<Mod, HashMap<Mod, ModCompatInfo>> compatInfo) {
-        parent = frame;
-        this.instName = instName;
+    public ModCompatWindow(Window frame, HashMap<Mod, HashMap<Mod, ModCompatInfo>> compatInfo) {
         this.compatInfo = compatInfo;
         setModal(true);
         setLayout(new GridLayout());
         setResizable(false);
         setTitle("Mod Compatibility");
 
-        this.panel = new JPanelBackgroundImage(Main.class.getResource("assets/blogbackground.png"));
-        add(this.panel);
+        JPanel panel = new JPanelBackgroundImage(Main.class.getResource("assets/blogbackground.png"));
+        add(panel);
 
         JTabbedPane tabpane = new JTabbedPane();
         tabpane.setOpaque(false);
@@ -38,7 +33,7 @@ public class ModCompatWindow extends JDialog {
         tabpane.addTab("Compatibility", makeCompatibilityTab());
         panel.add(tabpane);
         pack();
-        setLocationRelativeTo(parent);
+        setLocationRelativeTo(frame);
     }
 
     private JPanel makeCompatibilityTab() {

@@ -612,7 +612,7 @@ public class OptionsWindow extends JDialog {
                 e.printStackTrace();
             }
         }
-        new ModCompatWindow(parent, instName, incompatibleMods).setVisible(true);
+        new ModCompatWindow(this, incompatibleMods).setVisible(true);
     }
 
     private RowFilter<TableModel, Integer> getRowFilter(String typeFilter, String categoryFilter) {
