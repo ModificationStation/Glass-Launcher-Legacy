@@ -29,6 +29,9 @@ public class LauncherConfig extends JsonConfig {
     @SerializedName("logininfo")
     private LoginInfo loginInfo = null;
 
+    @SerializedName("ignoreinstanceversion")
+    private boolean ignoreInstanceVersion = false;
+
     public LauncherConfig(String path) {
         super(path);
     }

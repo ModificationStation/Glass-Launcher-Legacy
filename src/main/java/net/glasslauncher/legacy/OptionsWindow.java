@@ -26,8 +26,7 @@ import java.util.HashMap;
 import java.util.zip.ZipFile;
 
 public class OptionsWindow extends JDialog {
-    private Frame parent;
-    private JPanel panel;
+    private final Frame parent;
     private InstanceConfig instanceConfig;
     private ModList modList;
     private ArrayList<Mod> jarMods;
@@ -40,12 +39,11 @@ public class OptionsWindow extends JDialog {
     private JDetailsTable table;
     private RepoModTableModel tableModel;
 
-    private String instPath;
-    private String instName;
+    private final String instPath;
+    private final String instName;
     private ModValues validValues;
     private String typeFilter = "";
     private String categoryFilter = "";
-    private String versionFilter = "";
     private boolean modCompatChecked = true;
 
     private JTextFieldFancy javaargs;
@@ -57,8 +55,6 @@ public class OptionsWindow extends JDialog {
     private JCheckBox loginproxy;
     private JCheckBox disableIntermediary;
     private JComboBox<String> instanceVersion;
-
-    private boolean ignoreInstanceVersion = false;
 
     /**
      * Sets up options window for given instance.
@@ -72,8 +68,8 @@ public class OptionsWindow extends JDialog {
         setLayout(new GridLayout());
         setResizable(false);
         setTitle("Instance Options");
-        this.panel = new JPanelBackgroundImage(Main.class.getResource("assets/blogbackground.png"));
-        add(this.panel);
+        JPanel panel = new JPanelBackgroundImage(Main.class.getResource("assets/blogbackground.png"));
+        add(panel);
 
         instName = instance;
         instPath = CommonConfig.getGlassPath() + "instances/" + instance + "/";
@@ -149,7 +145,7 @@ public class OptionsWindow extends JDialog {
             }
         );
 
-        this.panel.add(tabpane);
+        panel.add(tabpane);
         pack();
         setLocationRelativeTo(frame);
 
@@ -626,7 +622,7 @@ public class OptionsWindow extends JDialog {
             @Override
             public boolean include(Entry<? extends TableModel, ? extends Integer> entry) {
                 return
-                        (ignoreInstanceVersion || entry.getStringValue(4).equals(instanceConfig.getVersion())) &&
+                        (Config.getLauncherConfig().isIgnoreInstanceVersion() || entry.getStringValue(4).equals(instanceConfig.getVersion())) &&
                                 ((typeFilter.isEmpty() || typeFilter.equals("None")) || Arrays.asList(entry.getStringValue(5).split(", ")).contains(typeFilter)) &&
                                 ((categoryFilter.isEmpty() || categoryFilter.equals("None")) || Arrays.asList(entry.getStringValue(6).split(", ")).contains(categoryFilter))
                         ;

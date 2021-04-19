@@ -11,7 +11,11 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.text.DecimalFormat;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicLong;
 
 class InstanceManagerWindow extends JDialog {
     private JPanel panel;
@@ -19,6 +23,7 @@ class InstanceManagerWindow extends JDialog {
 
     private JCheckBox hideMSCheckbox;
     private JCheckBox disableThemeCheckbox;
+    private JCheckBox ignoreInstanceVersionCheckbox;
 
     InstanceManagerWindow(Frame frame) {
         super(frame);
@@ -224,11 +229,61 @@ class InstanceManagerWindow extends JDialog {
         disableThemeCheckbox.setBounds(135, 30, 20, 20);
         disableThemeCheckbox.setSelected(Config.getLauncherConfig().isThemeDisabled());
 
+        JLabelFancy ignoreInstanceVersionLabel = new JLabelFancy("Ignore Instance Version:");
+        ignoreInstanceVersionLabel.setBounds(5, 53, 140, 20);
+
+        ignoreInstanceVersionCheckbox = new JCheckBox();
+        ignoreInstanceVersionCheckbox.setOpaque(false);
+        ignoreInstanceVersionCheckbox.setBounds(155, 54, 20, 20);
+        ignoreInstanceVersionCheckbox.setSelected(Config.getLauncherConfig().isIgnoreInstanceVersion());
+
+        JButtonScalingFancy clearVersionCache = new JButtonScalingFancy();
+        clearVersionCache.setText("Clear Version Cache");
+        clearVersionCache.addActionListener((e -> {
+            int response = JOptionPane.showConfirmDialog(this, "This will clear " + (Math.round((size(Paths.get(CommonConfig.getGlassPath(), "cache/versions"))/1048576.0) * 100) / 100.0) + "MB from \"cache/versions\"");
+            if (response == JOptionPane.YES_OPTION) {
+                FileUtils.delete(new File(CommonConfig.getGlassPath(), "cache/versions"));
+            }
+        }));
+        clearVersionCache.setBounds(5, 175, 140, 20);
+
+        JButtonScalingFancy clearIntermediaryCache = new JButtonScalingFancy();
+        clearIntermediaryCache.setText("Clear Intermediary Cache");
+        clearIntermediaryCache.addActionListener((e -> {
+            int response = JOptionPane.showConfirmDialog(this, "This will clear " + (Math.round((size(Paths.get(CommonConfig.getGlassPath(), "cache/intermediary_mappings"))/1048576.0) * 100) / 100.0) + "MB from \"cache/intermediary_mappings\"");
+            if (response == JOptionPane.YES_OPTION) {
+                FileUtils.delete(new File(CommonConfig.getGlassPath(), "cache/intermediary_mappings"));
+            }
+        }));
+        clearIntermediaryCache.setBounds(5, 199, 140, 20);
+
+        JButtonScalingFancy clearSkinCache = new JButtonScalingFancy();
+        clearSkinCache.setText("Clear Skin Cache");
+        clearSkinCache.addActionListener((e -> {
+            int response = JOptionPane.showConfirmDialog(this, "This will clear " + (Math.round((size(Paths.get(CommonConfig.getGlassPath(), "cache/webproxy"))/1048576.0) * 100) / 100.0) + "MB from \"cache/webproxy\"");
+            if (response == JOptionPane.YES_OPTION) {
+                FileUtils.delete(new File(CommonConfig.getGlassPath(), "cache/webproxy"));
+            }
+        }));
+        clearSkinCache.setBounds(5, 223, 140, 20);
+
+        JButtonScalingFancy clearResourceCache = new JButtonScalingFancy();
+        clearResourceCache.setText("Clear Resource Cache");
+        clearResourceCache.addActionListener((e -> {
+            int response = JOptionPane.showConfirmDialog(this, "This will clear " + (Math.round((size(Paths.get(CommonConfig.getGlassPath(), "cache/resources"))/1048576.0) * 100) / 100.0) + "MB from \"cache/resources\"");
+            if (response == JOptionPane.YES_OPTION) {
+                FileUtils.delete(new File(CommonConfig.getGlassPath(), "cache/resources"));
+            }
+        }));
+        clearResourceCache.setBounds(5, 247, 140, 20);
+
+
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent windowEvent) {
                 Config.getLauncherConfig().setHidingMSButton(hideMSCheckbox.isSelected());
                 Config.getLauncherConfig().setThemeDisabled(disableThemeCheckbox.isSelected());
+                Config.getLauncherConfig().setIgnoreInstanceVersion(disableThemeCheckbox.isSelected());
                 Config.getLauncherConfig().saveFile();
             }
         });
@@ -237,7 +292,58 @@ class InstanceManagerWindow extends JDialog {
         launcherPanel.add(hideMSCheckbox);
         launcherPanel.add(disableThemeLabel);
         launcherPanel.add(disableThemeCheckbox);
+        launcherPanel.add(ignoreInstanceVersionLabel);
+        launcherPanel.add(ignoreInstanceVersionCheckbox);
+        launcherPanel.add(clearVersionCache);
+        launcherPanel.add(clearIntermediaryCache);
+        launcherPanel.add(clearSkinCache);
+        launcherPanel.add(clearResourceCache);
 
         return launcherPanel;
+    }
+
+    /**
+     * Attempts to calculate the size of a file or directory.
+     *
+     * <p>
+     * Since the operation is non-atomic, the returned value may be inaccurate.
+     * However, this method is quick and does its best.
+     * https://stackoverflow.com/a/19877372
+     */
+    public static long size(Path path) {
+
+        final AtomicLong size = new AtomicLong(0);
+
+        try {
+            Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+
+                    size.addAndGet(attrs.size());
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult visitFileFailed(Path file, IOException exc) {
+
+                    System.out.println("skipped: " + file + " (" + exc + ")");
+                    // Skip folders that can't be traversed
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
+
+                    if (exc != null)
+                        System.out.println("had trouble traversing: " + dir + " (" + exc + ")");
+                    // Ignore errors traversing a folder
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        } catch (IOException e) {
+            throw new AssertionError("walkFileTree will not throw IOException if the FileVisitor does not");
+        }
+
+        return size.get();
     }
 }
