@@ -20,8 +20,8 @@ public class ComboBoxWindow extends JDialog {
         comboBox.setModel(model);
         add(comboBox);
 
-        setPreferredSize(new Dimension(200, 200));
-        setMinimumSize(new Dimension(200, 200));
+        setPreferredSize(new Dimension(200, 60));
+        setMinimumSize(new Dimension(200, 60));
         setLocationRelativeTo(owner);
     }
 
