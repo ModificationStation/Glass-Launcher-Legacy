@@ -266,7 +266,7 @@ public class OptionsWindow extends JDialog {
 
         jarMods = new ArrayList<>();
         JScrollPane modListScroll = new JScrollPane();
-        modDragDropList = new DragDropList(jarMods, instPath);
+        modDragDropList = new DragDropList(jarMods, instPath + "mods/");
         if (!Config.getLauncherConfig().isThemeDisabled()) {
             modListScroll.getViewport().setBackground(new Color(52, 52, 52));
             modDragDropList.setBackground(new Color(52, 52, 52));
@@ -382,7 +382,7 @@ public class OptionsWindow extends JDialog {
 
         loaderMods = new ArrayList<>();
         JScrollPane modListScroll = new JScrollPane();
-        loaderModDragDropList = new ModLocalList(loaderMods, instPath, modDetailsPanel);
+        loaderModDragDropList = new ModLocalList(loaderMods, instPath + ".minecraft/mods/", modDetailsPanel);
         if (!Config.getLauncherConfig().isThemeDisabled()) {
             modListScroll.getViewport().setBackground(new Color(52, 52, 52));
             loaderModDragDropList.setBackground(new Color(52, 52, 52));

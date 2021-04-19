@@ -46,7 +46,7 @@ public class DragDropHandler extends TransferHandler {
                         modName = modName.substring(0, modName.lastIndexOf('.'));
                     }
                     model.add(dropIndex, new Mod(file.getName(), modName, true, new String[]{""}, ""));
-                    Files.copy(file.toPath(), new File(instpath + "mods/" + file.getName()).toPath());
+                    Files.copy(file.toPath(), new File(instpath + file.getName()).toPath());
                     dropIndex++;
                 }
                 return true;

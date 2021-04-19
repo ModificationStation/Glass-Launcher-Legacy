@@ -11,6 +11,10 @@
 \+ Added a new default theme! Can be disabled in the instances window for your system default.  
 \+ Mods can be dragged into a mod list to be added to the current instance.  
 \+ Made it so instance versions can be changed. Jars will have to be provided manually though.  
+\+ Added the ability to easily clear the skin, sound, version and intermediary mapping caches.  
+\+ Added a confirmation prompt to deleting instances.  
+\* Fixed drag and dropping loader mods into the loader mods window.  
+\* Fixed not being able to delete loader mods.  
 \* Changed how glass-launcher gets its version. No more mislabelled launcher versions.  
 \* Made the console not display if `-noguiconsole` is passed, or if Java detects an attached console.  
 \* Fixed new subwindows not being centered on the parent window. Should make it less painful to use on multi-monitor setups.  
