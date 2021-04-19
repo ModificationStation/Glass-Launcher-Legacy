@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import net.glasslauncher.legacy.Config;
+import net.glasslauncher.legacy.Main;
 import net.glasslauncher.legacy.jsontemplate.Profile;
 import net.glasslauncher.legacy.jsontemplate.ProfileProperties;
 import net.glasslauncher.legacy.jsontemplate.TextureURLs;
@@ -67,7 +69,7 @@ public class HttpSkinHandler implements HttpHandler {
             os.write(response);
             os.close();
         } catch (Exception e) {
-        	System.out.println("glass-netfix: Failed to handle skin:");
+            Main.LOGGER.severe("Failed to handle skin!");
             e.printStackTrace();
             t.sendResponseHeaders(500, 0);
             t.close();

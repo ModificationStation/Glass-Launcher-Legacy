@@ -490,8 +490,6 @@ public class OptionsWindow extends JDialog {
                     else {
                         categoryFilter = "";
                     }
-                    System.out.println(categoryFilter);
-                    System.out.println(typeFilter);
                 }
                 else {
                     super.mouseClicked(e);
