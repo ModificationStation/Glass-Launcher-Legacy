@@ -30,7 +30,7 @@ public class OptionsWindow extends JDialog {
     private InstanceConfig instanceConfig;
     private ModList modList;
     private ArrayList<Mod> jarMods;
-    private DragDropList modDragDropList;
+    private DragDropList jarModDragDropList;
 
     private DragDropList loaderModDragDropList;
     private ArrayList<Mod> loaderMods;
@@ -96,9 +96,11 @@ public class OptionsWindow extends JDialog {
         tabpane.addTab("Loader Mods", makeLoaderMods());
         tabpane.addTab("Mod Repo", makeModRepo());
 
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(
             new WindowAdapter() {
                 public void windowClosing(WindowEvent we) {
+                    Main.LOGGER.info("Closing options window for " + instName + "...");
                     if (jarMods.size() > 0 && !instanceConfig.isDisableIntermediary()) {
                         int response = JOptionPane.showConfirmDialog(parent, "Jar mods detected. Do you want to disable intermediary mappings?\nThis will break fabric mods, but will unbreak your jar mods.", "Warning", JOptionPane.YES_NO_OPTION);
                         if (response == JOptionPane.YES_OPTION) {
@@ -110,6 +112,7 @@ public class OptionsWindow extends JDialog {
                         if (response != JOptionPane.YES_OPTION) {
                             checkModCompat();
                         }
+                        return;
                     }
                     instanceConfig.setJavaArgs(javaargs.getText());
                     instanceConfig.setMaxRam(maxram.getText());
@@ -122,10 +125,10 @@ public class OptionsWindow extends JDialog {
                     instanceConfig.setVersion((String) instanceVersion.getSelectedItem());
 
                     modList.setJarMods(new ArrayList<>());
-                    ListModel listModel = modDragDropList.model;
+                    ListModel<Mod> listModel = jarModDragDropList.model;
                     for (int i = 0; i< listModel.getSize(); i++) {
                         try {
-                            Mod mod = (Mod) listModel.getElementAt(i);
+                            Mod mod = listModel.getElementAt(i);
                             modList.getJarMods().add(mod);
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -141,6 +144,7 @@ public class OptionsWindow extends JDialog {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    dispose();
                 }
             }
         );
@@ -266,23 +270,23 @@ public class OptionsWindow extends JDialog {
 
         jarMods = new ArrayList<>();
         JScrollPane modListScroll = new JScrollPane();
-        modDragDropList = new DragDropList(jarMods, instPath + "mods/");
+        jarModDragDropList = new DragDropList(jarMods, instPath + "mods/");
         if (!Config.getLauncherConfig().isThemeDisabled()) {
             modListScroll.getViewport().setBackground(new Color(52, 52, 52));
-            modDragDropList.setBackground(new Color(52, 52, 52));
+            jarModDragDropList.setBackground(new Color(52, 52, 52));
         }
         refreshJarModList();
         modListScroll.setBorder(new EmptyBorder(0, 0, 0, 0));
         modListScroll.setBounds(20, 20, 200, 200);
-        modListScroll.setViewportView(modDragDropList);
+        modListScroll.setViewportView(jarModDragDropList);
 
         JButtonScalingFancy toggleModsButton = new JButtonScalingFancy();
         toggleModsButton.setText("Toggle Selected Mods");
         toggleModsButton.addActionListener(event -> {
-            for (Mod mod : modDragDropList.getSelectedValuesList()) {
+            for (Mod mod : jarModDragDropList.getSelectedValuesList()) {
                 mod.setEnabled(!mod.isEnabled());
             }
-            modDragDropList.repaint();
+            jarModDragDropList.repaint();
             modCompatChecked = false;
         });
         toggleModsButton.setBounds(20, 230, 200, 22);
@@ -310,7 +314,7 @@ public class OptionsWindow extends JDialog {
                 }
                 progressWindow.setProgress(1);
                 progressWindow.setProgressText("Applying Mods");
-                InstanceManager.addMods(instName, modDragDropList.model);
+                InstanceManager.addMods(instName, jarModDragDropList.model);
                 progressWindow.setProgress(2);
                 progressWindow.setProgressText("Done");
                 progressWindow.dispose();
@@ -348,7 +352,7 @@ public class OptionsWindow extends JDialog {
         removeModsButton.setText("Remove Selected Mods");
         removeModsButton.setForeground(new Color(185, 0, 0));
         removeModsButton.addActionListener(event -> {
-            for (Mod mod : modDragDropList.getSelectedValuesList()) {
+            for (Mod mod : jarModDragDropList.getSelectedValuesList()) {
                 (new File(instPath + "mods/" + mod.getFileName())).delete();
             }
             refreshJarModList();
@@ -554,11 +558,11 @@ public class OptionsWindow extends JDialog {
                 }
             }
         }
-        modDragDropList.model.clear();
+        jarModDragDropList.model.clear();
         for (Mod mod : jarMods) {
-            modDragDropList.model.addElement(mod);
+            jarModDragDropList.model.addElement(mod);
         }
-        modDragDropList.repaint();
+        jarModDragDropList.repaint();
     }
 
     private void refreshLoaderModList() {
@@ -580,7 +584,7 @@ public class OptionsWindow extends JDialog {
 
     private void checkModCompat() {
         HashMap<Mod, HashMap<Mod, ModCompatInfo>> incompatibleMods = new HashMap<>();
-        Object[] objArray = modDragDropList.model.toArray();
+        Object[] objArray = jarModDragDropList.model.toArray();
         ArrayList<Mod> theRealArray = new ArrayList<Mod>(){{Arrays.stream(objArray).forEach((obj) -> add((Mod) obj)); }};
         for (Mod mod : theRealArray) {
             try {
