@@ -21,12 +21,18 @@ class InstanceManagerWindow extends JDialog {
     private JPanel panel;
     private JPanel deletePanel = new JPanel();
 
+    private final Frame parent;
+
     private JCheckBox hideMSCheckbox;
     private JCheckBox disableThemeCheckbox;
     private JCheckBox ignoreInstanceVersionCheckbox;
+    private HintTextField proxyAddress;
+    private HintTextField proxyPort;
+    private HintTextField webPort;
 
     InstanceManagerWindow(Frame frame) {
         super(frame);
+        parent = frame;
         setModal(true);
         setLayout(new GridLayout());
         setResizable(false);
@@ -34,13 +40,45 @@ class InstanceManagerWindow extends JDialog {
         panel.setLayout(new GridLayout());
         add(panel);
         setTitle("Instance Manager");
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
         addWindowListener(new WindowAdapter() {
-                              public void windowClosing(WindowEvent we) {
-                                      Main.LOGGER.info("Closing instance manager...");
-                                      dispose();
-                              }
-                          }
-        );
+            @Override
+            public void windowClosing(WindowEvent windowEvent) {
+                Main.LOGGER.info("Closing instance manager...");
+                try {
+                    int i = Integer.parseInt(proxyPort.getText());
+                    if (i > 65535 || i < 1) {
+                        throw new NumberFormatException();
+                    }
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(parent, "Proxy port number is an invalid port number!");
+                    return;
+                }
+                try {
+                    int i = Integer.parseInt(webPort.getText());
+                    if (i > 65535 || i < 1) {
+                        throw new NumberFormatException();
+                    }
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(parent, "Web port number is an invalid port number!");
+                    return;
+                }
+                if (proxyAddress.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(parent, "Proxy address cannot be empty! Defaulting to 127.0.0.1.");
+                    proxyAddress.setText("127.0.0.1");
+                }
+                Config.getLauncherConfig().setHidingMSButton(hideMSCheckbox.isSelected());
+                Config.getLauncherConfig().setThemeDisabled(disableThemeCheckbox.isSelected());
+                Config.getLauncherConfig().setIgnoreInstanceVersion(disableThemeCheckbox.isSelected());
+                Config.getLauncherConfig().setProxyAddress(proxyAddress.getText());
+                Config.getLauncherConfig().setProxyPort(proxyPort.getText());
+                Config.getLauncherConfig().setWebPort(webPort.getText());
+                Config.getLauncherConfig().saveFile();
+                dispose();
+            }
+        });
+
         setBounds(0, 0, 580, 340);
 
         JTabbedPane tabbedPane = new JTabbedPane();
@@ -277,16 +315,26 @@ class InstanceManagerWindow extends JDialog {
         }));
         clearResourceCache.setBounds(5, 247, 140, 20);
 
+        JLabelFancy proxyAddressLabel = new JLabelFancy("Proxy Address:");
+        proxyAddressLabel.setBounds(160, 199, 90, 20);
 
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent windowEvent) {
-                Config.getLauncherConfig().setHidingMSButton(hideMSCheckbox.isSelected());
-                Config.getLauncherConfig().setThemeDisabled(disableThemeCheckbox.isSelected());
-                Config.getLauncherConfig().setIgnoreInstanceVersion(disableThemeCheckbox.isSelected());
-                Config.getLauncherConfig().saveFile();
-            }
-        });
+        proxyAddress = new HintTextField("Default 127.0.0.1. Set to 0.0.0.0 to listen to all IPs.");
+        proxyAddress.setText(Config.getLauncherConfig().getProxyAddress());
+        proxyAddress.setBounds(255, 199, 140, 20);
+
+        JLabelFancy proxyPortLabel = new JLabelFancy("Proxy Port:");
+        proxyPortLabel.setBounds(160, 223, 90, 20);
+
+        proxyPort = new HintTextField("Default 25560");
+        proxyPort.setText(Config.getLauncherConfig().getProxyPort());
+        proxyPort.setBounds(255, 223, 140, 20);
+
+        JLabelFancy webPortLabel = new JLabelFancy("Web Port:");
+        webPortLabel.setBounds(160, 247, 90, 20);
+
+        webPort = new HintTextField("Default 25561");
+        webPort.setText(Config.getLauncherConfig().getWebPort());
+        webPort.setBounds(255, 247, 140, 20);
 
         launcherPanel.add(hideMSButtonLabel);
         launcherPanel.add(hideMSCheckbox);
@@ -298,6 +346,12 @@ class InstanceManagerWindow extends JDialog {
         launcherPanel.add(clearIntermediaryCache);
         launcherPanel.add(clearSkinCache);
         launcherPanel.add(clearResourceCache);
+        launcherPanel.add(proxyAddressLabel);
+        launcherPanel.add(proxyAddress);
+        launcherPanel.add(proxyPortLabel);
+        launcherPanel.add(proxyPort);
+        launcherPanel.add(webPortLabel);
+        launcherPanel.add(webPort);
 
         return launcherPanel;
     }

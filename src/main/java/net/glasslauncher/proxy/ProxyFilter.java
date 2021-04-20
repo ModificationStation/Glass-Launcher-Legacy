@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ProxyFilter extends HttpFiltersAdapter {
     private static List<String> ignoredHosts = Config.PROXY_IGNORED_HOSTS;
-    private static String newHost = "localhost:" + Config.PROXY_WEB_PORT;
+    private static String newHost = "localhost:" + Config.getLauncherConfig().getWebPort();
     private boolean doSoundFix;
     private boolean doSkinFix;
     private boolean doCapeFix;

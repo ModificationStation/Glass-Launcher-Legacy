@@ -13,6 +13,7 @@
 \+ Made it so instance versions can be changed. Jars will have to be provided manually though.  
 \+ Added the ability to easily clear the skin, sound, version and intermediary mapping caches.  
 \+ Added a confirmation prompt to deleting instances.  
+\+ Added a launcher option for setting the proxy and webserver ports, as well as an option to allow the proxy to listen on all IPs.  
 \* Fixed drag and dropping loader mods into the loader mods window.  
 \* Fixed not being able to delete loader mods.  
 \* Changed how glass-launcher gets its version. No more mislabelled launcher versions.  

@@ -8,7 +8,7 @@ import java.net.InetSocketAddress;
 
 public final class ProxyHttpServer {
     public static HttpServer start() throws IOException {
-        HttpServer server = HttpServer.create(new InetSocketAddress(Config.PROXY_ADDRESS, Config.PROXY_WEB_PORT), 0);
+        HttpServer server = HttpServer.create(new InetSocketAddress(Config.getLauncherConfig().getProxyAddress(), Integer.parseInt(Config.getLauncherConfig().getWebPort())), 0);
         server.createContext("/skins/", new HttpSkinHandler(0));
         server.createContext("/capes/", new HttpSkinHandler(1));
         server.createContext("/join/", new HttpJoinHandler());

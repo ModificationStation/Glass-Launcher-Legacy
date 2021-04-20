@@ -30,7 +30,7 @@ public class Proxy extends Thread {
 
             this.serverBoot =
                     DefaultHttpProxyServer.bootstrap()
-                            .withAddress(new InetSocketAddress(Config.PROXY_ADDRESS, Config.PROXY_PORT))
+                            .withAddress(new InetSocketAddress(Config.getLauncherConfig().getProxyAddress(), Integer.parseInt(Config.getLauncherConfig().getProxyPort())))
                             .withManInTheMiddle(new CertificateSniffingMitmManager(new Authority(
                                     new File(Config.CACHE_PATH),
                                     "glass-launcher-proxy-mitm",
@@ -57,7 +57,7 @@ public class Proxy extends Thread {
         httpProxyServer = serverBoot.start();
         httpServer.start();
         Main.LOGGER.info("Proxy servers started!");
-        Main.LOGGER.info("Add \"-Dhttp.proxyHost=" + Config.PROXY_ADDRESS + " -Dhttp.proxyPort=" + Config.PROXY_PORT + "\" to your launch settings to use the proxy if you aren't using glass-launcher to launch!");
+        Main.LOGGER.info("Add \"-Dhttp.proxyHost=" + Config.getLauncherConfig().getProxyAddress() + " -Dhttp.proxyPort=" + Config.getLauncherConfig().getProxyPort() + "\" to your launch settings to use the proxy if you aren't using glass-launcher to launch!");
     }
 
     public void exit() {

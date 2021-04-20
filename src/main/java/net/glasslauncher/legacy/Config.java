@@ -39,21 +39,6 @@ public class Config {
     public static final long CACHE_AGE_LIMIT = 600L;
 
     /**
-     * The port which the built-in proxy runs on.
-     */
-    public static final int PROXY_PORT = 25560;
-
-    /**
-     * The port which the built-in webserver for the proxy runs on.
-     */
-    public static final int PROXY_WEB_PORT = 25561;
-
-    /**
-     * The address which the built-in proxy and webserver runs on.
-     */
-    public static final String PROXY_ADDRESS = "127.0.0.1";
-
-    /**
      * Hosts which are ignored by the proxy.
      */
     public static final List<String> PROXY_IGNORED_HOSTS = Collections.unmodifiableList(new ArrayList<String>() {{

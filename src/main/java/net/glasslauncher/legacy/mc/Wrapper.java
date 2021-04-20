@@ -76,7 +76,7 @@ public class Wrapper {
         args.add(Config.JAVA_BIN);
         if (instJson.isProxySound() || instJson.isProxyCape() || instJson.isProxySkin() || instJson.isProxyLogin()) {
             args.add("-Dhttp.proxyHost=127.0.0.1");
-            args.add("-Dhttp.proxyPort=" + Config.PROXY_PORT);
+            args.add("-Dhttp.proxyPort=" + Config.getLauncherConfig().getProxyPort());
             boolean[] proxyArgs = new boolean[]{
                     instJson.isProxySound(),
                     instJson.isProxySkin(),
