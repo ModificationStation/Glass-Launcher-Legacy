@@ -111,8 +111,8 @@ public class OptionsWindow extends JDialog {
                         int response = JOptionPane.showConfirmDialog(parent, "Jar mod compatibility has not been checked!\nAre you sure you don't want to run a check to see if any mods conflict?");
                         if (response != JOptionPane.YES_OPTION) {
                             checkModCompat();
+                            return;
                         }
-                        return;
                     }
                     instanceConfig.setJavaArgs(javaargs.getText());
                     instanceConfig.setMaxRam(maxram.getText());
