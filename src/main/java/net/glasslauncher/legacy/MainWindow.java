@@ -9,6 +9,7 @@ import net.glasslauncher.legacy.components.templates.JButtonScaling;
 import net.glasslauncher.legacy.mc.Wrapper;
 import net.glasslauncher.legacy.util.LoginVerifier;
 import net.glasslauncher.legacy.util.MSLoginHandler;
+import net.glasslauncher.legacy.util.MojangLoginHandler;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -70,7 +71,9 @@ class MainWindow extends JFrame {
         loginForm.setLayout(new BorderLayout());
 
         ActionListener mojangListener = (e) -> {
-            startMinecraft();
+            if (LoginVerifier.verifyLogin(true, loginPanel, this)) {
+                startMinecraft();
+            }
         };
 
         ActionListener msListener = (e) -> {

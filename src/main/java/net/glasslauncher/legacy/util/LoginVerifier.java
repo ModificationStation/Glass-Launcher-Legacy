@@ -14,7 +14,7 @@ public class LoginVerifier {
         if (Config.getLauncherConfig().isMSToken()) {
             Main.LOGGER.info("Verifying stored MS auth token...");
             if (!(new MSLoginHandler(parent)).verifyStoredToken()) {
-                Main.LOGGER.severe("Unable to verify stored MS auth token.");
+                Main.LOGGER.severe("Unable to verify stored MS auth token. Logging in is required.");
                 Config.getLauncherConfig().setLoginInfo(null);
                 return false;
             }
@@ -29,7 +29,7 @@ public class LoginVerifier {
                     Main.LOGGER.info("Mojang auth token has been verified!");
                     return true;
                 } catch (Exception e) {
-                    Main.LOGGER.warning("Unable to verify stored Mojang auth token.");
+                    Main.LOGGER.warning("Unable to verify stored Mojang auth token. Logging in is required.");
                     Config.getLauncherConfig().setLoginInfo(null);
                     return false;
                 }
