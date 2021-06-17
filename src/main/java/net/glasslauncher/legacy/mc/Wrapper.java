@@ -87,10 +87,16 @@ public class Wrapper {
             proxy.start();
         }
         String javaArgs = instJson.getJavaArgs();
-        // TODO: Make user args better to use
+        // TODO: Use an actual args parser
+        boolean trip = false;
         if (!javaArgs.isEmpty()) {
             for (String arg : javaArgs.split(" -")) {
-                args.add("-" + arg);
+                if (trip) {
+                    args.add("-" + arg);
+                } else {
+                    args.add(arg);
+                    trip = true;
+                }
             }
         }
         args.add("-Xmx" + instJson.getMaxRam());
