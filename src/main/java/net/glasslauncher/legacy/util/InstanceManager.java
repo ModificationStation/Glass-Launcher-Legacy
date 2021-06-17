@@ -13,9 +13,7 @@ import net.glasslauncher.legacy.jsontemplate.*;
 import net.glasslauncher.proxy.web.WebUtils;
 
 import javax.swing.*;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileSystem;
@@ -177,6 +175,7 @@ public class InstanceManager {
         else if (!version.equals("custom")) {
             try {
                 FileUtils.delete(new File(minecraftFolder));
+                throw new Exception("Specified Minecraft version does not exist in known versions!");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -227,7 +226,7 @@ public class InstanceManager {
                 Files.delete(jarFs.getPath("META-INF/MANIFEST.MF"));
             }
             catch (Exception e) {
-                e.printStackTrace();
+                Main.LOGGER.warning("Failed to delete manifest files. This is normal on custom jars.");
             }
             jarFs.close();
         } catch (Exception e) {
@@ -239,7 +238,14 @@ public class InstanceManager {
         String instPath = Config.getInstancePath(instance);
         InstanceConfig instanceConfig = new InstanceConfig(instPath + "instance_config.json");
         ModList modList = new ModList(instPath + "mods/mods.json");
-        boolean hasCustomJar = false;
+        CustomJarList modListV2 = new CustomJarList();
+        new File(modList.getPath()).getParentFile().mkdirs();
+        try {
+            modListV2 = (new Gson()).fromJson(new InputStreamReader(new FileInputStream(mmcZip.getFile(mmcZipInstDir + "/patches/net.minecraft.json"))), CustomJarList.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String customJar = null;
 
         if (multiMCPack.getFormatVersion() != 1) {
             throw new GenericInvalidVersionException("MultiMC instance version is unsupported!");
@@ -248,13 +254,18 @@ public class InstanceManager {
         progressWindow.setProgress(0);
         progressWindow.setProgressMax(3);
         progressWindow.setProgressText("Generating mod list...");
+
+        for (ModV2 mod : modListV2.getJarMods()) {
+            modList.getJarMods().add(modList.getJarMods().size(), new Mod(mod.getFilename(), mod.getDisplayname(), true, new String[]{}, ""));
+        }
+
         for (MultiMCComponent component : multiMCPack.getComponents()) {
             if (component.isImportant()) {
-                instanceConfig.setVersion(component.getCachedVersion());
+                instanceConfig.setVersion(component.getVersion());
             }
             else if (component.isDependencyOnly() || (component.getUid().equals("customjar") && component.isDisabled())) {}
             else if (component.getUid().equals("customjar") && !component.isDisabled()) {
-                hasCustomJar = true;
+                customJar = "libraries/customjar-1.jar";
             }
             else if (component.getCachedName() != null) {
                 modList.getJarMods().add(modList.getJarMods().size(), new Mod(component.getUid().replace("org.multimc.jarmod.", "") + ".jar", component.getCachedName(), !component.isDisabled(), new String[]{}, ""));
@@ -285,6 +296,18 @@ public class InstanceManager {
             mods.add(mods.getSize(), mod);
         }
 
+        try {
+            progressWindow.setProgressText("Copying custom minecraft.jar...");
+            if (customJar != null) {
+                File originalJar = new File(instPath + ".minecraft/bin/minecraft.jar");
+                originalJar.delete();
+                Files.copy(mmcZip.getFile(mmcZipInstDir + "/" + customJar).toPath(), originalJar.toPath());
+                instanceConfig.setVersion("custom");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         File vanillaJar = new File(instPath + ".minecraft/bin/minecraft_vanilla.jar");
         File moddedJar = new File(instPath + ".minecraft/bin/minecraft.jar");
         try {
@@ -299,18 +322,6 @@ public class InstanceManager {
             return;
         }
         InstanceManager.addMods(instance, mods);
-
-        try {
-            progressWindow.setProgressText("Copying custom minecraft.jar...");
-            if (hasCustomJar) {
-                File originalJar = new File(instPath + ".minecraft/bin/minecraft.jar");
-                originalJar.delete();
-                Files.copy(mmcZip.getFile(mmcZipInstDir + "/libraries/customjar-1.jar").toPath(), originalJar.toPath());
-                instanceConfig.setVersion("custom");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         progressWindow.increaseProgress();
         progressWindow.setProgressText("Saving config and copying instance files...");
         instanceConfig.saveFile();
