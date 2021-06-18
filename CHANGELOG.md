@@ -1,5 +1,5 @@
 #### v0.5
-\+ Added some ~~basic~~ pretty advanced glass-repo integration.  
+\+ Added some basic glass-repo integration.  
 \+ Added the `-help` and `-h` parameters.  
 \+ Added a mod info panel for viewing info about mods, if they have info attached.  
 \+ Added Microsoft account support. The button can be hidden in the instances window for those who dislike it.  
