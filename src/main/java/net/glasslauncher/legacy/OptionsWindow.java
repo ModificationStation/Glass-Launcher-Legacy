@@ -299,8 +299,8 @@ public class OptionsWindow extends JDialog {
                 progressWindow.setProgressMax(2);
                 progressWindow.setProgress(0);
                 progressWindow.setProgressText("Setting up");
-                File vanillaJar = new File(instPath + ".minecraft/bin/minecraft_vanilla.jar");
-                File moddedJar = new File(instPath + ".minecraft/bin/minecraft.jar");
+                File vanillaJar = new File(instPath + ".minecraft/bin/" + instanceConfig.getVersion() + "_vanilla.jar");
+                File moddedJar = new File(instPath + ".minecraft/bin/" + instanceConfig.getVersion() + ".jar");
                 try {
                     if (vanillaJar.exists()) {
                         moddedJar.delete();
@@ -314,7 +314,7 @@ public class OptionsWindow extends JDialog {
                 }
                 progressWindow.setProgress(1);
                 progressWindow.setProgressText("Applying Mods");
-                InstanceManager.addMods(instName, jarModDragDropList.model);
+                InstanceManager.addMods(instName, instanceConfig, jarModDragDropList.model);
                 progressWindow.setProgress(2);
                 progressWindow.setProgressText("Done");
                 progressWindow.dispose();

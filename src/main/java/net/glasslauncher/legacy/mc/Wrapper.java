@@ -102,10 +102,10 @@ public class Wrapper {
         args.add("-Xmx" + instJson.getMaxRam());
         args.add("-Xms" + instJson.getMinRam());
         args.add("-Djava.library.path=" + instPath + "/bin/natives");
-        args.add("-Dfabric.gameJarPath=" + instPath + "/bin/minecraft.jar");
+        args.add("-Dfabric.gameJarPath=" + instPath + "/bin/" + instJson.getVersion() + ".jar");
         args.add("-cp");
         args.add(System.getProperty("java.class.path") + (Config.OS.equals("windows")? ";" : ":") + Config.getAbsolutePathForCP(instance, new String[] {
-                ".minecraft/bin/minecraft.jar",
+                ".minecraft/bin/" + instJson.getVersion() + ".jar",
                 ".minecraft/bin/lwjgl.jar",
                 ".minecraft/bin/lwjgl_util.jar",
                 ".minecraft/bin/jinput.jar",
@@ -151,7 +151,7 @@ public class Wrapper {
         mcEnv.put("appdata", newAppData);
         mcEnv.put("home", newAppData);
         mcEnv.put("user.home", newAppData);
-        mcEnv.put("fabric.gameJarPath", Config.getInstancePath(instance) + ".minecraft/bin/minecraft.jar");
+        mcEnv.put("fabric.gameJarPath", Config.getInstancePath(instance) + ".minecraft/bin/" + instJson.getVersion() + ".jar");
 
         try {
             logger.setUseParentHandlers(false);

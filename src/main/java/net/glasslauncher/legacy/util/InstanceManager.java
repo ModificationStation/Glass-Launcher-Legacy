@@ -109,7 +109,7 @@ public class InstanceManager {
                 for (Mod mod : modList.getJarMods()) {
                     mods.add(mods.getSize(), mod);
                 }
-                addMods(instanceName, mods);
+                addMods(instanceName, instanceConfig, mods);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -139,7 +139,7 @@ public class InstanceManager {
         if (Config.getMcVersions().getClient().containsKey(version)) {
             if (versionCacheJar.exists()) {
                 try {
-                    Files.copy(versionCacheJar.toPath(), new File(minecraftFolder + "/bin/minecraft.jar").toPath());
+                    Files.copy(versionCacheJar.toPath(), new File(minecraftFolder + "/bin/" + version + ".jar").toPath());
                 } catch (FileAlreadyExistsException e) {
                     Main.LOGGER.info("Instance \"" + instance + "\" already exists!");
                     return;
@@ -160,7 +160,7 @@ public class InstanceManager {
                         url = "https://launcher.mojang.com/v1/objects/" + Config.getMcVersions().getClient().get(version).getUrl() + "/client.jar";
                     }
                     FileUtils.downloadFile(url, versionsCachePath, null, version + ".jar");
-                    Files.copy(versionCacheJar.toPath(), new File(minecraftFolder + "/bin/minecraft.jar").toPath());
+                    Files.copy(versionCacheJar.toPath(), new File(minecraftFolder + "/bin/" + version + ".jar").toPath());
                 } catch (Exception e) {
                     try {
                         FileUtils.delete(new File(minecraftFolder));
@@ -198,11 +198,11 @@ public class InstanceManager {
         FileUtils.extractZip(lwjglCacheZip.getPath(), minecraftFolder + "/bin");
     }
 
-    public static void addMods(String instance, ListModel<Mod> mods) {
+    public static void addMods(String instance, InstanceConfig instanceConfig, ListModel<Mod> mods) {
         instance = Config.getInstancePath(instance);
         try {
-            File moddedJar = new File(instance, "/.minecraft/bin/minecraft.jar");
-            File vanillaJar = new File(instance, "/.minecraft/bin/minecraft_vanilla.jar");
+            File moddedJar = new File(instance, "/.minecraft/bin/" + instanceConfig.getVersion() + ".jar");
+            File vanillaJar = new File(instance, "/.minecraft/bin/" + instanceConfig.getVersion() + "_vanilla.jar");
             if (moddedJar.exists() && !vanillaJar.exists()) {
                 Files.move(moddedJar.toPath(), vanillaJar.toPath());
             }
@@ -210,7 +210,7 @@ public class InstanceManager {
                 moddedJar.delete();
             }
             else {
-                throw new FileNotFoundException("Minecraft.jar is missing! Restore it to fix this error!");
+                throw new FileNotFoundException("Minecraft.jar is missing from the bin folder! Restore it to fix this error!");
             }
             ArrayList<File> zips = new ArrayList<>();
             for (int i = mods.getSize(); i != 0; i--) {
@@ -299,7 +299,7 @@ public class InstanceManager {
         try {
             progressWindow.setProgressText("Copying custom minecraft.jar...");
             if (customJar != null) {
-                File originalJar = new File(instPath + ".minecraft/bin/minecraft.jar");
+                File originalJar = new File(instPath + ".minecraft/bin/" + instanceConfig.getVersion() + ".jar");
                 originalJar.delete();
                 Files.copy(mmcZip.getFile(mmcZipInstDir + "/" + customJar).toPath(), originalJar.toPath());
                 instanceConfig.setVersion("custom");
@@ -308,8 +308,8 @@ public class InstanceManager {
             e.printStackTrace();
         }
 
-        File vanillaJar = new File(instPath + ".minecraft/bin/minecraft_vanilla.jar");
-        File moddedJar = new File(instPath + ".minecraft/bin/minecraft.jar");
+        File vanillaJar = new File(instPath + ".minecraft/bin/" + instanceConfig.getVersion() + "_vanilla.jar");
+        File moddedJar = new File(instPath + ".minecraft/bin/" + instanceConfig.getVersion() + ".jar");
         try {
             if (vanillaJar.exists()) {
                 moddedJar.delete();
@@ -321,7 +321,7 @@ public class InstanceManager {
             e.printStackTrace();
             return;
         }
-        InstanceManager.addMods(instance, mods);
+        InstanceManager.addMods(instance, instanceConfig, mods);
         progressWindow.increaseProgress();
         progressWindow.setProgressText("Saving config and copying instance files...");
         instanceConfig.saveFile();
