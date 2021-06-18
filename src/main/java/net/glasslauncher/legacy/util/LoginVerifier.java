@@ -29,7 +29,7 @@ public class LoginVerifier {
                     Main.LOGGER.info("Mojang auth token has been verified!");
                     return true;
                 } catch (Exception e) {
-                    Main.LOGGER.warning("Unable to verify stored Mojang auth token. Logging in is required.");
+                    Main.LOGGER.severe("Unable to verify stored Mojang auth token. Logging in is required.");
                     Config.getLauncherConfig().setLoginInfo(null);
                     return false;
                 }
@@ -46,7 +46,7 @@ public class LoginVerifier {
                     return false;
                 }
             }
-            if (!loginPanel.getUsername().getText().isEmpty() && canOffline) {
+            if (!loginPanel.getUsername().getText().isEmpty() && canOffline && !(Config.getLauncherConfig().getLoginInfo() != null && (Config.getLauncherConfig().getLoginInfo().getAccessToken() == null || !Config.getLauncherConfig().getLoginInfo().getAccessToken().isEmpty()))) {
                 Config.getLauncherConfig().setLoginInfo(new LoginInfo(loginPanel.getUsername().getText(), ""));
             }
             return Config.getLauncherConfig().getLoginInfo() != null;

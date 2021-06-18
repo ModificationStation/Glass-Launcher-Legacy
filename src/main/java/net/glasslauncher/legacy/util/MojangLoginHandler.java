@@ -38,8 +38,10 @@ public class MojangLoginHandler {
             if (username != null && password != null && !username.isEmpty() && !password.isEmpty()) {
                 Main.LOGGER.info("Getting account info from username and password...");
                 AuthenticationResponse response = OpenMCAuthenticator.authenticate(username, password, Config.getLauncherConfig().getClientToken());
+                Config.getLauncherConfig().setMSToken(false);
                 Config.getLauncherConfig().setClientToken(response.getClientToken());
                 Config.getLauncherConfig().setLoginInfo(new LoginInfo(response.getSelectedProfile().getName(), response.getAccessToken()));
+                Config.getLauncherConfig().saveFile();
             }
         } catch (Exception e) {
             e.printStackTrace();

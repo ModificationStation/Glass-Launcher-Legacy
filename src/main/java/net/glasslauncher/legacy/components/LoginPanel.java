@@ -68,6 +68,7 @@ public class LoginPanel extends JPanel {
             logoutButton.setBounds(0, 66, 22, 22);
             logoutButton.addActionListener((e) -> {
                 Config.getLauncherConfig().setLoginInfo(null);
+                Config.getLauncherConfig().setMSToken(false);
                 setHasToken(false);
             });
             add(logoutButton);
