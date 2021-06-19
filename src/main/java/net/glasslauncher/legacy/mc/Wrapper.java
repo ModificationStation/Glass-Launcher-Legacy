@@ -117,6 +117,8 @@ public class Wrapper {
         args.add(Config.getLauncherConfig().getLoginInfo().getUsername());
         args.add("--session");
         args.add(Config.getLauncherConfig().getLoginInfo().getAccessToken());
+        args.add("--uuid");
+        args.add(Config.getLauncherConfig().getLoginInfo().getUuid());
         if (instJson.getVersion() != null && !instJson.getVersion().toLowerCase().equals("none")) {
             args.add("--title=Minecraft " + instJson.getVersion());
         }

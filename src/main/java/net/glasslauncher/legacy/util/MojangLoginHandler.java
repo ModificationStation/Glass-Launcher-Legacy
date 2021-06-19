@@ -21,7 +21,7 @@ public class MojangLoginHandler {
                     OpenMCAuthenticator.validate(loginInfo.getAccessToken(), Config.getLauncherConfig().getClientToken());
                     RefreshResponse response = OpenMCAuthenticator.refresh(loginInfo.getAccessToken(), Config.getLauncherConfig().getClientToken());
                     Config.getLauncherConfig().setClientToken(response.getClientToken());
-                    Config.getLauncherConfig().setLoginInfo(new LoginInfo(response.getSelectedProfile().getName(), response.getAccessToken()));
+                    Config.getLauncherConfig().setLoginInfo(new LoginInfo(response.getSelectedProfile().getName(), response.getAccessToken(), response.getSelectedProfile().getUUID().toString()));
                     Main.LOGGER.info("Cached token validated!");
                     return;
                 } catch (Exception e) {
@@ -40,7 +40,7 @@ public class MojangLoginHandler {
                 AuthenticationResponse response = OpenMCAuthenticator.authenticate(username, password, Config.getLauncherConfig().getClientToken());
                 Config.getLauncherConfig().setMSToken(false);
                 Config.getLauncherConfig().setClientToken(response.getClientToken());
-                Config.getLauncherConfig().setLoginInfo(new LoginInfo(response.getSelectedProfile().getName(), response.getAccessToken()));
+                Config.getLauncherConfig().setLoginInfo(new LoginInfo(response.getSelectedProfile().getName(), response.getAccessToken(), response.getSelectedProfile().getUUID().toString()));
                 Config.getLauncherConfig().saveFile();
             }
         } catch (Exception e) {

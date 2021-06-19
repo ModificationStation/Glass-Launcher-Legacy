@@ -47,7 +47,7 @@ public class LoginVerifier {
                 }
             }
             if (!loginPanel.getUsername().getText().isEmpty() && canOffline && !(Config.getLauncherConfig().getLoginInfo() != null && (Config.getLauncherConfig().getLoginInfo().getAccessToken() == null || !Config.getLauncherConfig().getLoginInfo().getAccessToken().isEmpty()))) {
-                Config.getLauncherConfig().setLoginInfo(new LoginInfo(loginPanel.getUsername().getText(), ""));
+                Config.getLauncherConfig().setLoginInfo(new LoginInfo(loginPanel.getUsername().getText(), "", ""));
             }
             return Config.getLauncherConfig().getLoginInfo() != null;
         }

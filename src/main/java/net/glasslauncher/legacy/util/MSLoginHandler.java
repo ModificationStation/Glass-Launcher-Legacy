@@ -338,12 +338,11 @@ public class MSLoginHandler {
 
             InputStream is = connection.getInputStream();
 
-            MCProfile jsonObject = gson.fromJson(new InputStreamReader(is), MCProfile.class);
-            String name = jsonObject.getName();
+            MCProfile mcProfile = gson.fromJson(new InputStreamReader(is), MCProfile.class);
 
             frame.dispose();
             Config.getLauncherConfig().setMSToken(true);
-            Config.getLauncherConfig().setLoginInfo(new LoginInfo(name, mcAccessToken), true);
+            Config.getLauncherConfig().setLoginInfo(new LoginInfo(mcProfile.getName(), mcAccessToken, mcProfile.getId()), true);
             return true;
         } catch (IOException e) {
             e.printStackTrace();
