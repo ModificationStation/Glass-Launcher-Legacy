@@ -10,7 +10,6 @@ repositories {
     mavenCentral()
     mavenLocal()
     jcenter()
-    maven { url "https://maven.glass-launcher.net/repo/" }
     maven { url "https://jitpack.io" }
     maven { url  "https://maven.fabricmc.net/" }
 }
@@ -85,12 +84,12 @@ dependencies {
     // Used to handle accessing the mod repo.
     // https://glass-repo.net
     // No public documentation yet, though if you figure it out, you can use it for whatever.
-    compile group: "net.glasslauncher.repo", name: "glass-site-java-api", version: "0.7"
+    compile group: "com.github.calmilamsy", name: "Glass-Site-Repo-Java-API", version: "4aa5302"
 
     // Various utility classes that help dramatically with handling files and URLs.
     // https://glass-launcher.net
     // Same thing, use if you want, though there are no docs.
-    compile group: "net.glasslauncher", name: "commons", version: "1.3"
+    compile group: "com.github.calmilamsy", name: "Glass-Commons", version: "e8cacac"
 
 }
 
