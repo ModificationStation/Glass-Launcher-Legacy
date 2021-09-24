@@ -74,7 +74,7 @@ dependencies {
     compile "commons-io:commons-io:2.5"
     compile "org.apache.commons:commons-lang3:3.5"
     compile "net.sf.jopt-simple:jopt-simple:5.0.4"
-    compile "tk.valoeghese:ZoesteriaConfig:1.3.2"
+    compile "com.github.valoeghese:ZoesteriaConfig:1.3.2"
     // Fabric Loader dependencies end
 
     // Used to handle auth
@@ -84,12 +84,12 @@ dependencies {
     // Used to handle accessing the mod repo.
     // https://glass-repo.net
     // No public documentation yet, though if you figure it out, you can use it for whatever.
-    compile group: "com.github.calmilamsy", name: "Glass-Site-Repo-Java-API", version: "8a63f53"
+    compile group: "com.github.calmilamsy", name: "Glass-Site-Repo-Java-API", version: "f623e78"
 
     // Various utility classes that help dramatically with handling files and URLs.
     // https://glass-launcher.net
     // Same thing, use if you want, though there are no docs.
-    compile group: "com.github.calmilamsy", name: "Glass-Commons", version: "e8cacac"
+    compile group: "com.github.calmilamsy", name: "Glass-Commons", version: "4aa5302"
 
 }
 
