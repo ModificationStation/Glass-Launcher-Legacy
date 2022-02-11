@@ -10,7 +10,6 @@ import net.glasslauncher.legacy.Main;
 import net.glasslauncher.legacy.ProgressWindow;
 import net.glasslauncher.legacy.VerifyAccountWindow;
 import net.glasslauncher.legacy.jsontemplate.*;
-import net.glasslauncher.proxy.web.WebUtils;
 
 import javax.swing.*;
 import java.io.*;
@@ -330,17 +329,17 @@ public class InstanceManager {
     }
 
     private static void addSounds(String instance) {
-        String basePath = Config.getInstancePath(instance) + ".minecraft/resources/";
-        MinecraftResources minecraftResources;
-
-        try {
-            minecraftResources = (new Gson()).fromJson(WebUtils.getStringFromURL(Config.BASE_RESOURCES_URL + "json.php"), MinecraftResources.class);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
-        }
-
-        downloadResourcesThreadManager = new DownloadResourcesThreadManager(Arrays.asList(minecraftResources.getFiles()), basePath);
-        downloadResourcesThreadManager.run();
+//        String basePath = Config.getInstancePath(instance) + ".minecraft/resources/";
+//        MinecraftResources minecraftResources;
+//
+//        try {
+//            minecraftResources = (new Gson()).fromJson(WebUtils.getStringFromURL(Config.BASE_RESOURCES_URL + "json.php"), MinecraftResources.class);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return;
+//        }
+//
+//        downloadResourcesThreadManager = new DownloadResourcesThreadManager(Arrays.asList(minecraftResources.getFiles()), basePath);
+//        downloadResourcesThreadManager.run();
     }
 }

@@ -5,6 +5,7 @@ import net.glasslauncher.common.LoggerFactory;
 
 import javax.swing.*;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
@@ -15,6 +16,9 @@ public class Main {
     public static MainWindow mainwin;
 
     public static void main(String[] args) {
+        if (!System.getProperty("java.version").startsWith("1.8")) {
+            JOptionPane.showMessageDialog(null, "Unsupported java version found!\n" + System.getProperty("java.version") + " was found, but java 1.8 is the only version supported.");
+        }
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
@@ -72,8 +76,8 @@ public class Main {
             LOGGER.info("Detected running with a console.");
         }
         else {
-            console = new ConsoleWindow();
             LOGGER.info("Detected not running with a console. Creating a console window...");
+            console = new ConsoleWindow();
         }
 
         try {
@@ -93,18 +97,9 @@ public class Main {
         }
 
         for (String arg : args) {
-            if (arg.equals("-proxy")) {
-                ProxyStandalone.main(args);
-                return;
-            }
-            else if (arg.equals("-help") || arg.equals("-h")) {
+            if (arg.equals("-help") || arg.equals("-h")) {
                 LOGGER.info(
                         "\n" +
-                                "-proxy         : Launches in proxy only mode. No GUI aside from the console is shown. Defaults to all options enabled unless other paramaters are passed.\n" +
-                                " -dosound      : Enables the sound part of the proxy. Uses the oldest sound where available, so sounds might not be accurate on newer versions.\n" +
-                                " -dologin      : Enables the login part of the proxy. The server you are joining must be using an online fix for this to do anything.\n" +
-                                " -doskin       : Enables the skin part of the proxy. Fixes all references to player skins through Mojang/Minecraft servers.\n" +
-                                " -docape       : Enables the cape part of the proxy. Fixes all references to player capes through Mojang/Minecraft servers.\n" +
                                 "-noguiconsole  : Forces the launcher to run without a console window.\n" +
                                 "-installdir    : Changes install dir to the specified path."
                 );

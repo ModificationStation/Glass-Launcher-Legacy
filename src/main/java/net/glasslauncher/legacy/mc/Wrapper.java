@@ -9,15 +9,18 @@ import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
 import net.glasslauncher.legacy.jsontemplate.InstanceConfig;
 import net.glasslauncher.legacy.jsontemplate.MCVersion;
-import net.glasslauncher.proxy.Proxy;
+import net.glasslauncher.wrapper.LegacyWrapper;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -28,9 +31,7 @@ public class Wrapper {
     private final ArrayList<String> args;
     private InstanceConfig instJson;
 
-    private Proxy proxy = null;
-
-    private final Logger logger = LoggerFactory.makeLogger("Minecraft", "minecraft");
+    private final HashMap<String, Logger> loggers = new HashMap<>();
 
     public Wrapper() {
         this.instance = Config.getLauncherConfig().getLastUsedInstance();
@@ -74,18 +75,7 @@ public class Wrapper {
 
         this.args = new ArrayList<>();
         args.add(Config.JAVA_BIN);
-        if (instJson.isProxySound() || instJson.isProxyCape() || instJson.isProxySkin() || instJson.isProxyLogin()) {
-            args.add("-Dhttp.proxyHost=127.0.0.1");
-            args.add("-Dhttp.proxyPort=" + Config.getLauncherConfig().getProxyPort());
-            boolean[] proxyArgs = new boolean[]{
-                    instJson.isProxySound(),
-                    instJson.isProxySkin(),
-                    instJson.isProxyCape(),
-                    instJson.isProxyLogin()
-            };
-            proxy = new Proxy(proxyArgs);
-            proxy.start();
-        }
+        args.add("-Dglasslauncher.wrapper=" + String.join(",", String.valueOf(instJson.isProxySound()), String.valueOf(instJson.isProxySkin()), String.valueOf(instJson.isProxyCape()), String.valueOf(instJson.isProxyLogin()), String.valueOf(instJson.isProxyPiracyCheck())));
         String javaArgs = instJson.getJavaArgs();
         // TODO: Use an actual args parser
         boolean trip = false;
@@ -110,7 +100,7 @@ public class Wrapper {
                 ".minecraft/bin/lwjgl_util.jar",
                 ".minecraft/bin/jinput.jar",
         }) + extraCP);
-        args.add(KnotClient.class.getCanonicalName());
+        args.add(LegacyWrapper.class.getCanonicalName());
         args.add("--gameDir");
         args.add(instPath);
         args.add("--username");
@@ -119,7 +109,7 @@ public class Wrapper {
         args.add(Config.getLauncherConfig().getLoginInfo().getAccessToken());
         args.add("--uuid");
         args.add(Config.getLauncherConfig().getLoginInfo().getUuid());
-        if (instJson.getVersion() != null && !instJson.getVersion().toLowerCase().equals("none")) {
+        if (instJson.getVersion() != null && !instJson.getVersion().equalsIgnoreCase("none")) {
             args.add("--title=Minecraft " + instJson.getVersion());
         }
     }
@@ -156,6 +146,9 @@ public class Wrapper {
         mcEnv.put("fabric.gameJarPath", Config.getInstancePath(instance) + ".minecraft/bin/" + instJson.getVersion() + ".jar");
 
         try {
+            Logger logger = LoggerFactory.makeLogger("Minecraft", "minecraft");
+            String uuid = UUID.randomUUID().toString();
+            loggers.put(uuid, logger);
             logger.setUseParentHandlers(false);
             ConsoleHandler consoleHandler = new ConsoleHandler();
             consoleHandler.setFormatter(new MinecraftFormatter());
@@ -170,7 +163,11 @@ public class Wrapper {
             mcStdout.start();
             mcStderr.start();
 
-            (new Monitor(mc, proxy, () -> {
+            (new Monitor(mc, () -> {
+                for (Handler handler : logger.getHandlers()) {
+                    handler.flush();
+                    handler.close();
+                }
                 logger.removeHandler(consoleHandler);
                 consoleHandler.close();
             })).start();
