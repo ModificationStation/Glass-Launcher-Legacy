@@ -2,10 +2,22 @@ package net.glasslauncher.legacy;
 
 import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.common.JsonConfig;
-import net.glasslauncher.legacy.components.*;
+import net.glasslauncher.legacy.components.DragDropList;
+import net.glasslauncher.legacy.components.HijackedValidModValues;
+import net.glasslauncher.legacy.components.JButtonScalingFancy;
+import net.glasslauncher.legacy.components.JDetailsTable;
+import net.glasslauncher.legacy.components.JLabelFancy;
+import net.glasslauncher.legacy.components.JPanelBackgroundImage;
+import net.glasslauncher.legacy.components.JTextFieldFancy;
+import net.glasslauncher.legacy.components.LocalModDetailsPanel;
+import net.glasslauncher.legacy.components.ModLocalList;
 import net.glasslauncher.legacy.components.handlers.RepoModTableModel;
 import net.glasslauncher.legacy.components.templates.DetailsPanel;
-import net.glasslauncher.legacy.jsontemplate.*;
+import net.glasslauncher.legacy.jsontemplate.ClassInfo;
+import net.glasslauncher.legacy.jsontemplate.InstanceConfig;
+import net.glasslauncher.legacy.jsontemplate.Mod;
+import net.glasslauncher.legacy.jsontemplate.ModCompatInfo;
+import net.glasslauncher.legacy.jsontemplate.ModList;
 import net.glasslauncher.legacy.mc.LocalMods;
 import net.glasslauncher.legacy.util.InstanceManager;
 import net.glasslauncher.repo.api.mod.RepoReader;
@@ -16,14 +28,10 @@ import javax.swing.border.*;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.zip.ZipFile;
+import java.io.*;
+import java.nio.file.*;
+import java.util.*;
+import java.util.zip.*;
 
 public class OptionsWindow extends JDialog {
     private final Frame parent;
@@ -53,7 +61,6 @@ public class OptionsWindow extends JDialog {
     private JCheckBox capeproxy;
     private JCheckBox soundproxy;
     private JCheckBox loginproxy;
-    private JCheckBox disableIntermediary;
     private JComboBox<String> instanceVersion;
 
     /**
@@ -101,12 +108,6 @@ public class OptionsWindow extends JDialog {
             new WindowAdapter() {
                 public void windowClosing(WindowEvent we) {
                     Main.LOGGER.info("Closing options window for " + instName + "...");
-                    if (jarMods.size() > 0 && !instanceConfig.isDisableIntermediary()) {
-                        int response = JOptionPane.showConfirmDialog(parent, "Jar mods detected. Do you want to disable intermediary mappings?\nThis will break fabric mods, but will unbreak your jar mods.", "Warning", JOptionPane.YES_NO_OPTION);
-                        if (response == JOptionPane.YES_OPTION) {
-                            disableIntermediary.setSelected(true);
-                        }
-                    }
                     if (!modCompatChecked) {
                         int response = JOptionPane.showOptionDialog(parent, "Jar mod compatibility has not been checked!\nAre you sure you don't want to run a check to see if any mods conflict?", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
                         if (response != JOptionPane.YES_OPTION) {
@@ -121,7 +122,6 @@ public class OptionsWindow extends JDialog {
                     instanceConfig.setProxyCape(capeproxy.isSelected());
                     instanceConfig.setProxySound(soundproxy.isSelected());
                     instanceConfig.setProxyLogin(loginproxy.isSelected());
-                    instanceConfig.setDisableIntermediary(disableIntermediary.isSelected());
                     instanceConfig.setVersion((String) instanceVersion.getSelectedItem());
 
                     modList.setJarMods(new ArrayList<>());
@@ -236,16 +236,6 @@ public class OptionsWindow extends JDialog {
         loginproxy.setBounds(150, 181, 20, 20);
         loginproxy.setSelected(instanceConfig.isProxyLogin());
         instsettings.add(loginproxy);
-
-        JLabelFancy disableIntermediaryLabel = new JLabelFancy("Disable Intermediary (Can break jar mods if off):");
-        disableIntermediaryLabel.setBounds(20, 208, 250, 20);
-        instsettings.add(disableIntermediaryLabel);
-
-        disableIntermediary = new JCheckBox();
-        disableIntermediary.setOpaque(false);
-        disableIntermediary.setBounds(280, 209, 20, 20);
-        disableIntermediary.setSelected(instanceConfig.isDisableIntermediary());
-        instsettings.add(disableIntermediary);
 
         JLabelFancy instanceVersionLabel = new JLabelFancy("Minecraft Version:");
         instanceVersionLabel.setBounds(20, 372, 120, 20);

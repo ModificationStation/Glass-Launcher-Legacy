@@ -5,12 +5,10 @@ import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
 import net.glasslauncher.legacy.jsontemplate.MinecraftResource;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.io.*;
+import java.nio.file.*;
+import java.util.*;
+import java.util.concurrent.*;
 
 public class DownloadResourcesThreadManager {
     public static final int MAX_THREADS = 8;

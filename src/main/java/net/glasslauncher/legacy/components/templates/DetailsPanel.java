@@ -13,7 +13,7 @@ import org.commonmark.renderer.html.HtmlRenderer;
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.*;
 
 public abstract class DetailsPanel extends JPanel {
 

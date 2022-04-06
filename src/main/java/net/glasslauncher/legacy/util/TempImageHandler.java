@@ -4,11 +4,8 @@ import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.common.FileUtils;
 import net.glasslauncher.legacy.Main;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.io.*;
+import java.security.*;
 
 public class TempImageHandler {
 

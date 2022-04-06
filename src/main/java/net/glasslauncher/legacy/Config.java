@@ -1,19 +1,23 @@
 package net.glasslauncher.legacy;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.TypeAdapter;
+import com.google.gson.TypeAdapterFactory;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import lombok.Getter;
 import lombok.Setter;
 import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.common.JsonConfig;
+import net.glasslauncher.legacy.jsontemplate.JsonPostProcessable;
 import net.glasslauncher.legacy.jsontemplate.LauncherConfig;
 import net.glasslauncher.legacy.jsontemplate.MCVersions;
 
-import java.io.File;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
 public class Config {
 
@@ -196,4 +200,26 @@ public class Config {
             Main.LOGGER.info("This should be impossible!");
         }
     }
+
+    public static final Gson GSON = new GsonBuilder().registerTypeAdapterFactory(new TypeAdapterFactory() {
+        @Override
+        public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
+            TypeAdapter<T> delegate = gson.getDelegateAdapter(this, type);
+            return new TypeAdapter<T>() {
+                @Override
+                public void write(JsonWriter out, T value) throws IOException {
+                    delegate.write(out, value);
+                }
+
+                @Override
+                public T read(JsonReader in) throws IOException {
+                    T obj = delegate.read(in);
+                    if (obj instanceof JsonPostProcessable) {
+                        ((JsonPostProcessable) obj).jsonPostProcess();
+                    }
+                    return obj;
+                }
+            };
+        }
+    }).create();
 }

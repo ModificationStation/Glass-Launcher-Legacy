@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import net.glasslauncher.legacy.util.ArrayUtils;
 import net.glasslauncher.repo.api.mod.jsonobj.ModValues;
 
-import java.util.Arrays;
+import java.util.*;
 
 public class HijackedValidModValues extends ModValues {
 

@@ -5,7 +5,7 @@ import net.glasslauncher.legacy.jsontemplate.ModCompatInfo;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.HashMap;
+import java.util.*;
 
 public class CompatList extends JList<Mod> {
     public DefaultListModel<Mod> model;

@@ -10,8 +10,8 @@ import net.glasslauncher.repo.api.mod.jsonobj.Mod;
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
-import java.io.IOException;
-import java.util.Arrays;
+import java.io.*;
+import java.util.*;
 
 public class RepoModDetailsDialog extends JDialog {
 

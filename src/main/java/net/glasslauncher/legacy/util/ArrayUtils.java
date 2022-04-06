@@ -1,6 +1,6 @@
 package net.glasslauncher.legacy.util;
 
-import java.util.Arrays;
+import java.util.*;
 
 public class ArrayUtils {
 

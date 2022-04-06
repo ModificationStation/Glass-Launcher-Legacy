@@ -2,11 +2,11 @@ package net.glasslauncher.legacy.components;
 
 import net.glasslauncher.legacy.Config;
 
-import javax.imageio.ImageIO;
+import javax.imageio.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.*;
-import java.net.URL;
+import java.net.*;
 
 public class JPanelBackgroundImage extends JPanel {
     private BufferedImage tileImage;

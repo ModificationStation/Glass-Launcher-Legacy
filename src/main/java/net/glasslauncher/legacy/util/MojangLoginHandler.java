@@ -8,7 +8,7 @@ import net.glasslauncher.legacy.Main;
 import net.glasslauncher.legacy.jsontemplate.LoginInfo;
 
 import javax.swing.*;
-import java.util.UUID;
+import java.util.*;
 
 public class MojangLoginHandler {
 

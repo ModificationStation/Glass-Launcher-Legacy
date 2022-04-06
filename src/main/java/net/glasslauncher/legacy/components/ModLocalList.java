@@ -5,8 +5,8 @@ import net.glasslauncher.legacy.jsontemplate.Mod;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.*;
 
 public class ModLocalList extends DragDropList {
     // Fix for the renderer being called twice every click for some reason.

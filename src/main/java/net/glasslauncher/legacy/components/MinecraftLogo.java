@@ -2,11 +2,11 @@ package net.glasslauncher.legacy.components;
 
 import net.glasslauncher.legacy.Main;
 
-import javax.imageio.ImageIO;
+import javax.imageio.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.*;
-import java.io.IOException;
+import java.io.*;
 
 public class MinecraftLogo extends JPanel {
     private Image bgimage;

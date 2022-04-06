@@ -6,7 +6,7 @@ import net.glasslauncher.legacy.jsontemplate.Mod;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.*;
 
 public class DragDropList extends JList<Mod> {
     public DefaultListModel<Mod> model;

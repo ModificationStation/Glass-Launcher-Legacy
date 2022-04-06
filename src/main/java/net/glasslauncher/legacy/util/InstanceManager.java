@@ -9,21 +9,23 @@ import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
 import net.glasslauncher.legacy.ProgressWindow;
 import net.glasslauncher.legacy.VerifyAccountWindow;
-import net.glasslauncher.legacy.jsontemplate.*;
+import net.glasslauncher.legacy.jsontemplate.CustomJarList;
+import net.glasslauncher.legacy.jsontemplate.InstanceConfig;
+import net.glasslauncher.legacy.jsontemplate.Mod;
+import net.glasslauncher.legacy.jsontemplate.ModList;
+import net.glasslauncher.legacy.jsontemplate.ModV2;
+import net.glasslauncher.legacy.jsontemplate.MultiMCComponent;
+import net.glasslauncher.legacy.jsontemplate.MultiMCPack;
 
 import javax.swing.*;
 import java.io.*;
-import java.net.URL;
-import java.nio.file.FileAlreadyExistsException;
+import java.net.*;
 import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Objects;
+import java.nio.file.*;
+import java.util.*;
+import java.util.zip.*;
 
 public class InstanceManager {
-    private static DownloadResourcesThreadManager downloadResourcesThreadManager;
 
     /**
      * Detects what kind of modpack zip has been provided and then calls the related install function for the type.
@@ -85,7 +87,7 @@ public class InstanceManager {
             }
             if (isMultiMC) {
                 progressWindow.increaseProgress();
-                progressWindow.setProgressText("Installing MultiMC Modpack...");
+                progressWindow.setProgressText("Installing MultiMC instance...");
                 Main.LOGGER.info("Provided instance is a MultiMC instance. Importing...");
                 InputStream inputStream = mmcPackURL.openStream();
                 String jsonText = FileUtils.convertStreamToString(inputStream);
@@ -95,7 +97,7 @@ public class InstanceManager {
 
             } else if (instanceZipFile.getFile("instance_config.json").exists()) {
                 progressWindow.increaseProgress();
-                progressWindow.setProgressText("Installing Glass Launcher Modpack...");
+                progressWindow.setProgressText("Installing Glass Launcher instance...");
                 Main.LOGGER.info("Provided instance is a Glass Launcher instance. Importing...");
                 InstanceConfig instanceConfig = (InstanceConfig) JsonConfig.loadConfig(instanceZipFile.getFile("instance_config.json").getAbsolutePath(), InstanceConfig.class);
                 createBlankInstance(instanceConfig.getVersion(), instanceName, progressWindow);
@@ -109,6 +111,9 @@ public class InstanceManager {
                     mods.add(mods.getSize(), mod);
                 }
                 addMods(instanceName, instanceConfig, mods);
+            }
+            else {
+                throw new ZipException("Provided zip file is not a MultiMC or Glass Launcher instance!");
             }
         } catch (Exception e) {
             e.printStackTrace();

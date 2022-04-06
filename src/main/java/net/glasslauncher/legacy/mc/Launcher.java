@@ -1,76 +1,40 @@
 package net.glasslauncher.legacy.mc;
 
-import net.fabricmc.loader.launch.knot.KnotClient;
 import net.glasslauncher.common.CommonConfig;
-import net.glasslauncher.common.FileUtils;
 import net.glasslauncher.common.JsonConfig;
 import net.glasslauncher.common.LoggerFactory;
 import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
 import net.glasslauncher.legacy.jsontemplate.InstanceConfig;
-import net.glasslauncher.legacy.jsontemplate.MCVersion;
+import net.glasslauncher.legacy.jsontemplate.MavenDep;
 import net.glasslauncher.wrapper.LegacyWrapper;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Handler;
-import java.util.logging.Logger;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
+import java.io.*;
+import java.lang.reflect.*;
+import java.util.*;
+import java.util.logging.*;
 
-public class Wrapper {
+public class Launcher {
     private final String instance;
 
     private final ArrayList<String> args;
     private InstanceConfig instJson;
 
-    private final HashMap<String, Logger> loggers = new HashMap<>();
-
-    public Wrapper() {
+    public Launcher() {
         this.instance = Config.getLauncherConfig().getLastUsedInstance();
         String instPath = CommonConfig.getGlassPath() + "instances/" + instance + "/.minecraft";
 
         this.getConfig();
-        Map<String, MCVersion> mappings = Config.getMcVersions().getMappings();
 
-        if (!instJson.isDisableIntermediary() && mappings.containsKey(instJson.getVersion())) {
-            Main.LOGGER.info("Downloading intermediary mappings for " + instJson.getVersion());
-            FileUtils.downloadFile(mappings.get(instJson.getVersion()).getUrl(), Config.CACHE_PATH + "intermediary_mappings/", null, instJson.getVersion() + ".tiny");
-
-            try {
-                FileInputStream in = new FileInputStream(Config.CACHE_PATH + "intermediary_mappings/" + instJson.getVersion() + ".tiny");
-                ZipOutputStream out = new ZipOutputStream(new FileOutputStream(Config.CACHE_PATH + "intermediary_mappings/" + instJson.getVersion() + ".jar"));
-                out.putNextEntry(new ZipEntry("mappings/mappings.tiny"));
-
-                byte[] b = new byte[1024];
-                int count;
-
-                while ((count = in.read(b)) > 0) {
-                    out.write(b, 0, count);
-                }
-                out.close();
-                in.close();
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
-        else {
-            Main.LOGGER.info("No intermediary mappings found for " + instJson.getVersion());
-        }
-
-        String extraCP = "";
+        StringBuilder extraCP = new StringBuilder();
         if (new File(Config.CACHE_PATH + "intermediary_mappings/" + instJson.getVersion() + ".jar").exists()) {
             Main.LOGGER.info("Adding intermediary mappings for " + instJson.getVersion() + " to classpath.");
-            extraCP = ";" + Config.CACHE_PATH + "intermediary_mappings/" + instJson.getVersion() + ".jar";
+            extraCP.append(";").append(Config.CACHE_PATH).append("intermediary_mappings/").append(instJson.getVersion()).append(".jar");
+        }
+        for (MavenDep mavenDep : instJson.getMavenDeps()) {
+            mavenDep.jsonPostProcess();
+            mavenDep.cache();
+            extraCP.append(";").append(mavenDep.provide());
         }
 
         this.args = new ArrayList<>();
@@ -94,14 +58,14 @@ public class Wrapper {
         args.add("-Djava.library.path=" + instPath + "/bin/natives");
         args.add("-Dfabric.gameJarPath=" + instPath + "/bin/" + instJson.getVersion() + ".jar");
         args.add("-cp");
-        args.add(System.getProperty("java.class.path") + (Config.OS.equals("windows")? ";" : ":") + Config.getAbsolutePathForCP(instance, new String[] {
+        args.add((Config.OS.equals("windows")? ";" : ":") + Config.getAbsolutePathForCP(instance, new String[] {
                 ".minecraft/bin/" + instJson.getVersion() + ".jar",
                 ".minecraft/bin/lwjgl.jar",
                 ".minecraft/bin/lwjgl_util.jar",
                 ".minecraft/bin/jinput.jar",
         }) + extraCP);
         args.add(LegacyWrapper.class.getCanonicalName());
-        args.add("--gameDir");
+        args.add("--path");
         args.add(instPath);
         args.add("--username");
         args.add(Config.getLauncherConfig().getLoginInfo().getUsername());
@@ -109,8 +73,11 @@ public class Wrapper {
         args.add(Config.getLauncherConfig().getLoginInfo().getAccessToken());
         args.add("--uuid");
         args.add(Config.getLauncherConfig().getLoginInfo().getUuid());
-        if (instJson.getVersion() != null && !instJson.getVersion().equalsIgnoreCase("none")) {
-            args.add("--title=Minecraft " + instJson.getVersion());
+        args.add("--mainClass");
+        args.add(instJson.getMainClass());
+        if ((instJson.getCustomMinecraftArgs() != null) && !instJson.getCustomMinecraftArgs().isEmpty()) {
+            args.add("--modArg");
+            args.add(instJson.getCustomMinecraftArgs());
         }
     }
 
@@ -147,8 +114,6 @@ public class Wrapper {
 
         try {
             Logger logger = LoggerFactory.makeLogger("Minecraft", "minecraft");
-            String uuid = UUID.randomUUID().toString();
-            loggers.put(uuid, logger);
             logger.setUseParentHandlers(false);
             ConsoleHandler consoleHandler = new ConsoleHandler();
             consoleHandler.setFormatter(new MinecraftFormatter());
@@ -156,14 +121,19 @@ public class Wrapper {
             logger.getHandlers()[0].setFormatter(new MinecraftFormatter());
             Field pattern = logger.getHandlers()[0].getClass().getDeclaredField("pattern");
             pattern.setAccessible(true);
-            logger.info("Logging minecraft output to \"" + pattern.get(logger.getHandlers()[0]) + "\"");
-            Process mc = mcInit.start();
-            MinecraftLogInterceptor mcStdout = new MinecraftLogInterceptor(mc.getInputStream(), logger, false);
-            MinecraftLogInterceptor mcStderr = new MinecraftLogInterceptor(mc.getErrorStream(), logger, true);
-            mcStdout.start();
-            mcStderr.start();
 
-            (new Monitor(mc, () -> {
+            (new Monitor(mcInit, (mc) -> {
+                try {
+                    logger.info("Logging minecraft output to \"" + pattern.get(logger.getHandlers()[0]) + "\"");
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+                MinecraftLogInterceptor mcStdout = new MinecraftLogInterceptor(mc.getInputStream(), logger, false);
+                MinecraftLogInterceptor mcStderr = new MinecraftLogInterceptor(mc.getErrorStream(), logger, true);
+                mcStdout.start();
+                mcStderr.start();
+            }, () -> {
+                Main.LOGGER.info("Minecraft closed. Closing loggers.");
                 for (Handler handler : logger.getHandlers()) {
                     handler.flush();
                     handler.close();

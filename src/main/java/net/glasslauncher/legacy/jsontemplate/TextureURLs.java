@@ -2,7 +2,7 @@ package net.glasslauncher.legacy.jsontemplate;
 
 import lombok.Getter;
 
-import java.util.Map;
+import java.util.*;
 
 public class TextureURLs {
     @Getter private Map SKIN;

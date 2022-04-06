@@ -4,11 +4,10 @@ import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.common.FileUtils;
 import net.glasslauncher.legacy.Main;
 
-import java.io.File;
-import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.io.*;
+import java.nio.file.*;
+import java.util.*;
+import java.util.concurrent.*;
 
 import static net.glasslauncher.legacy.Config.destDirBypass;
 

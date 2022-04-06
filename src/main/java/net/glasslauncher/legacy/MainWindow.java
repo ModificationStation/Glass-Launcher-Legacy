@@ -6,17 +6,16 @@ import net.glasslauncher.legacy.components.JPanelDirt;
 import net.glasslauncher.legacy.components.LoginPanel;
 import net.glasslauncher.legacy.components.MinecraftLogo;
 import net.glasslauncher.legacy.components.templates.JButtonScaling;
-import net.glasslauncher.legacy.mc.Wrapper;
+import net.glasslauncher.legacy.mc.Launcher;
 import net.glasslauncher.legacy.util.LoginVerifier;
 import net.glasslauncher.legacy.util.MSLoginHandler;
-import net.glasslauncher.legacy.util.MojangLoginHandler;
 
 import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
 class MainWindow extends JFrame {
     private int orgWidth = 870;
@@ -191,7 +190,7 @@ class MainWindow extends JFrame {
     private void startMinecraft() {
         loginPanel.setHasToken(true);
         Main.LOGGER.info("Starting instance: " + instsel.getSelectedItem());
-        if (instsel.getSelectedItem() == null || instsel.getSelectedItem().toString().toLowerCase().equals("none")) {
+        if (instsel.getSelectedItem() == null || instsel.getSelectedItem().toString().equalsIgnoreCase("none")) {
             Main.LOGGER.severe("Selected instance is null or empty! Aborting launch.");
             return;
         }
@@ -203,7 +202,7 @@ class MainWindow extends JFrame {
         Config.getLauncherConfig().setLastUsedEmail(loginPanel.getUsername().getText());
         Config.getLauncherConfig().setLastUsedInstance(instsel.getSelectedItem().toString());
         Config.getLauncherConfig().saveFile();
-        Wrapper mc = new Wrapper();
+        Launcher mc = new Launcher();
         mc.startMC();
         if (Config.getLauncherConfig().getLoginInfo().getAccessToken().isEmpty()) {
             loginPanel.setHasToken(false);

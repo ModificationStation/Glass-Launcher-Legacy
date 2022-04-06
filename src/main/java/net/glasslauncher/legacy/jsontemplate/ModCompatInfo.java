@@ -2,7 +2,7 @@ package net.glasslauncher.legacy.jsontemplate;
 
 import lombok.Getter;
 
-import java.util.ArrayList;
+import java.util.*;
 
 @Getter
 public class ModCompatInfo {

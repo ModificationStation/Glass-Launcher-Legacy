@@ -7,7 +7,7 @@ import net.glasslauncher.legacy.jsontemplate.Mod;
 import net.glasslauncher.legacy.jsontemplate.ModCompatInfo;
 
 import javax.swing.*;
-import java.util.HashMap;
+import java.util.*;
 
 public class CompatibilityDetailsPanel extends DetailsPanel {
     private final HashMap<Mod, HashMap<Mod, ModCompatInfo>> compatInfo;

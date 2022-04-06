@@ -2,19 +2,22 @@ package net.glasslauncher.legacy;
 
 import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.common.FileUtils;
-import net.glasslauncher.legacy.components.*;
+import net.glasslauncher.legacy.components.HintTextField;
+import net.glasslauncher.legacy.components.JButtonScalingFancy;
+import net.glasslauncher.legacy.components.JLabelFancy;
+import net.glasslauncher.legacy.components.JPanelBackgroundImage;
+import net.glasslauncher.legacy.components.JTextFieldFancy;
 import net.glasslauncher.legacy.util.InstanceManager;
 
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicLong;
+import java.nio.file.attribute.*;
+import java.util.*;
+import java.util.concurrent.atomic.*;
 
 class InstanceManagerWindow extends JDialog {
     private JPanel panel;

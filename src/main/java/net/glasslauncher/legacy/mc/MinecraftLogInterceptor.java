@@ -4,11 +4,8 @@ https://stackoverflow.com/a/32351355
  */
 package net.glasslauncher.legacy.mc;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.logging.Logger;
+import java.io.*;
+import java.util.logging.*;
 
 public class MinecraftLogInterceptor extends Thread {
     private InputStream in;

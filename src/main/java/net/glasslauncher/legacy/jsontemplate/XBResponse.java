@@ -3,7 +3,7 @@ package net.glasslauncher.legacy.jsontemplate;
 import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 
-import java.util.HashMap;
+import java.util.*;
 
 @Getter
 public class XBResponse {

@@ -4,11 +4,9 @@ import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.common.LoggerFactory;
 
 import javax.swing.*;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.logging.Logger;
+import java.io.*;
+import java.util.*;
+import java.util.logging.*;
 
 public class Main {
     public static Logger LOGGER;

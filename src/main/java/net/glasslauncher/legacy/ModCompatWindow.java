@@ -9,7 +9,7 @@ import net.glasslauncher.legacy.jsontemplate.ModCompatInfo;
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
-import java.util.HashMap;
+import java.util.*;
 
 public class ModCompatWindow extends JDialog {
 

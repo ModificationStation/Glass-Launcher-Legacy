@@ -1,12 +1,17 @@
 package net.glasslauncher.legacy.mc;
 
+import lombok.Setter;
 import net.glasslauncher.legacy.Main;
 
+import java.io.*;
+import java.util.function.*;
+
 public class Monitor {
-    private Thread task;
+    private final Thread task;
 
-    Monitor(Process mc, Runnable onClose) {
-
+    Monitor(ProcessBuilder processBuilder, Consumer<Process> onStart, Runnable onClose) throws IOException {
+        Process mc = processBuilder.start();
+        onStart.accept(mc);
         task = new Thread(() -> {
             while (true) {
                 if (!mc.isAlive()) {

@@ -14,7 +14,7 @@ import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.html.HTMLAnchorElement;
 
 import java.awt.*;
-import java.net.URI;
+import java.net.*;
 
 public class LinkRedirector implements ChangeListener<Worker.State>, EventListener {
     private static final String CLICK_EVENT = "click";
