@@ -27,6 +27,36 @@ public class Launcher {
         this.getConfig();
 
         StringBuilder extraCP = new StringBuilder();
+
+        MavenDep dep = new MavenDep("commons-cli:commons-cli:1.5.0", "https://repo.maven.apache.org/maven2");
+        dep.jsonPostProcess();
+        dep.cache();
+        extraCP.append(";").append(dep.provide());
+
+        dep = new MavenDep("org.json:json:20211205", "https://repo.maven.apache.org/maven2");
+        dep.jsonPostProcess();
+        dep.cache();
+        extraCP.append(";").append(dep.provide());
+
+        dep = new MavenDep("org.apache.commons:commons-text:1.9", "https://repo.maven.apache.org/maven2");
+        dep.jsonPostProcess();
+        dep.cache();
+        extraCP.append(";").append(dep.provide());
+
+        dep = new MavenDep("net.glasslauncher:commons:1.3", "https://maven.glass-launcher.net/snapshots");
+        dep.jsonPostProcess();
+        dep.cache();
+        extraCP.append(";").append(dep.provide());
+
+        dep = new MavenDep("org.apache.commons:commons-lang3:3.12.0", "https://repo.maven.apache.org/maven2");
+        dep.jsonPostProcess();
+        dep.cache();
+        extraCP.append(";").append(dep.provide());
+
+        dep = new MavenDep("com.github.calmilamsy:glass-launch-wrapper:0e96525", "https://jitpack.io");
+        dep.jsonPostProcess();
+        dep.cache();
+        extraCP.append(";").append(dep.provide());
         if (new File(Config.CACHE_PATH + "intermediary_mappings/" + instJson.getVersion() + ".jar").exists()) {
             Main.LOGGER.info("Adding intermediary mappings for " + instJson.getVersion() + " to classpath.");
             extraCP.append(";").append(Config.CACHE_PATH).append("intermediary_mappings/").append(instJson.getVersion()).append(".jar");
@@ -111,6 +141,7 @@ public class Launcher {
         mcEnv.put("home", newAppData);
         mcEnv.put("user.home", newAppData);
         mcEnv.put("fabric.gameJarPath", Config.getInstancePath(instance) + ".minecraft/bin/" + instJson.getVersion() + ".jar");
+        System.out.println(Config.getInstancePath(instance) + ".minecraft/bin/" + instJson.getVersion() + ".jar");
 
         try {
             Logger logger = LoggerFactory.makeLogger("Minecraft", "minecraft");

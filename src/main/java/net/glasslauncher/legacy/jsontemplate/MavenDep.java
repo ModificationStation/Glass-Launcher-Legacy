@@ -11,6 +11,11 @@ import java.net.*;
 @Getter
 public class MavenDep implements JsonPostProcessable {
 
+    public MavenDep(String name, String url) {
+        this.name = name;
+        this.url = url;
+    }
+
     private String name = "";
     private String url = "";
     private transient String group = "";
