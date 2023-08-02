@@ -1,6 +1,5 @@
 package net.glasslauncher.legacy.mc;
 
-import lombok.Setter;
 import net.glasslauncher.legacy.Main;
 
 import java.io.*;

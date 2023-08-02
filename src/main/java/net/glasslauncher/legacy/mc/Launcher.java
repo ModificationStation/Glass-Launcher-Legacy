@@ -88,7 +88,7 @@ public class Launcher {
         args.add("-Djava.library.path=" + instPath + "/bin/natives");
         args.add("-Dfabric.gameJarPath=" + instPath + "/bin/" + instJson.getVersion() + ".jar");
         args.add("-cp");
-        args.add((Config.OS.equals("windows")? ";" : ":") + Config.getAbsolutePathForCP(instance, new String[] {
+        args.add(Config.getAbsolutePathForCP(instance, new String[] {
                 ".minecraft/bin/" + instJson.getVersion() + ".jar",
                 ".minecraft/bin/lwjgl.jar",
                 ".minecraft/bin/lwjgl_util.jar",
@@ -99,10 +99,16 @@ public class Launcher {
         args.add(instPath);
         args.add("--username");
         args.add(Config.getLauncherConfig().getLoginInfo().getUsername());
-        args.add("--session");
-        args.add(Config.getLauncherConfig().getLoginInfo().getAccessToken());
-        args.add("--uuid");
-        args.add(Config.getLauncherConfig().getLoginInfo().getUuid());
+        String session = Config.getLauncherConfig().getLoginInfo().getAccessToken();
+        if(session != null && !session.isEmpty()) {
+            args.add("--session");
+            args.add(Config.getLauncherConfig().getLoginInfo().getAccessToken());
+        }
+        String uuid = Config.getLauncherConfig().getLoginInfo().getUuid();
+        if(uuid != null && !uuid.isEmpty()) {
+            args.add("--uuid");
+            args.add(Config.getLauncherConfig().getLoginInfo().getUuid());
+        }
         args.add("--mainClass");
         args.add(instJson.getMainClass());
         if ((instJson.getCustomMinecraftArgs() != null) && !instJson.getCustomMinecraftArgs().isEmpty()) {
@@ -141,7 +147,6 @@ public class Launcher {
         mcEnv.put("home", newAppData);
         mcEnv.put("user.home", newAppData);
         mcEnv.put("fabric.gameJarPath", Config.getInstancePath(instance) + ".minecraft/bin/" + instJson.getVersion() + ".jar");
-        System.out.println(Config.getInstancePath(instance) + ".minecraft/bin/" + instJson.getVersion() + ".jar");
 
         try {
             Logger logger = LoggerFactory.makeLogger("Minecraft", "minecraft");

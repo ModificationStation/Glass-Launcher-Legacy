@@ -1,56 +1,70 @@
 package net.glasslauncher.legacy.util;
 
-import net.chris54721.openmcauthenticator.OpenMCAuthenticator;
+import gg.codie.mineonline.gui.MicrosoftLoginController;
 import net.glasslauncher.legacy.Config;
+import net.glasslauncher.legacy.MSLoginWindow;
 import net.glasslauncher.legacy.Main;
-import net.glasslauncher.legacy.components.LoginPanel;
 import net.glasslauncher.legacy.jsontemplate.LoginInfo;
 
+import javax.swing.*;
 import java.awt.*;
 
 public class LoginVerifier {
 
-    public static boolean verifyLogin(boolean canOffline, LoginPanel loginPanel, Window parent) {
-        if (Config.getLauncherConfig().isMSToken()) {
-            Main.LOGGER.info("Verifying stored MS auth token...");
-            if (!(new MSLoginHandler(parent)).verifyStoredToken()) {
-                Main.LOGGER.severe("Unable to verify stored MS auth token. Logging in is required.");
-                Config.getLauncherConfig().setLoginInfo(null);
-                return false;
-            }
-            loginPanel.getUsername().setText(Config.getLauncherConfig().getLoginInfo().getUsername());
-            Main.LOGGER.info("MS auth token has been verified!");
+    public static boolean verifyLogin(Window parent, boolean canOffline) {
+        Main.mainwin.setHasToken(false);
+
+        LoginInfo loginInfo = Config.getLauncherConfig().getLoginInfo();
+        if((canOffline && loginInfo != null && loginInfo.getUsername() != null && !loginInfo.getUsername().isEmpty() && loginInfo.getAccessToken() == null)) {
+            Main.LOGGER.info("Got given a name, but a null token. Working in offline mode.");
+            Main.mainwin.setHasToken(true);
+            return true;
         }
-        else {
-            if (Config.getLauncherConfig().getLoginInfo() != null) {
-                Main.LOGGER.info("Verifying stored Mojang auth token...");
-                try {
-                    OpenMCAuthenticator.validate(Config.getLauncherConfig().getLoginInfo().getAccessToken(), Config.getLauncherConfig().getClientToken());
-                    Main.LOGGER.info("Mojang auth token has been verified!");
+
+        new MSLoginWindow(parent);
+
+        if(MicrosoftLoginController.getError() == null && Config.getLauncherConfig().getLoginInfo() != null && Config.getLauncherConfig().getLoginInfo().getAccessToken() != null) {
+            Main.LOGGER.info("Successfully validated login.");
+            Main.mainwin.setHasToken(true);
+            return true;
+        }
+
+        while(true) {
+            if(canOffline) {
+                int response = JOptionPane.showConfirmDialog(parent, "Unable to login! Do you want to continue in offline mode?", "Warning", JOptionPane.YES_NO_CANCEL_OPTION);
+                if (response == JOptionPane.YES_OPTION) {
+                    String name = null;
+                    LoginInfo loginInfo2 = Config.getLauncherConfig().getLoginInfo();
+                    while(name == null || name.isEmpty()) {
+                        name = JOptionPane.showInputDialog(parent, "Enter the username you want to use: ", loginInfo2 != null ? loginInfo2.getUsername() : null);
+                    }
+                    Config.getLauncherConfig().setLoginInfo(new LoginInfo(name, null, null));
+                    Main.mainwin.setUsername(name);
+                    Main.LOGGER.info("Skipping login and proceeding in offline mode.");
+                    Main.mainwin.setHasToken(true);
                     return true;
-                } catch (Exception e) {
-                    Main.LOGGER.severe("Unable to verify stored Mojang auth token. Logging in is required.");
-                    Config.getLauncherConfig().setLoginInfo(null);
+                }
+                else if (response == JOptionPane.CANCEL_OPTION || response == JOptionPane.CLOSED_OPTION) {
+                    Main.LOGGER.info("Aborted login.");
                     return false;
                 }
             }
-            String pass = "";
-            if (loginPanel.getPassword().getForeground() != Color.gray) {
-                pass = String.valueOf(loginPanel.getPassword().getPassword());
-            }
-            if (!pass.isEmpty()) {
-                MojangLoginHandler.login(loginPanel.getUsername().getText(), pass);
-                LoginInfo loginInfo = Config.getLauncherConfig().getLoginInfo();
-                if (loginInfo == null) {
-                    Main.LOGGER.severe("Unable to log in!");
+            else {
+                Main.LOGGER.severe("Logging in is required.");
+                int response = JOptionPane.showConfirmDialog(parent, "Unable to login! Do you want to try again?", "Warning", JOptionPane.YES_NO_OPTION);
+                if(response == JOptionPane.NO_OPTION || response == JOptionPane.CLOSED_OPTION) {
+                    Main.LOGGER.info("Aborted login.");
                     return false;
                 }
             }
-            if (!loginPanel.getUsername().getText().isEmpty() && canOffline && !(Config.getLauncherConfig().getLoginInfo() != null && (Config.getLauncherConfig().getLoginInfo().getAccessToken() == null || !Config.getLauncherConfig().getLoginInfo().getAccessToken().isEmpty()))) {
-                Config.getLauncherConfig().setLoginInfo(new LoginInfo(loginPanel.getUsername().getText(), "", ""));
+
+            new MSLoginWindow(parent);
+
+            if(MicrosoftLoginController.getError() == null && Config.getLauncherConfig().getLoginInfo() != null && Config.getLauncherConfig().getLoginInfo().getAccessToken() != null) {
+                Main.LOGGER.info("Logged in successfully.");
+                Main.mainwin.setHasToken(true);
+                return true;
             }
-            return Config.getLauncherConfig().getLoginInfo() != null;
         }
-        return true;
     }
 }

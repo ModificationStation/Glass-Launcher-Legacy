@@ -1,14 +1,15 @@
 package net.glasslauncher.legacy;
 
+import gg.codie.mineonline.gui.MicrosoftLoginController;
 import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.common.FileUtils;
 import net.glasslauncher.legacy.components.JPanelDirt;
-import net.glasslauncher.legacy.components.LoginPanel;
+import net.glasslauncher.legacy.components.MSLoginPanel;
 import net.glasslauncher.legacy.components.MinecraftLogo;
 import net.glasslauncher.legacy.components.templates.JButtonScaling;
+import net.glasslauncher.legacy.jsontemplate.LoginInfo;
 import net.glasslauncher.legacy.mc.Launcher;
 import net.glasslauncher.legacy.util.LoginVerifier;
-import net.glasslauncher.legacy.util.MSLoginHandler;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -17,12 +18,12 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.*;
 
-class MainWindow extends JFrame {
+public class MainWindow extends JFrame {
     private int orgWidth = 870;
     private int orgHeight = 520;
 
     private final Panel mainPanel = new Panel();
-    private LoginPanel loginPanel;
+    private MSLoginPanel loginPanel;
 
     private JComboBox<String> instsel;
 
@@ -61,6 +62,14 @@ class MainWindow extends JFrame {
         makeGUI();
     }
 
+    public void setHasToken(boolean hasToken) {
+        loginPanel.setHasToken(hasToken);
+    }
+
+    public void setUsername(String username) {
+        loginPanel.getUsernameField().setText(username);
+    }
+
     private void makeGUI() {
 
         JScrollPane blogContainer = makeBlog();
@@ -69,21 +78,15 @@ class MainWindow extends JFrame {
         JPanelDirt loginForm = new JPanelDirt();
         loginForm.setLayout(new BorderLayout());
 
-        ActionListener mojangListener = (e) -> {
-            if (LoginVerifier.verifyLogin(true, loginPanel, this)) {
+        ActionListener msListener = (e) -> {
+            if (LoginVerifier.verifyLogin(this, true)) {
+                loginPanel.getUsernameField().setText(Config.getLauncherConfig().getLoginInfo().getUsername());
+                loginPanel.setHasToken(true);
                 startMinecraft();
             }
         };
 
-        ActionListener msListener = (e) -> {
-            (new MSLoginHandler(Main.mainwin)).login();
-            if (Config.getLauncherConfig().getLoginInfo() != null) {
-                loginPanel.getUsername().setText(Config.getLauncherConfig().getLoginInfo().getUsername());
-                loginPanel.setHasToken(true);
-            }
-        };
-
-        loginPanel = new LoginPanel(mojangListener, msListener);
+        loginPanel = new MSLoginPanel(msListener);
 
         // Logo
         MinecraftLogo logo = new MinecraftLogo();
@@ -92,11 +95,7 @@ class MainWindow extends JFrame {
         addWindowListener(new WindowAdapter() {
             public void windowOpened(WindowEvent e){
                 if (Config.getLauncherConfig().getLoginInfo() == null) {
-                    if (loginPanel.getUsername().getText().isEmpty()) {
-                        loginPanel.getUsername().grabFocus();
-                    } else {
-                        loginPanel.getPassword().grabFocus();
-                    }
+                    loginPanel.getLoginButton().grabFocus();
                 }
             }
         });
@@ -137,7 +136,6 @@ class MainWindow extends JFrame {
         if (instsel.getSelectedItem() != null) {
             Config.getLauncherConfig().setLastUsedInstance(instsel.getSelectedItem().toString());
         }
-        loginPanel.setHasToken(LoginVerifier.verifyLogin(false, loginPanel, this));
 
         pack();
         setLocationRelativeTo(null);
@@ -194,17 +192,13 @@ class MainWindow extends JFrame {
             Main.LOGGER.severe("Selected instance is null or empty! Aborting launch.");
             return;
         }
-        if (!LoginVerifier.verifyLogin(true, loginPanel, this)) {
-            loginPanel.setHasToken(false);
-            Main.LOGGER.severe("Aborting launch.");
-            return;
-        }
-        Config.getLauncherConfig().setLastUsedEmail(loginPanel.getUsername().getText());
+        Config.getLauncherConfig().setLastUsedUsername(Config.getLauncherConfig().getLoginInfo().getUsername());
         Config.getLauncherConfig().setLastUsedInstance(instsel.getSelectedItem().toString());
         Config.getLauncherConfig().saveFile();
         Launcher mc = new Launcher();
         mc.startMC();
-        if (Config.getLauncherConfig().getLoginInfo().getAccessToken().isEmpty()) {
+        LoginInfo loginInfo = Config.getLauncherConfig().getLoginInfo();
+        if (loginInfo != null && MicrosoftLoginController.validateToken(loginInfo.getAccessToken())) {
             loginPanel.setHasToken(false);
             Config.getLauncherConfig().setLoginInfo(null);
         }

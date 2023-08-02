@@ -8,7 +8,6 @@ import net.glasslauncher.common.JsonConfig;
 import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
 import net.glasslauncher.legacy.ProgressWindow;
-import net.glasslauncher.legacy.VerifyAccountWindow;
 import net.glasslauncher.legacy.jsontemplate.CustomJarList;
 import net.glasslauncher.legacy.jsontemplate.InstanceConfig;
 import net.glasslauncher.legacy.jsontemplate.Mod;
@@ -126,7 +125,7 @@ public class InstanceManager {
         progressWindow.setProgress(1);
         progressWindow.setProgressMax(4);
         progressWindow.setProgressText("Initializing...");
-        if (!(new VerifyAccountWindow(progressWindow)).isLoginValid()) {
+        if (!LoginVerifier.verifyLogin(progressWindow, false)) {
             JOptionPane.showMessageDialog(progressWindow, "Account not validated! Aborting.");
             return;
         }

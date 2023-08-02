@@ -85,15 +85,6 @@ public class Main {
             throw new RuntimeException("Something went extremely wrong reading config!");
         }
 
-        // Bad javafx, no cleanup for you cause you like to break.
-        try {
-            Class.forName("com.sun.javafx.application.PlatformImpl");
-            com.sun.javafx.application.PlatformImpl.setImplicitExit(false);
-        } catch (Exception e) {
-            Main.LOGGER.warning("Can't find a valid JavaFX installation! Disabling Microsoft authentication.");
-            Config.getLauncherConfig().setHidingMSButton(true);
-        }
-
         for (String arg : args) {
             if (arg.equals("-help") || arg.equals("-h")) {
                 LOGGER.info(
