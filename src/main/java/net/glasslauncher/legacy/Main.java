@@ -14,9 +14,6 @@ public class Main {
     public static MainWindow mainwin;
 
     public static void main(String[] args) {
-        if (!System.getProperty("java.version").startsWith("1.8")) {
-            JOptionPane.showMessageDialog(null, "Unsupported java version found!\n" + System.getProperty("java.version") + " was found, but java 1.8 is the only version supported.");
-        }
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
@@ -83,6 +80,14 @@ public class Main {
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Something went extremely wrong reading config!");
+        }
+
+        LOGGER.info("Using Java " + System.getProperty("java.version"));
+        if (!System.getProperty("java.version").startsWith("1.8")) {
+            LOGGER.info("Newer java version found! " + System.getProperty("java.version") + " was found, but java 1.8 is what's required for most modloader mods.");
+            if(!Config.getLauncherConfig().isHidingJavaWarning()) {
+                JOptionPane.showMessageDialog(null, "Newer java version found!\n" + System.getProperty("java.version") + " was found, but java 1.8 is what's required for most modloader mods.\nYou can disable this pop-up in the instances tab.");
+            }
         }
 
         for (String arg : args) {

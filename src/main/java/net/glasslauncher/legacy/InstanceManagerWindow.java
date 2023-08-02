@@ -25,7 +25,7 @@ class InstanceManagerWindow extends JDialog {
 
     private final Frame parent;
 
-    private JCheckBox hideMSCheckbox;
+    private JCheckBox hideJavaWarningCheckbox;
     private JCheckBox disableThemeCheckbox;
     private JCheckBox ignoreInstanceVersionCheckbox;
     private HintTextField proxyAddress;
@@ -70,7 +70,7 @@ class InstanceManagerWindow extends JDialog {
                     JOptionPane.showMessageDialog(parent, "Proxy address cannot be empty! Defaulting to 127.0.0.1.");
                     proxyAddress.setText("127.0.0.1");
                 }
-                Config.getLauncherConfig().setHidingMSButton(hideMSCheckbox.isSelected());
+                Config.getLauncherConfig().setHidingJavaWarning(hideJavaWarningCheckbox.isSelected());
                 Config.getLauncherConfig().setThemeDisabled(disableThemeCheckbox.isSelected());
                 Config.getLauncherConfig().setIgnoreInstanceVersion(disableThemeCheckbox.isSelected());
                 Config.getLauncherConfig().setProxyAddress(proxyAddress.getText());
@@ -253,13 +253,13 @@ class InstanceManagerWindow extends JDialog {
         launcherPanel.setBounds(0, 0, 580, 340);
         launcherPanel.setLayout(null);
 
-        JLabelFancy hideMSButtonLabel = new JLabelFancy("Hide MS Login Button:");
+        JLabelFancy hideMSButtonLabel = new JLabelFancy("Hide Java Warning:");
         hideMSButtonLabel.setBounds(5, 5, 120, 20);
 
-        hideMSCheckbox = new JCheckBox();
-        hideMSCheckbox.setOpaque(false);
-        hideMSCheckbox.setBounds(135, 6, 20, 20);
-        hideMSCheckbox.setSelected(Config.getLauncherConfig().isHidingMSButton());
+        hideJavaWarningCheckbox = new JCheckBox();
+        hideJavaWarningCheckbox.setOpaque(false);
+        hideJavaWarningCheckbox.setBounds(135, 6, 20, 20);
+        hideJavaWarningCheckbox.setSelected(Config.getLauncherConfig().isHidingJavaWarning());
 
         JLabelFancy disableThemeLabel = new JLabelFancy("Disable Custom Theme:");
         disableThemeLabel.setBounds(5, 29, 120, 20);
@@ -339,7 +339,7 @@ class InstanceManagerWindow extends JDialog {
         webPort.setBounds(255, 247, 140, 20);
 
         launcherPanel.add(hideMSButtonLabel);
-        launcherPanel.add(hideMSCheckbox);
+        launcherPanel.add(hideJavaWarningCheckbox);
         launcherPanel.add(disableThemeLabel);
         launcherPanel.add(disableThemeCheckbox);
         launcherPanel.add(ignoreInstanceVersionLabel);

@@ -27,10 +27,10 @@ public class LauncherConfig extends JsonConfig {
     private String clientToken = "";
 
     /**
-     * Hides the MS login button on both the main launcher window, and the new instance account validation window.
+     * Hides the Java version warning pop-up that's shown if using a version of Java that isn't 1.8.
      */
-    @SerializedName("ishidingmsbutton")
-    private boolean isHidingMSButton = false;
+    @SerializedName("ishidingjavawarning")
+    private boolean isHidingJavaWarning = false;
 
     /**
      * If true, makes all windows use a white system theme where it makes sense.
