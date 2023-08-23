@@ -84,9 +84,9 @@ public class Main {
 
         LOGGER.info("Using Java " + System.getProperty("java.version"));
         if (!System.getProperty("java.version").startsWith("1.8")) {
-            LOGGER.info("Newer java version found! " + System.getProperty("java.version") + " was found, but java 1.8 is what's required for most modloader mods.");
+            LOGGER.info("Newer Java version found! " + System.getProperty("java.version") + " was found, but Java 1.8 is what's required for most jar edit mods, including modloader.");
             if(!Config.getLauncherConfig().isHidingJavaWarning()) {
-                JOptionPane.showMessageDialog(null, "Newer java version found!\n" + System.getProperty("java.version") + " was found, but java 1.8 is what's required for most modloader mods.\nYou can disable this pop-up in the instances tab.");
+                JOptionPane.showMessageDialog(null, "Newer Java version found!\n" + System.getProperty("java.version") + " was found, but Java 1.8 is what's required for most jar edit mods, including modloader.\nYou can disable this pop-up in the instances tab.");
             }
         }
 
