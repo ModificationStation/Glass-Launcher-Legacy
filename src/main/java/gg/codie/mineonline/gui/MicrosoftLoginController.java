@@ -1,9 +1,10 @@
 package gg.codie.mineonline.gui;
 
-import blue.endless.jankson.Jankson;
-import blue.endless.jankson.JsonArray;
-import blue.endless.jankson.JsonObject;
-import blue.endless.jankson.JsonPrimitive;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.MSLoginWindow;
 import net.glasslauncher.legacy.jsontemplate.LoginInfo;
@@ -124,11 +125,11 @@ public class MicrosoftLoginController {
                 return;
             }
 
-            JsonObject jsonObject = Jankson.builder().build().load(response.toString());
+            JsonObject jsonObject = (JsonObject) JsonParser.parseString(response.toString());
 
-            userCode = jsonObject.get(String.class, "user_code");
-            verificationUrl = jsonObject.get(String.class, "verification_uri");
-            deviceCode = jsonObject.get(String.class, "device_code");
+            userCode = String.valueOf(jsonObject.get("user_code"));
+            verificationUrl = String.valueOf(jsonObject.get("verification_uri"));
+            deviceCode = String.valueOf(jsonObject.get("device_code"));
 
             isLoggingIn = true;
             loginPollThread.start();
@@ -173,9 +174,9 @@ public class MicrosoftLoginController {
             }
             rd.close();
 
-            JsonObject jsonObject = Jankson.builder().build().load(response.toString());
+            JsonObject jsonObject = (JsonObject) JsonParser.parseString(response.toString());
 
-            String errorCode = jsonObject.get(String.class, "error");
+            String errorCode = String.valueOf(jsonObject.get("error"));
 
             if(errorCode == null) {
                 errorCode = "";
@@ -212,7 +213,7 @@ public class MicrosoftLoginController {
 
             singleton.isLoggingIn = false;
 
-            String accessToken = jsonObject.get(String.class, "access_token");
+            String accessToken = String.valueOf(jsonObject.get("access_token"));
             acquireXBLToken(accessToken);
         } catch (UnknownHostException e) {
             error = "Failed to contact Microsoft. Are you offline?";
@@ -232,13 +233,13 @@ public class MicrosoftLoginController {
             JsonObject data = new JsonObject();
             JsonObject properties = new JsonObject();
 
-            properties.put("AuthMethod", new JsonPrimitive("RPS"));
-            properties.put("SiteName", new JsonPrimitive("user.auth.xboxlive.com"));
-            properties.put("RpsTicket", new JsonPrimitive("d=" + accessToken));
+            properties.add("AuthMethod", new JsonPrimitive("RPS"));
+            properties.add("SiteName", new JsonPrimitive("user.auth.xboxlive.com"));
+            properties.add("RpsTicket", new JsonPrimitive("d=" + accessToken));
 
-            data.put("Properties", properties);
-            data.put("RelyingParty", new JsonPrimitive("http://auth.xboxlive.com"));
-            data.put("TokenType", new JsonPrimitive("JWT"));
+            data.add("Properties", properties);
+            data.add("RelyingParty", new JsonPrimitive("http://auth.xboxlive.com"));
+            data.add("TokenType", new JsonPrimitive("JWT"));
 
             HttpURLConnection connection = (HttpURLConnection)uri.openConnection();
             connection.setRequestProperty("Content-Type", "application/json");
@@ -268,8 +269,8 @@ public class MicrosoftLoginController {
                 return;
             }
 
-            JsonObject jsonObject = Jankson.builder().build().load(response.toString());
-            String xblToken = jsonObject.get(String.class, "Token");
+            JsonObject jsonObject = (JsonObject) JsonParser.parseString(response.toString());
+            String xblToken = String.valueOf(jsonObject.get("Token"));
             acquireXsts(xblToken);
         } catch (UnknownHostException e) {
             error = "Failed to contact Xbox Live. Are you offline?";
@@ -289,14 +290,14 @@ public class MicrosoftLoginController {
             JsonObject data = new JsonObject();
             JsonObject properties = new JsonObject();
 
-            properties.put("SandboxId", new JsonPrimitive("RETAIL"));
+            properties.add("SandboxId", new JsonPrimitive("RETAIL"));
             JsonArray xblTokenElement = new JsonArray();
             xblTokenElement.add(new JsonPrimitive(xblToken));
-            properties.put("UserTokens", xblTokenElement);
+            properties.add("UserTokens", xblTokenElement);
 
-            data.put("Properties", properties);
-            data.put("RelyingParty", new JsonPrimitive("rp://api.minecraftservices.com/"));
-            data.put("TokenType", new JsonPrimitive("JWT"));
+            data.add("Properties", properties);
+            data.add("RelyingParty", new JsonPrimitive("rp://api.minecraftservices.com/"));
+            data.add("TokenType", new JsonPrimitive("JWT"));
 
 
             HttpURLConnection connection = (HttpURLConnection)uri.openConnection();
@@ -321,11 +322,11 @@ public class MicrosoftLoginController {
                 }
                 rd.close();
 
-                JsonObject jsonObject = Jankson.builder().build().load(response.toString());
-                String xblXsts = jsonObject.get(String.class, "Token");
+                JsonObject jsonObject = (JsonObject) JsonParser.parseString(response.toString());
+                String xblXsts = String.valueOf(jsonObject.get("Token"));
                 JsonObject claims = (JsonObject) jsonObject.get("DisplayClaims");
-                JsonArray xui = claims.get(JsonArray.class, "xui");
-                String uhs = xui.get(JsonObject.class, 0).get(String.class, "uhs");
+                JsonArray xui = (JsonArray) claims.get("xui");
+                String uhs = String.valueOf(xui.get(0).getAsJsonObject().get("uhs"));
                 acquireMinecraftToken(uhs, xblXsts);
             } catch (IOException e) {
                 InputStream is = connection.getErrorStream();
@@ -338,9 +339,9 @@ public class MicrosoftLoginController {
                 }
                 rd.close();
 
-                JsonObject jsonObject = Jankson.builder().build().load(response.toString());
-                if (jsonObject.containsKey("XErr")) {
-                    long errorCode = jsonObject.getLong("XErr", 0);
+                JsonObject jsonObject = (JsonObject) JsonParser.parseString(response.toString());
+                if (jsonObject.has("XErr")) {
+                    long errorCode = jsonObject.get("XErr").getAsLong();
                     if (errorCode ==  2148916233L) {
                         error = "You are not signed up with Xbox.\nPlease login to minecraft.net to continue.";
                     } else if (errorCode == 2148916238L) {
@@ -376,7 +377,7 @@ public class MicrosoftLoginController {
             URL uri = new URL(mcLoginUrl);
 
             JsonObject data = new JsonObject();
-            data.put("identityToken", new JsonPrimitive("XBL3.0 x=" + xblUhs + ";" + xblXsts));
+            data.add("identityToken", new JsonPrimitive("XBL3.0 x=" + xblUhs + ";" + xblXsts));
 
             HttpURLConnection connection = (HttpURLConnection)uri.openConnection();
             connection.setRequestProperty("Content-Type", "application/json");
@@ -399,8 +400,8 @@ public class MicrosoftLoginController {
             }
             rd.close();
 
-            JsonObject jsonObject = Jankson.builder().build().load(response.toString());
-            String mcAccessToken = jsonObject.get(String.class, "access_token");
+            JsonObject jsonObject = (JsonObject) JsonParser.parseString(response.toString());
+            String mcAccessToken = String.valueOf(jsonObject.get("access_token"));
             checkMcStore(mcAccessToken);
             checkMcProfile(mcAccessToken);
         } catch (UnknownHostException e) {
@@ -466,9 +467,9 @@ public class MicrosoftLoginController {
             }
             rd.close();
 
-            JsonObject jsonObject = Jankson.builder().build().load(response.toString());
-            String name = jsonObject.get(String.class, "name");
-            String uuid = jsonObject.get(String.class, "id");
+            JsonObject jsonObject = (JsonObject) JsonParser.parseString(response.toString());
+            String name = String.valueOf(jsonObject.get("name"));
+            String uuid = String.valueOf(jsonObject.get("id"));
 
 
             LoginInfo loginInfo = new LoginInfo(name, mcAccessToken, uuid);
