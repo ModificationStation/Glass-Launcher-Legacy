@@ -10,6 +10,6 @@ public class ClassInfo {
 
     public ClassInfo(String name) {
         this.name = name;
-        this.isMinecraft = name.replace(".class", "").length() <= 2 || name.endsWith("net/minecraft/client/Minecraft.class");
+        this.isMinecraft = name.replace(".class", "").length() <= 3 || name.endsWith("net/minecraft/client/Minecraft.class");
     }
 }
