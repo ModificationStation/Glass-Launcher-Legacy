@@ -54,21 +54,18 @@ public class Launcher {
         dep.cache();
         extraCP.append(";").append(dep.provide());
 
-        dep = new MavenDep("com.github.calmilamsy:glass-launch-wrapper:f91c92f", "https://jitpack.io");
+        dep = new MavenDep("com.github.calmilamsy:glass-launch-wrapper:90a3031", "https://jitpack.io");
         dep.jsonPostProcess();
         dep.cache();
         extraCP.append(";").append(dep.provide());
-        if (new File(Config.CACHE_PATH + "intermediary_mappings/" + instJson.getVersion() + ".jar").exists()) {
-            Main.LOGGER.info("Adding intermediary mappings for " + instJson.getVersion() + " to classpath.");
-            extraCP.append(";").append(Config.CACHE_PATH).append("intermediary_mappings/").append(instJson.getVersion()).append(".jar");
-        }
+
         for (MavenDep mavenDep : instJson.getMavenDeps()) {
             mavenDep.cache();
             extraCP.append(";").append(mavenDep.provide());
         }
 
         this.args = new ArrayList<>();
-        args.add(Config.JAVA_BIN);
+        args.add(instJson.getCustomJava());
         args.add("-Dglasslauncher.wrapper=" + String.join(",", String.valueOf(instJson.isProxySound()), String.valueOf(instJson.isProxySkin()), String.valueOf(instJson.isProxyCape()), String.valueOf(instJson.isProxyLogin()), String.valueOf(instJson.isProxyPiracyCheck())));
         String javaArgs = instJson.getJavaArgs();
         // TODO: Use an actual args parser
@@ -86,7 +83,6 @@ public class Launcher {
         args.add("-Xmx" + instJson.getMaxRam());
         args.add("-Xms" + instJson.getMinRam());
         args.add("-Djava.library.path=" + instPath + "/bin/natives");
-        args.add("-Dfabric.gameJarPath=" + instPath + "/bin/" + instJson.getVersion() + ".jar");
         args.add("-classpath");
         args.add(Config.getAbsolutePathForCP(instance, new String[] {
                 ".minecraft/bin/" + instJson.getVersion() + ".jar",
@@ -94,6 +90,7 @@ public class Launcher {
                 ".minecraft/bin/lwjgl_util.jar",
                 ".minecraft/bin/jinput.jar",
         }) + extraCP);
+//        args.add("-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=127.0.0.1:5008");
         System.out.println(args.get(args.size() - 1));
         args.add(LegacyWrapper.class.getCanonicalName());
         args.add("--username");
@@ -195,7 +192,6 @@ public class Launcher {
         mcEnv.put("appdata", newAppData);
         mcEnv.put("home", newAppData);
         mcEnv.put("user.home", newAppData);
-        mcEnv.put("fabric.gameJarPath", Config.getInstancePath(instance) + ".minecraft/bin/" + instJson.getVersion() + ".jar");
 
         try {
             Logger logger = LoggerFactory.makeLogger("Minecraft", "minecraft");
