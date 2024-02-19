@@ -2,7 +2,10 @@ package net.glasslauncher.legacy.jsontemplate;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.common.JsonConfig;
+import net.glasslauncher.legacy.Config;
+import net.glasslauncher.wrapper.LegacyWrapper;
 
 import java.util.*;
 
@@ -20,6 +23,18 @@ public class InstanceConfig extends JsonConfig {
     private ArrayList<MavenDep> mavenDeps = new ArrayList<>();
     private String mainClass = "net.minecraft.client.Minecraft";
     private String customMinecraftArgs = "";
+    private String customJava = "";
+    private boolean hidingJavaWarnings = false;
+
+    public String getCustomJava() {
+        if (customJava != null && !customJava.isEmpty()) {
+            return customJava;
+        }
+        else if (Config.getLauncherConfig().getJavaInstallPath() != null && !Config.getLauncherConfig().getJavaInstallPath().isEmpty()) {
+            return Config.getLauncherConfig().getJavaInstallPath();
+        }
+        return CommonConfig.JAVA_BIN;
+    }
 
     /**
      * @param path Path to the JSON file.

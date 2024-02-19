@@ -3,14 +3,15 @@ package net.glasslauncher.legacy.mc;
 import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.common.JsonConfig;
 import net.glasslauncher.common.LoggerFactory;
+import net.glasslauncher.common.PublicPatternFileHandler;
 import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
 import net.glasslauncher.legacy.jsontemplate.InstanceConfig;
 import net.glasslauncher.legacy.jsontemplate.MavenDep;
 import net.glasslauncher.wrapper.LegacyWrapper;
 
+import javax.swing.*;
 import java.io.*;
-import java.lang.reflect.*;
 import java.util.*;
 import java.util.logging.*;
 
@@ -53,7 +54,7 @@ public class Launcher {
         dep.cache();
         extraCP.append(";").append(dep.provide());
 
-        dep = new MavenDep("com.github.calmilamsy:glass-launch-wrapper:0e96525", "https://jitpack.io");
+        dep = new MavenDep("com.github.calmilamsy:glass-launch-wrapper:f91c92f", "https://jitpack.io");
         dep.jsonPostProcess();
         dep.cache();
         extraCP.append(";").append(dep.provide());
@@ -62,7 +63,6 @@ public class Launcher {
             extraCP.append(";").append(Config.CACHE_PATH).append("intermediary_mappings/").append(instJson.getVersion()).append(".jar");
         }
         for (MavenDep mavenDep : instJson.getMavenDeps()) {
-            mavenDep.jsonPostProcess();
             mavenDep.cache();
             extraCP.append(";").append(mavenDep.provide());
         }
@@ -87,16 +87,15 @@ public class Launcher {
         args.add("-Xms" + instJson.getMinRam());
         args.add("-Djava.library.path=" + instPath + "/bin/natives");
         args.add("-Dfabric.gameJarPath=" + instPath + "/bin/" + instJson.getVersion() + ".jar");
-        args.add("-cp");
+        args.add("-classpath");
         args.add(Config.getAbsolutePathForCP(instance, new String[] {
                 ".minecraft/bin/" + instJson.getVersion() + ".jar",
                 ".minecraft/bin/lwjgl.jar",
                 ".minecraft/bin/lwjgl_util.jar",
                 ".minecraft/bin/jinput.jar",
         }) + extraCP);
+        System.out.println(args.get(args.size() - 1));
         args.add(LegacyWrapper.class.getCanonicalName());
-        args.add("--path");
-        args.add(instPath);
         args.add("--username");
         args.add(Config.getLauncherConfig().getLoginInfo().getUsername());
         String session = Config.getLauncherConfig().getLoginInfo().getAccessToken();
@@ -136,8 +135,58 @@ public class Launcher {
     }
 
     public void startMC() {
-        // Launched as a separate process because Minecraft directly calls exit when quit is pressed.
+        try {
+            // A couple of basic sanity checks for Java.
+            Main.LOGGER.info("Using Java install at \"" + instJson.getCustomJava() + "\"");
 
+            Process process = Runtime.getRuntime().exec(new String[]{instJson.getCustomJava(), "-version"});
+            // Why the fuck do you print to stderr for this, Java?
+            BufferedReader stdError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+
+            String s;
+            boolean is64 = false;
+            boolean hasPacking = false;
+            while ((s = stdError.readLine()) != null) {
+                if (s.toLowerCase().contains("version")) {
+                    Main.LOGGER.info(s.split("\"")[1].split("\\.")[0]);
+                    if(Integer.parseInt(s.split("\"")[1].split("\\.")[0]) > 8) {
+                        hasPacking = true;
+                    }
+                }
+                if (s.contains("64-Bit")) {
+                    is64 = true;
+                }
+            }
+            if (hasPacking) {
+                Main.LOGGER.warning("Detected using Java newer than 8, forcedisabling launch-wrapper functions.");
+                args.add("--disableFixes");
+                args.add("true");
+                if(!instJson.isHidingJavaWarnings()) {
+                    JOptionPane.showMessageDialog(Main.mainwin, "Detected using Java newer than 8, be aware that the built in fixes for minecraft have been disabled for compatibility reasons.");
+                }
+            }
+            if (!is64) {
+                String ramToUse = instJson.getMaxRam();
+                String ramStep = ramToUse.substring(ramToUse.length() - 1).toLowerCase();
+                ramToUse = ramToUse.substring(0, ramToUse.length() - 1);
+                int ramInt = Integer.parseInt(ramToUse);
+                if ((ramStep.equals("m") && ramInt > 1024) || (ramStep.equals("g") && ramInt > 1)) {
+                    Main.LOGGER.warning("Detected using x32 Java! Aborting launch, due to attempting to use more than 1GB of RAM!");
+                    JOptionPane.showMessageDialog(Main.mainwin, "Detected using x32 Java! Aborting launch, due to attempting to use more than 1GB of RAM!");
+                    return;
+                }
+                Main.LOGGER.info("Detected using x32 Java. If you're planning on using more than 1GB of RAM for minecraft, you should use the x64 version of Java!");
+                if (!instJson.isHidingJavaWarnings()) {
+                    JOptionPane.showMessageDialog(Main.mainwin, "Detected using x32 Java. If you're planning on using more than 1GB of RAM for minecraft, you should use the x64 version of Java!");
+                }
+            }
+        } catch (Exception e) {
+            Main.LOGGER.warning("Failed to validate Java, aborting launch!");
+            e.printStackTrace();
+            return;
+        }
+
+        // Launched as a separate process because Minecraft directly calls exit when quit is pressed.
         ProcessBuilder mcInit = new ProcessBuilder(args);
         mcInit.directory(new File(Config.getInstancePath(instance) + "/.minecraft"));
 
@@ -154,16 +203,11 @@ public class Launcher {
             ConsoleHandler consoleHandler = new ConsoleHandler();
             consoleHandler.setFormatter(new MinecraftFormatter());
             logger.addHandler(consoleHandler);
+            // Loggers made by LoggerFactory have their file handler added first.
             logger.getHandlers()[0].setFormatter(new MinecraftFormatter());
-            Field pattern = logger.getHandlers()[0].getClass().getDeclaredField("pattern");
-            pattern.setAccessible(true);
 
             (new Monitor(mcInit, (mc) -> {
-                try {
-                    logger.info("Logging minecraft output to \"" + pattern.get(logger.getHandlers()[0]) + "\"");
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
+                logger.info("Logging minecraft output to \"" + ((PublicPatternFileHandler) logger.getHandlers()[0]).publicPattern + "\"");
                 MinecraftLogInterceptor mcStdout = new MinecraftLogInterceptor(mc.getInputStream(), logger, false);
                 MinecraftLogInterceptor mcStderr = new MinecraftLogInterceptor(mc.getErrorStream(), logger, true);
                 mcStdout.start();

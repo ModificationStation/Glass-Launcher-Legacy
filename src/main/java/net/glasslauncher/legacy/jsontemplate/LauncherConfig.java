@@ -69,6 +69,9 @@ public class LauncherConfig extends JsonConfig {
     @SerializedName("proxyaddress")
     private String proxyAddress = "127.0.0.1";
 
+    @SerializedName("javainstallpath")
+    private String javaInstallPath = "";
+
     public LauncherConfig(String path) {
         super(path);
     }

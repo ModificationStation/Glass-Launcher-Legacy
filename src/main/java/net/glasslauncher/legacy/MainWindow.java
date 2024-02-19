@@ -31,7 +31,7 @@ public class MainWindow extends JFrame {
      * Sets up the main window object.
      * @param console The console for the launcher. Used to close the console.
      */
-    MainWindow(Frame console) {
+    public MainWindow(Frame console) {
         // Setting the size, icon, location and layout of the launcher
         Insets insets = getInsets();
         Main.LOGGER.info("Starting...");
@@ -192,6 +192,13 @@ public class MainWindow extends JFrame {
             Main.LOGGER.severe("Selected instance is null or empty! Aborting launch.");
             return;
         }
+
+        if (!Objects.equals(System.getProperty("sun.arch.data.model"), "64")) {
+            if(!Config.getLauncherConfig().isHidingJavaWarning()) {
+                JOptionPane.showMessageDialog(null, "Detected using " + System.getProperty("sun.arch.data.model") + ". If you're planning on using more than 1GB of RAM in your instances, you should use the x64 version of Java!");
+            }
+        }
+
         Config.getLauncherConfig().setLastUsedUsername(Config.getLauncherConfig().getLoginInfo().getUsername());
         Config.getLauncherConfig().setLastUsedInstance(instsel.getSelectedItem().toString());
         Config.getLauncherConfig().saveFile();

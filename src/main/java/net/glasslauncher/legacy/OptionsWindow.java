@@ -61,7 +61,9 @@ public class OptionsWindow extends JDialog {
     private JCheckBox capeproxy;
     private JCheckBox soundproxy;
     private JCheckBox loginproxy;
+    private JCheckBox hideJavaWarnings;
     private JComboBox<String> instanceVersion;
+    private JTextFieldFancy javaInstall;
 
     /**
      * Sets up options window for given instance.
@@ -116,13 +118,15 @@ public class OptionsWindow extends JDialog {
                         }
                     }
                     instanceConfig.setJavaArgs(javaargs.getText());
-                    instanceConfig.setMaxRam(maxram.getText());
-                    instanceConfig.setMinRam(minram.getText());
+                    instanceConfig.setMaxRam(maxram.getText().trim());
+                    instanceConfig.setMinRam(minram.getText().trim());
                     instanceConfig.setProxySkin(skinproxy.isSelected());
                     instanceConfig.setProxyCape(capeproxy.isSelected());
                     instanceConfig.setProxySound(soundproxy.isSelected());
                     instanceConfig.setProxyLogin(loginproxy.isSelected());
+                    instanceConfig.setHidingJavaWarnings(hideJavaWarnings.isSelected());
                     instanceConfig.setVersion((String) instanceVersion.getSelectedItem());
+                    instanceConfig.setCustomJava(javaInstall.getText().trim());
 
                     modList.setJarMods(new ArrayList<>());
                     ListModel<Mod> listModel = jarModDragDropList.model;
@@ -238,7 +242,7 @@ public class OptionsWindow extends JDialog {
         instsettings.add(loginproxy);
 
         JLabelFancy instanceVersionLabel = new JLabelFancy("Minecraft Version:");
-        instanceVersionLabel.setBounds(20, 372, 120, 20);
+        instanceVersionLabel.setBounds(20, 352, 120, 20);
         instsettings.add(instanceVersionLabel);
 
         instanceVersion = new JComboBox<>();
@@ -247,8 +251,49 @@ public class OptionsWindow extends JDialog {
         }
         instanceVersion.addItem("none");
         instanceVersion.setSelectedItem(instanceConfig.getVersion());
-        instanceVersion.setBounds(150, 370, 194, 22);
+        instanceVersion.setBounds(150, 350, 194, 22);
         instsettings.add(instanceVersion);
+
+        JLabelFancy javaInstallLabel = new JLabelFancy("Java Install:");
+        javaInstallLabel.setBounds(20, 382, 120, 20);
+        instsettings.add(javaInstallLabel);
+
+        javaInstall = new JTextFieldFancy("Java Install Path");
+        javaInstall.setBounds(150, 380, 340, 24);
+        javaInstall.setText(instanceConfig.getCustomJava());
+        instsettings.add(javaInstall);
+
+        JButton pickJavaInstallButton = new JButtonScalingFancy();
+        pickJavaInstallButton.setText("...");
+        pickJavaInstallButton.addActionListener(event -> {
+            FileDialog fileChooser = new FileDialog(this, "Select Java Executable");
+            fileChooser.setFilenameFilter((e, str) -> !Config.OS.equals("windows") || str.endsWith(".exe"));
+            fileChooser.setVisible(true);
+            try {
+                String file = fileChooser.getFiles()[0].getAbsolutePath();
+                javaInstall.setText(file);
+            } catch (NullPointerException | ArrayIndexOutOfBoundsException ignored) {}
+        });
+        pickJavaInstallButton.setBounds(520, 380, 30, 24);
+        instsettings.add(pickJavaInstallButton);
+
+        JButton detectJavaInstallButton = new JButtonScalingFancy();
+        detectJavaInstallButton.setText("A");
+        detectJavaInstallButton.addActionListener(event -> {
+            javaInstall.setText(new JavaInstallSelectWindow(this).getJava());
+        });
+        detectJavaInstallButton.setBounds(490, 380, 30, 24);
+        instsettings.add(detectJavaInstallButton);
+
+        JLabelFancy hideJavaWarningsLabel = new JLabelFancy("Hide Java Warnings:");
+        hideJavaWarningsLabel.setBounds(670, 380, 120, 20);
+        instsettings.add(hideJavaWarningsLabel);
+
+        hideJavaWarnings = new JCheckBox();
+        hideJavaWarnings.setOpaque(false);
+        hideJavaWarnings.setBounds(800, 380, 20, 20);
+        hideJavaWarnings.setSelected(instanceConfig.isHidingJavaWarnings());
+        instsettings.add(hideJavaWarnings);
 
         return instsettings;
     }
