@@ -222,7 +222,7 @@ public class InstanceManager {
             }
             zips.add(vanillaJar);
             FileUtils.mergeZips(moddedJar, zips);
-            FileSystem jarFs = FileSystems.newFileSystem(moddedJar.toPath(), null);
+            FileSystem jarFs = FileSystems.newFileSystem(moddedJar.toPath(), (ClassLoader) null);
             try {
                 Files.delete(jarFs.getPath("META-INF/MOJANG_C.DSA"));
                 Files.delete(jarFs.getPath("META-INF/MOJANG_C.SF"));
