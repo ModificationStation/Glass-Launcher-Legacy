@@ -607,7 +607,11 @@ public class OptionsWindow extends JDialog {
         File[] mods = modsFolder.listFiles();
         if (mods != null) {
             for (File modFile : mods) {
-                loaderMods.add(loaderMods.size(), LocalMods.getModInfo(instPath, modFile.getName()));
+                String[] modNames = modFile.getName().split("\\.");
+                String modExt = modNames[modNames.length - 1];
+                if(modFile.isFile() && (modExt.equalsIgnoreCase("zip") || modExt.equalsIgnoreCase("jar") || modExt.equalsIgnoreCase("disabled"))) {
+                    loaderMods.add(loaderMods.size(), LocalMods.getModInfo(instPath, modFile.getName()));
+                }
             }
         }
         loaderModDragDropList.model.clear();
