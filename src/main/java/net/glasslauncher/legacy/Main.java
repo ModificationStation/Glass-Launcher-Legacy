@@ -66,8 +66,8 @@ public class Main {
                 newArgs.add(Main.class.getCanonicalName());
                 newArgs.add("-secondlaunch");
                 ProcessBuilder processBuilder = new ProcessBuilder(newArgs);
-                processBuilder.redirectError(new File("processerr.txt"));
-                processBuilder.redirectOutput(new File("processout.txt"));
+//                processBuilder.redirectError(new File("processerr.txt"));
+//                processBuilder.redirectOutput(new File("processout.txt"));
                 processBuilder.start();
 
                 System.out.println("If you're launching from a console, and wish to not have this program reboot to fix itself, pass \"-cp " + newArgs.get(2) + "\" as an argument.");
