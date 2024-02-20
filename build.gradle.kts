@@ -8,7 +8,6 @@ plugins {
     java
     id("edu.sc.seis.launch4j") version "3.0.4"
     id("io.freefair.lombok") version "8.2.2"
-    id("io.github.kota65535.dependency-report") version "2.0.1"
     id("com.google.osdetector") version "1.7.3"
 }
 
