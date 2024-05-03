@@ -2,6 +2,7 @@ package gg.codie.mineonline.gui;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
@@ -127,9 +128,9 @@ public class MicrosoftLoginController {
 
             JsonObject jsonObject = (JsonObject) JsonParser.parseString(response.toString());
 
-            userCode = String.valueOf(jsonObject.get("user_code"));
-            verificationUrl = String.valueOf(jsonObject.get("verification_uri"));
-            deviceCode = String.valueOf(jsonObject.get("device_code"));
+            userCode = jsonObject.get("user_code").toString().replace("\"", "");
+            verificationUrl = jsonObject.get("verification_uri").toString().replace("\"", "");
+            deviceCode = jsonObject.get("device_code").toString().replace("\"", "").replaceAll("\"", "");
 
             isLoggingIn = true;
             loginPollThread.start();
@@ -176,10 +177,10 @@ public class MicrosoftLoginController {
 
             JsonObject jsonObject = (JsonObject) JsonParser.parseString(response.toString());
 
-            String errorCode = String.valueOf(jsonObject.get("error"));
-
-            if(errorCode == null) {
-                errorCode = "";
+            JsonElement errorCodeElement = jsonObject.get("error");
+            String errorCode = "";
+            if (errorCodeElement != null) {
+                errorCode = errorCodeElement.toString().replace("\"", "");
             }
 
             if (errorCode.equals("authorization_pending")) {
@@ -213,7 +214,7 @@ public class MicrosoftLoginController {
 
             singleton.isLoggingIn = false;
 
-            String accessToken = String.valueOf(jsonObject.get("access_token"));
+            String accessToken = jsonObject.get("access_token").toString().replace("\"", "");
             acquireXBLToken(accessToken);
         } catch (UnknownHostException e) {
             error = "Failed to contact Microsoft. Are you offline?";
@@ -270,7 +271,7 @@ public class MicrosoftLoginController {
             }
 
             JsonObject jsonObject = (JsonObject) JsonParser.parseString(response.toString());
-            String xblToken = String.valueOf(jsonObject.get("Token"));
+            String xblToken = jsonObject.get("Token").toString().replace("\"", "");
             acquireXsts(xblToken);
         } catch (UnknownHostException e) {
             error = "Failed to contact Xbox Live. Are you offline?";
@@ -323,10 +324,10 @@ public class MicrosoftLoginController {
                 rd.close();
 
                 JsonObject jsonObject = (JsonObject) JsonParser.parseString(response.toString());
-                String xblXsts = String.valueOf(jsonObject.get("Token"));
+                String xblXsts = jsonObject.get("Token").toString().replace("\"", "");
                 JsonObject claims = (JsonObject) jsonObject.get("DisplayClaims");
                 JsonArray xui = (JsonArray) claims.get("xui");
-                String uhs = String.valueOf(xui.get(0).getAsJsonObject().get("uhs"));
+                String uhs = xui.get(0).getAsJsonObject().get("uhs").toString().replace("\"", "");
                 acquireMinecraftToken(uhs, xblXsts);
             } catch (IOException e) {
                 InputStream is = connection.getErrorStream();
@@ -401,7 +402,7 @@ public class MicrosoftLoginController {
             rd.close();
 
             JsonObject jsonObject = (JsonObject) JsonParser.parseString(response.toString());
-            String mcAccessToken = String.valueOf(jsonObject.get("access_token"));
+            String mcAccessToken = jsonObject.get("access_token").toString().replace("\"", "");
             checkMcStore(mcAccessToken);
             checkMcProfile(mcAccessToken);
         } catch (UnknownHostException e) {
@@ -468,8 +469,8 @@ public class MicrosoftLoginController {
             rd.close();
 
             JsonObject jsonObject = (JsonObject) JsonParser.parseString(response.toString());
-            String name = String.valueOf(jsonObject.get("name"));
-            String uuid = String.valueOf(jsonObject.get("id"));
+            String name = jsonObject.get("name").toString().replace("\"", "");
+            String uuid = jsonObject.get("id").toString().replace("\"", "");
 
 
             LoginInfo loginInfo = new LoginInfo(name, mcAccessToken, uuid);
