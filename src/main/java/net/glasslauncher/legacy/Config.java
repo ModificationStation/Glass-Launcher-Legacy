@@ -77,6 +77,8 @@ public class Config {
      */
     public static final String JAVA_BIN = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
 
+    public static final String CLASSPATH_SEPARATOR = OS.equals("windows") ? ";" : ":";
+
     /**
      * JSON format map that reduces clutter and makes the end JSON easy to read.
      */

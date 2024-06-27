@@ -32,36 +32,36 @@ public class Launcher {
         MavenDep dep = new MavenDep("commons-cli:commons-cli:1.5.0", "https://repo.maven.apache.org/maven2");
         dep.jsonPostProcess();
         dep.cache();
-        extraCP.append(";").append(dep.provide());
+        extraCP.append(Config.CLASSPATH_SEPARATOR).append(dep.provide());
 
         dep = new MavenDep("org.json:json:20211205", "https://repo.maven.apache.org/maven2");
         dep.jsonPostProcess();
         dep.cache();
-        extraCP.append(";").append(dep.provide());
+        extraCP.append(Config.CLASSPATH_SEPARATOR).append(dep.provide());
 
         dep = new MavenDep("org.apache.commons:commons-text:1.9", "https://repo.maven.apache.org/maven2");
         dep.jsonPostProcess();
         dep.cache();
-        extraCP.append(";").append(dep.provide());
+        extraCP.append(Config.CLASSPATH_SEPARATOR).append(dep.provide());
 
         dep = new MavenDep("net.glasslauncher:commons:1.3", "https://maven.glass-launcher.net/snapshots");
         dep.jsonPostProcess();
         dep.cache();
-        extraCP.append(";").append(dep.provide());
+        extraCP.append(Config.CLASSPATH_SEPARATOR).append(dep.provide());
 
         dep = new MavenDep("org.apache.commons:commons-lang3:3.12.0", "https://repo.maven.apache.org/maven2");
         dep.jsonPostProcess();
         dep.cache();
-        extraCP.append(";").append(dep.provide());
+        extraCP.append(Config.CLASSPATH_SEPARATOR).append(dep.provide());
 
         dep = new MavenDep("com.github.calmilamsy:glass-launch-wrapper:90a3031", "https://jitpack.io");
         dep.jsonPostProcess();
         dep.cache();
-        extraCP.append(";").append(dep.provide());
+        extraCP.append(Config.CLASSPATH_SEPARATOR).append(dep.provide());
 
         for (MavenDep mavenDep : instJson.getMavenDeps()) {
             mavenDep.cache();
-            extraCP.append(";").append(mavenDep.provide());
+            extraCP.append(Config.CLASSPATH_SEPARATOR).append(mavenDep.provide());
         }
 
         this.args = new ArrayList<>();
