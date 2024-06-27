@@ -11,6 +11,7 @@ import net.glasslauncher.legacy.jsontemplate.MCVersions;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.util.function.Function;
 
 public class Config {
 
@@ -76,6 +77,11 @@ public class Config {
      * The path of the Java binary running the launcher.
      */
     public static final String JAVA_BIN = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
+
+    /**
+     * Exists to save on copy-paste code, because OSX has some bullshit snowflake behavior for UI looks.
+     */
+    public static final boolean IS_OSX = OS.equals("osx");
 
     public static final String CLASSPATH_SEPARATOR = OS.equals("windows") ? ";" : ":";
 

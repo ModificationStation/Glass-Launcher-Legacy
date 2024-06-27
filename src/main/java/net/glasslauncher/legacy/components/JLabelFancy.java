@@ -32,4 +32,12 @@ public class JLabelFancy extends JLabel {
         }
         super.paintComponent(g);
     }
+
+    @Override
+    public void setBounds(int x, int y, int width, int height) {
+        if (Config.IS_OSX) {
+            width += width / 5;
+        }
+        super.setBounds(x, y, width, height);
+    }
 }

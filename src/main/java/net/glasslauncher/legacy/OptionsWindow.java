@@ -207,7 +207,7 @@ public class OptionsWindow extends JDialog {
 
         skinproxy = new JCheckBox();
         skinproxy.setOpaque(false);
-        skinproxy.setBounds(150, 97, 20, 20);
+        skinproxy.setBounds(150, 97, 24, 20);
         skinproxy.setSelected(instanceConfig.isProxySkin());
         instsettings.add(skinproxy);
 
@@ -217,7 +217,7 @@ public class OptionsWindow extends JDialog {
 
         capeproxy = new JCheckBox();
         capeproxy.setOpaque(false);
-        capeproxy.setBounds(150, 125, 20, 20);
+        capeproxy.setBounds(150, 125, 24, 20);
         capeproxy.setSelected(instanceConfig.isProxyCape());
         instsettings.add(capeproxy);
 
@@ -227,7 +227,7 @@ public class OptionsWindow extends JDialog {
 
         soundproxy = new JCheckBox();
         soundproxy.setOpaque(false);
-        soundproxy.setBounds(150, 153, 20, 20);
+        soundproxy.setBounds(150, 153, 24, 20);
         soundproxy.setSelected(instanceConfig.isProxySound());
         instsettings.add(soundproxy);
 
@@ -237,7 +237,7 @@ public class OptionsWindow extends JDialog {
 
         loginproxy = new JCheckBox();
         loginproxy.setOpaque(false);
-        loginproxy.setBounds(150, 181, 20, 20);
+        loginproxy.setBounds(150, 181, 24, 20);
         loginproxy.setSelected(instanceConfig.isProxyLogin());
         instsettings.add(loginproxy);
 
@@ -291,7 +291,7 @@ public class OptionsWindow extends JDialog {
 
         hideJavaWarnings = new JCheckBox();
         hideJavaWarnings.setOpaque(false);
-        hideJavaWarnings.setBounds(800, 380, 20, 20);
+        hideJavaWarnings.setBounds(800, 380, 24, 20);
         hideJavaWarnings.setSelected(instanceConfig.isHidingJavaWarnings());
         instsettings.add(hideJavaWarnings);
 

@@ -164,7 +164,7 @@ class InstanceManagerWindow extends JDialog {
         for (String version : Config.getMcVersions().getClient().keySet()) {
             instanceVersion.addItem(version);
         }
-        instanceVersion.setBounds(351, 63, 194, 22);
+        instanceVersion.setBounds(351, 63, 194, Config.IS_OSX ? 26 : 22);
 
         JButton instanceVersionButton = new JButtonScalingFancy();
         instanceVersionButton.setText("Create Blank Instance");
@@ -192,7 +192,7 @@ class InstanceManagerWindow extends JDialog {
                 ex.printStackTrace();
             }
         });
-        instanceFolderButton.setBounds(5, 247, 150, 22);
+        instanceFolderButton.setBounds(5, 244, 150, 22);
 
         createPanel.add(installModpackDir);
         createPanel.add(installModpackDirButton);
@@ -258,7 +258,7 @@ class InstanceManagerWindow extends JDialog {
 
         hideJavaWarningCheckbox = new JCheckBox();
         hideJavaWarningCheckbox.setOpaque(false);
-        hideJavaWarningCheckbox.setBounds(135, 6, 20, 20);
+        hideJavaWarningCheckbox.setBounds(135, 6, 24, 20);
         hideJavaWarningCheckbox.setSelected(Config.getLauncherConfig().isHidingJavaWarning());
 
         JLabelFancy disableThemeLabel = new JLabelFancy("Disable Custom Theme:");
@@ -266,7 +266,7 @@ class InstanceManagerWindow extends JDialog {
 
         disableThemeCheckbox = new JCheckBox();
         disableThemeCheckbox.setOpaque(false);
-        disableThemeCheckbox.setBounds(135, 30, 20, 20);
+        disableThemeCheckbox.setBounds(135, 30, 24, 20);
         disableThemeCheckbox.setSelected(Config.getLauncherConfig().isThemeDisabled());
 
         JLabelFancy ignoreInstanceVersionLabel = new JLabelFancy("Ignore Instance Version:");
@@ -274,7 +274,7 @@ class InstanceManagerWindow extends JDialog {
 
         ignoreInstanceVersionCheckbox = new JCheckBox();
         ignoreInstanceVersionCheckbox.setOpaque(false);
-        ignoreInstanceVersionCheckbox.setBounds(155, 54, 20, 20);
+        ignoreInstanceVersionCheckbox.setBounds(155, 54, 24, 20);
         ignoreInstanceVersionCheckbox.setSelected(Config.getLauncherConfig().isIgnoreInstanceVersion());
 
         JButtonScalingFancy clearVersionCache = new JButtonScalingFancy();

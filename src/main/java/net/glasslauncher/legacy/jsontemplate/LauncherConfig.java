@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.Setter;
 import net.glasslauncher.common.JsonConfig;
+import net.glasslauncher.legacy.Config;
 
 @Getter @Setter
 public class LauncherConfig extends JsonConfig {
@@ -95,5 +96,12 @@ public class LauncherConfig extends JsonConfig {
 
     public String getProxyAddress() {
         return proxyAddress != null? proxyAddress : "127.0.0.1";
+    }
+
+    /**
+     * OSX makes the custom theme look garbage, don't give them the ability to use it.
+     */
+    public boolean isThemeDisabled() {
+        return Config.IS_OSX || isThemeDisabled;
     }
 }

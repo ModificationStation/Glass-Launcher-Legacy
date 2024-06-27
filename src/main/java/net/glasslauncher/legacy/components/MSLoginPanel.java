@@ -39,6 +39,9 @@ public class MSLoginPanel extends JPanel {
         // This is fake.
         HintPasswordField passwordField = new HintPasswordField("Password");
         passwordField.setBounds(24, 40, 166, 22);
+        if (Config.IS_OSX) {
+            passwordField.setBounds(21, 36, 172, 30);
+        }
         passwordField.setText("oh boy, pass");
         passwordField.setEnabled(false);
 

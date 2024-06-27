@@ -104,6 +104,9 @@ public class MainWindow extends JFrame {
         instsel = new JComboBox<>();
         refreshInstanceList();
         instsel.setBounds(24, 66, 166, 22);
+        if (Config.IS_OSX) {
+            instsel.setBounds(19, 66, 177, 22);
+        }
 
         // Options button
         JButtonScaling options = new JButtonScaling();

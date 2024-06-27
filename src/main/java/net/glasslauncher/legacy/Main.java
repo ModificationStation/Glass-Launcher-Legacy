@@ -5,9 +5,11 @@ import net.glasslauncher.common.LoggerFactory;
 import net.glasslauncher.legacy.jsontemplate.PreLaunchDep;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.util.List;
 import java.util.logging.*;
 
 import static net.glasslauncher.legacy.Config.OS;
@@ -20,6 +22,9 @@ public class Main {
     public static void main(String[] args) throws URISyntaxException, IOException {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            if (Config.IS_OSX) {
+            UIManager.put("TabbedPane.selectedTabTitleNormalColor", Color.GRAY);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
