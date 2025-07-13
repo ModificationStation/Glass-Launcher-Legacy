@@ -1,0 +1,31 @@
+[versions]
+# Plugins
+shadow = "9.0.0-rc1"
+lombok-plugin = "8.14"
+# Libraries
+lombok = "1.18.38"
+littleproxy = "1.1.2"
+littleproxy-mitm = "1.1.0"
+gson = "2.9.1"
+commons-validator = "1.6"
+glass-site-java-api = "0.7"
+glasslauncher-commons = "1.4"
+
+[plugins]
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
+lombok = { id = "io.freefair.lombok", version.ref = "lombok-plugin" }
+
+[libraries]
+littleproxy = { module = "org.littleshoot:littleproxy", version.ref = "littleproxy" }
+littleproxy-mitm = { module = "com.github.ganskef:littleproxy-mitm", version.ref = "littleproxy-mitm" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+commons-validator = { module = "commons-validator:commons-validator", version.ref = "commons-validator" }
+glass-site-java-api = { module = "net.glasslauncher.repo:glass-site-java-api", version.ref = "glass-site-java-api" }
+glasslauncher-commons = { module = "net.glasslauncher:commons", version.ref = "glasslauncher-commons" }
+
+[bundles]
+implementation = [
+    "littleproxy", "littleproxy-mitm",
+    "gson", "commons-validator",
+    "glass-site-java-api", "glasslauncher-commons"
+]

@@ -1,3 +1,7 @@
+#### v0.5.0
+\* Rewrote the buildscript and updated dependencies
+\* Replaced the local static blog with an [updated online one](https://halotroop.github.io/MCUpdate)
+
 #### v0.4.5
 \* Fixed the resource proxy not working on old alpha versions.
 

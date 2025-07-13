@@ -3,14 +3,12 @@ package net.glasslauncher.legacy.mc;
 import com.google.gson.Gson;
 import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.legacy.jsontemplate.InstanceConfig;
-import net.glasslauncher.legacy.Config;
 import net.glasslauncher.legacy.Main;
 import net.glasslauncher.legacy.jsontemplate.LoginCreds;
 import net.glasslauncher.legacy.jsontemplate.LoginResponse;
 import net.glasslauncher.legacy.jsontemplate.LoginResponseAgent;
 
 import javax.swing.JOptionPane;
-import javax.xml.ws.http.HTTPException;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -40,7 +38,7 @@ public class LaunchArgs {
             return null;
         }
         String instance = args[2];
-        instpath = CommonConfig.GLASS_PATH + "instances/" + instance;
+        instpath = CommonConfig.getGlassPath() + "instances/" + instance;
         try {
             if (!(new File(instpath, "instance_config.json")).exists()) {
                 instjson = new InstanceConfig(instpath + "/instance_config.json");
@@ -101,7 +99,7 @@ public class LaunchArgs {
                 Main.getLogger().severe("Error sending request!");
                 Main.getLogger().severe("Code: " + req.getResponseCode());
                 Main.getLogger().severe("Error: " + session.getError());
-                throw new HTTPException(req.getResponseCode());
+                throw new Exception("HTTP Error: " + req.getResponseCode());
             }
             LoginResponseAgent profile = session.getSelectedProfile();
             return new String[]{session.getAccessToken(), profile.getName()};

@@ -145,7 +145,7 @@ class InstanceManagerWindow extends JDialog {
         instanceFolderButton.addActionListener((e) -> {
             Main.getLogger().info("Opening instances folder...");
             try {
-                Desktop.getDesktop().open(new File(CommonConfig.GLASS_PATH + "instances"));
+                Desktop.getDesktop().open(new File(CommonConfig.getGlassPath(), "instances"));
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -173,10 +173,10 @@ class InstanceManagerWindow extends JDialog {
     }
 
     private void updateInstanceList() {
-        (new File(CommonConfig.GLASS_PATH + "instances")).mkdirs();
+        (new File(CommonConfig.getGlassPath() + "instances")).mkdirs();
         deletePanel.removeAll();
         deletePanel.repaint();
-        for (File instance : (Objects.requireNonNull(new File(CommonConfig.GLASS_PATH + "instances").listFiles()))) {
+        for (File instance : (Objects.requireNonNull(new File(CommonConfig.getGlassPath(), "instances").listFiles()))) {
             if (instance.isDirectory()) {
                 ScalingButton deleteButton = new ScalingButton();
                 deleteButton.setText("Delete \"" + instance.getName() + "\".");

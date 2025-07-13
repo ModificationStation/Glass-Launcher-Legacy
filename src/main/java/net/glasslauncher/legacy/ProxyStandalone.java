@@ -7,7 +7,6 @@ import java.io.File;
 public class ProxyStandalone {
     /**
      * Main function of the standalone proxy
-     * @param args
      */
     public static void main(String[] args) {
         boolean doSound = false;
@@ -15,15 +14,20 @@ public class ProxyStandalone {
         boolean doCape = false;
         boolean doLogin = false;
         for (String arg : args) {
-            if (arg.toLowerCase().equals("-dosound")) {
-                doSound = true;
-            } else if (arg.toLowerCase().equals("-doskin")) {
-                doSkin = true;
-            } else if (arg.toLowerCase().equals("-docape")) {
-                doCape = true;
-            } else if (arg.toLowerCase().equals("-dologin")) {
-                doLogin = true;
-            }
+			switch (arg.toLowerCase()) {
+				case "-dosound":
+					doSound = true;
+					break;
+				case "-doskin":
+					doSkin = true;
+					break;
+				case "-docape":
+					doCape = true;
+					break;
+				case "-dologin":
+					doLogin = true;
+					break;
+			}
         }
         if (!doSound && !doSkin && !doCape && !doLogin) {
             Main.getLogger().info("No proxy arguments provided! Defaulting to all enabled.");
@@ -36,7 +40,12 @@ public class ProxyStandalone {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Proxy proxy = new Proxy(new boolean[]{doSound, doSkin, doCape, doLogin});
+        Proxy proxy = new Proxy(new boolean[]{doSound, doSkin, doCape, doLogin}) {
+            @Override
+            public void run() {
+                super.run();
+            }
+        };
         proxy.start();
     }
 }

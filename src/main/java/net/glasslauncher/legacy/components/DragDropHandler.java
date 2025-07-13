@@ -1,5 +1,7 @@
 package net.glasslauncher.legacy.components;
 
+import net.glasslauncher.legacy.jsontemplate.Mod;
+
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.TransferHandler;
@@ -31,8 +33,8 @@ class DragDropHandler extends TransferHandler {
             int draggedImageIndex = Integer.parseInt((String) transferable.getTransferData(DataFlavor.stringFlavor));
 
             JList.DropLocation dl = (JList.DropLocation) support.getDropLocation();
-            DefaultListModel model = list.model;
-            Object draggedObject = model.get(draggedImageIndex);
+            DefaultListModel<Mod> model = list.model;
+            Mod draggedObject = model.get(draggedImageIndex);
             int dropIndex = dl.getIndex();
             if (model.indexOf(draggedObject) < dropIndex) {
                 dropIndex--;

@@ -34,7 +34,7 @@ import java.util.Objects;
 public class InstanceManager {
 
     /**
-     * Detects what kind of modpack zip has been provided and then calls the related install function for the type.
+     * Detects what kind of modpack zip has been provided and then calls the related installation function for the type.
      * @param path Path to instance zip file.
      */
     public static void installModpack(String path, ProgressWindow progressWindow) {
@@ -87,7 +87,7 @@ public class InstanceManager {
                 }
             }
 
-            if ((new File(CommonConfig.GLASS_PATH + "instances/" + instanceName)).exists()) {
+            if ((new File(CommonConfig.getGlassPath() + "instances/" + instanceName)).exists()) {
                 Main.getLogger().info("Instance \"" + instanceName + "\" already exists!");
                 return;
             }
@@ -178,17 +178,15 @@ public class InstanceManager {
                     return;
                 }
             }
-        }
-        else if (version.equals("custom")) {}
-        else {
-            try {
-                FileUtils.delete(new File(minecraftFolder));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        } else if (!version.equals("custom")) {
+			try {
+				FileUtils.delete(new File(minecraftFolder));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 
-        progressWindow.increaseProgress();
+		progressWindow.increaseProgress();
         progressWindow.setProgressText("Adding sounds...");
         addSounds(instance);
         progressWindow.increaseProgress();
@@ -218,7 +216,7 @@ public class InstanceManager {
             }
             zips.add(vanillaJar);
             FileUtils.mergeZips(moddedJar, zips);
-            FileSystem jarFs = FileSystems.newFileSystem(moddedJar.toPath(), null);
+            FileSystem jarFs = FileSystems.newFileSystem(moddedJar.toPath(), (ClassLoader) null);
             try {
                 Files.delete(jarFs.getPath("META-INF/MOJANG_C.DSA"));
                 Files.delete(jarFs.getPath("META-INF/MOJANG_C.SF"));
@@ -250,14 +248,14 @@ public class InstanceManager {
             if (component.isImportant()) {
                 instanceConfig.setVersion(component.getCachedVersion());
             }
-            else if (component.isDependencyOnly() || (component.getUid().equals("customjar") && component.isDisabled())) {}
-            else if (component.getUid().equals("customjar") && !component.isDisabled()) {
-                hasCustomJar = true;
-            }
-            else if (component.getCachedName() != null) {
-                modList.getJarMods().add(modList.getJarMods().size(), new Mod(component.getUid().replace("org.multimc.jarmod.", "") + ".jar", component.getCachedName(), 0, !component.isDisabled()));
-            }
-        }
+            else if (!component.isDependencyOnly() && (!component.getUid().equals("customjar") || !component.isDisabled())) {
+				if (component.getUid().equals("customjar") && !component.isDisabled()) {
+					hasCustomJar = true;
+				} else if (component.getCachedName() != null) {
+					modList.getJarMods().add(modList.getJarMods().size(), new Mod(component.getUid().replace("org.multimc.jarmod.", "") + ".jar", component.getCachedName(), 0, !component.isDisabled()));
+				}
+			}
+		}
 
         createBlankInstance(instanceConfig.getVersion(), instance, progressWindow);
         if (!(new File(instPath)).exists()) {
@@ -271,7 +269,7 @@ public class InstanceManager {
 
         for (Mod mod : modList.getJarMods()) {
             try {
-                org.apache.commons.io.FileUtils.copyFile(mmcZip.getFile(mmcZipInstDir + "/jarmods/" + mod.getFileName()), new File(instPath + "/mods/" + mod.getFileName()));
+                Files.copy(mmcZip.getFile(mmcZipInstDir + "/jarmods/" + mod.getFileName()).toPath(), new File(instPath + "/mods/" + mod.getFileName()).toPath());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -331,7 +329,7 @@ public class InstanceManager {
         try {
             for (MinecraftResource minecraftResource : minecraftResources.getFiles()) {
                 File file = new File(basePath + minecraftResource.getFile());
-                File cacheFile = new File(CommonConfig.GLASS_PATH + "cache/resources/" + minecraftResource.getFile());
+                File cacheFile = new File(CommonConfig.getGlassPath(), "cache/resources/" + minecraftResource.getFile());
                 String md5 = minecraftResource.getMd5();
                 String url = baseURL + minecraftResource.getFile().replace(" ", "%20");
 

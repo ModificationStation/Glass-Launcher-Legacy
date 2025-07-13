@@ -14,8 +14,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Window;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 
 public class VerifyAccountWindow extends JDialog {
     @Getter boolean loginValid = false;

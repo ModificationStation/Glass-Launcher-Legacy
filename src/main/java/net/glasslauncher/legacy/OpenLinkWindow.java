@@ -12,8 +12,6 @@ public class OpenLinkWindow extends JOptionPane {
 
     /**
      * Used to make a pop-up clickable link.
-     * @param comp
-     * @param url
      */
     OpenLinkWindow(Component comp, String url) {
         JLabel label = new JLabel();

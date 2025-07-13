@@ -3,16 +3,16 @@ package net.glasslauncher.legacy;
 import lombok.Getter;
 import net.glasslauncher.common.CommonConfig;
 import net.glasslauncher.common.FileUtils;
-import net.glasslauncher.repo.api.mod.RepoReader;
+import net.glasslauncher.common.LoggerFactory;
 
 import javax.swing.UIManager;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
 public class Main {
-    @Getter private static Logger logger = CommonConfig.makeLogger("GlassLauncher", "glass-launcher");
-    private static ArrayList<String> libs = new ArrayList<>();
-    public static MainWindow mainwin;
+    @Getter private static final Logger logger = LoggerFactory.makeLogger("GlassLauncher", "glass-launcher");
+    private static final ArrayList<String> libs = new ArrayList<>();
+	public static MainWindow mainWindow;
 
     public static void main(String[] args) {
         try {
@@ -53,21 +53,21 @@ public class Main {
         } catch (Exception e) {
             e.printStackTrace();
         }*/
-        mainwin = new MainWindow(console);
+        mainWindow = new MainWindow(console);
     }
 
     /**
      * Downloads all dependencies listed in Config.Deps.cactusDeps.
      */
     private static void getDeps() {
-        getLogger().info("Checking dependencies...");
+        logger.info("Checking dependencies...");
 
         for (String dep : Config.getGLASS_DEPS().keySet()) {
             try {
-                FileUtils.downloadFile(dep, CommonConfig.GLASS_PATH + "/lib/", Config.getGLASS_DEPS().get(dep));
+                FileUtils.downloadFile(dep, CommonConfig.getGlassPath() + "/lib/", Config.getGLASS_DEPS().get(dep));
                 libs.add(dep.substring(dep.lastIndexOf('/') + 1));
             } catch (Exception e) {
-                getLogger().info("Failed to download dependency. Invalid formatting?");
+                logger.info("Failed to download dependency. Invalid formatting?");
                 e.printStackTrace();
             }
         }
@@ -79,6 +79,6 @@ public class Main {
      * @return True if active, False otherwise.
      */
     public static boolean isLauncherActive() {
-        return mainwin != null;
+        return mainWindow != null;
     }
 }

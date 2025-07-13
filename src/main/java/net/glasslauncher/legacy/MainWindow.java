@@ -28,14 +28,12 @@ import java.awt.Insets;
 import java.awt.Panel;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
-import java.util.Scanner;
+import java.io.*;
+import java.net.URL;
 
-class MainWindow extends JFrame {
+public class MainWindow extends JFrame {
     private int orgWidth = 854;
     private int orgHeight = 480;
 
@@ -176,12 +174,15 @@ class MainWindow extends JFrame {
         setVisible(true);
     }
 
-    private JScrollPane makeBlog() {
-        String page = new Scanner(MainWindow.class.getResourceAsStream("assets/blog.html"), "UTF-8").useDelimiter("\\A").next();
-        page = page.replaceAll("\\$\\{root}\\$", MainWindow.class.getResource("assets/").toString());
+	private JScrollPane makeBlog() {
         JTextPane blog = new JTextPane();
-        blog.setContentType("text/html");
-        blog.setText(page);
+		try {
+            blog.setPage(new URL("https://halotroop2288.github.io/MCUpdate"));
+            blog.setContentType("text/html");
+		} catch (Throwable ignored) {
+            Main.getLogger().warning("Couldn't load MCUpdate Blog.");
+		}
+
         blog.setBorder(BorderFactory.createEmptyBorder());
         blog.setEditable(false);
         blog.addHyperlinkListener(event -> {
@@ -193,16 +194,16 @@ class MainWindow extends JFrame {
                 }
             }
         });
-        JScrollPane blogcontainer = new JScrollPane(blog);
-        blogcontainer.setBorder(BorderFactory.createEmptyBorder());
-        blogcontainer.setBounds(new Rectangle(0, 0, mainPanel.getWidth(), mainPanel.getHeight() - 200));
-        return blogcontainer;
+        JScrollPane blogContainer = new JScrollPane(blog);
+        blogContainer.setBorder(BorderFactory.createEmptyBorder());
+        blogContainer.setBounds(new Rectangle(0, 0, mainPanel.getWidth(), mainPanel.getHeight() - 200));
+        return blogContainer;
     }
 
     public void refreshInstanceList() {
         Main.getLogger().info("Refreshing instance list...");
         instsel.setModel(new DefaultComboBoxModel<>());
-        File file = new File(CommonConfig.GLASS_PATH + "instances");
+        File file = new File(CommonConfig.getGlassPath() + "instances");
         String[] instances = file.list((current, name) -> new File(current, name).isDirectory());
         String lastUsedInstance = Config.getLauncherConfig().getLastUsedInstance();
         boolean exists = false;

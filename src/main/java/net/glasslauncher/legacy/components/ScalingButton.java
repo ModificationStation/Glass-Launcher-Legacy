@@ -4,7 +4,6 @@ import javax.swing.JButton;
 import java.awt.Insets;
 
 public class ScalingButton extends JButton {
-
     /**
      * Creates a button with no set text or icon.
      */

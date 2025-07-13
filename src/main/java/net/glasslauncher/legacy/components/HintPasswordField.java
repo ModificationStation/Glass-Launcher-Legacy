@@ -55,11 +55,7 @@ public class HintPasswordField extends JPasswordField {
     }
 
     public char[] getPassword() {
-        if (defaultColor != getForeground() && super.getText().equals(hint)) {
-            return new char[]{};
-        }
-        else {
-            return super.getPassword();
-        }
+		return defaultColor != getForeground() && Arrays.equals(super.getPassword(), hint.toCharArray())
+            ? new char[]{} : super.getPassword();
     }
 }
